@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'imports',
     'start',
+    'base',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'imports/templates'),
-                 os.path.join(BASE_DIR, 'start/templares')],
+                 os.path.join(BASE_DIR, 'start/templates'),
+                 os.path.join(BASE_DIR, 'base/templates'),
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,8 +81,11 @@ WSGI_APPLICATION = 'sistecHe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sistecheag',
+        'USER': 'postgres',
+        'PASSWORD': 'henrique321',
+        'HOST': 'localhost'
     }
 }
 
@@ -125,4 +131,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIR = [
     os.path.join(BASE_DIR, 'imports/static'),
     os.path.join(BASE_DIR, 'start/static'),
+    os.path.join(BASE_DIR, 'base/static'),
 ]
