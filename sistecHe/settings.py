@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'imports',
     'start',
     'base',
+    'users',
 ]
 
 MIDDLEWARE = [

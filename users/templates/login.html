@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Login</h1>
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <label for="login"><b>Email</b></label>
+        <input type="text" id="login" name="login" placeholder="Entre com o login cadastrado" required>
+        <label for="password"><b>Senha</b></label>
+        <input id="password" type="password"  name="password" placeholder="Digite aqui sua senha" required>
+        <button class="btn btn-success" type="submit">Entrar</button>
+    </form>
+{% endblock %}

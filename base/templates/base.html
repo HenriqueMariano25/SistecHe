@@ -9,7 +9,10 @@
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}" type="javascript"></script>
 </head>
 <body>
-    {% include 'partials/menu.html' %}
+    {% if user.is_authenticated %}
+        {% include 'partials/menu.html' %}
+    {% endif %}
+
     {% block content %}
     {% endblock %}
 </body>

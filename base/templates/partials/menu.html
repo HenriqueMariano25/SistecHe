@@ -3,4 +3,11 @@
 <div>
     <a href="{% url 'index' %}">Home</a>
     <a href="{% url 'effective' %}">Efetivo</a>
+    {% if user.is_authenticated %}
+        <a>Ola, {{ user.first_name }}</a>
+        <a href="{% url 'logout' %}">Sair</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
 </div>
