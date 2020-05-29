@@ -1,32 +1,34 @@
-from datetime import datetime
-
+from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 import pandas as pd
-from base.models import SubSector, Employee, Sector
+from base.models import SubSector, Employee, Sector, ImportHistory
 
 
 def employees(request):
     employees = Employee.objects.all().order_by('name')
+    import_history = ImportHistory.objects.last()
     if request.user.is_authenticated:
         if request.method == 'POST':
             search = request.POST['search']
             if 'search' in request.POST:
                 employees = employees.filter(name__icontains=search)
-                data = {'employees': employees,
-                        'sectors': Sector.objects.all()}
-        else:
-            data = {'employees': employees,
-                    'sectors': Sector.objects.all()}
 
+        data = {'employees': employees,
+                'sectors': Sector.objects.all(),
+                'import_history': import_history,
+                'import_history_create_at':import_history.created_at.strftime("%d/%m/%Y - %H:%M")
+                }
         return render(request, 'employees.html', data)
     else:
         return redirect('login')
 
 
 def update_employees(request):
+    import_history = ImportHistory(type="employees", made_by=request.user, created_at=timezone.now())
+    import_history.save()
     if request.method == 'POST':
         excel = request.FILES['excel']
         datas = pd.read_excel(excel.file)

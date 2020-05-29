@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 class SubSector(models.Model):
@@ -31,3 +31,8 @@ class Employee(models.Model):
 
     def __str__(self):
         return self.name
+
+class ImportHistory(models.Model):
+    type = models.CharField(max_length=50)
+    made_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_at = models.DateTimeField()
