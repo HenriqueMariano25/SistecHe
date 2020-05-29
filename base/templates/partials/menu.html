@@ -2,7 +2,8 @@
 
 <div>
     <a href="{% url 'index' %}">Home</a>
-    <a href="{% url 'employees' %}">Funcionarios</a>
+    <a href="{% url 'employees' %}">Funcionários</a>
+    <a href="{% url 'extra_hour' %}">Hora Extra</a>
     {% if user.is_authenticated %}
         <a>Ola, {{ user.first_name }}</a>
         <a href="{% url 'logout' %}">Sair</a>

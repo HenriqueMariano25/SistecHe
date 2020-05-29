@@ -9,7 +9,7 @@ from base.models import SubSector, Employee, Sector, ImportHistory
 
 def employees(request):
     employees = Employee.objects.all().order_by('name')
-    import_history = ImportHistory.objects.last()
+    import_history = ImportHistory.objects.filter(type="employees").last()
     if request.user.is_authenticated:
         if request.method == 'POST':
             search = request.POST['search']
@@ -19,8 +19,7 @@ def employees(request):
         data = {'employees': employees,
                 'sectors': Sector.objects.all(),
                 'import_history': import_history,
-                'import_history_create_at':import_history.created_at.strftime("%d/%m/%Y - %H:%M")
-                }
+                'import_history_create_at':import_history.created_at.strftime("%d/%m/%Y - %H:%M")}
         return render(request, 'employees.html', data)
     else:
         return redirect('login')
@@ -113,3 +112,10 @@ def update_employees_sector(request):
         return JsonResponse({'result': 'OK'})
     else:
         return JsonResponse({'result': 'Fail'})
+
+
+def extra_hour(request):
+    employees = Employee.objects.all().order_by('name')
+    data = {'employees': employees}
+
+    return render(request, 'extra_hour.html',data)

@@ -1,0 +1,35 @@
+<head>
+    <title>Importação|Hora Extra</title>
+</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Welcome to the import extra hours</h1>
+    {% if import_history %}
+        <h2>Última Atualização: {{ import_history_create_at }} por {{ user.first_name }}</h2>
+    {% endif %}
+    <table id="tableExtraHours" class="table border border-dark">
+        <thead class="theadAF">
+        <tr>
+            <th scope="col">Matricula</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Função</th>
+            <td scope="col">Hora Extra</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+
+            <tr class="tr-employee">
+                <td>{{ employee.registration }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.occupation }}</td>
+                <td>{{ employee.extra_hour }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
