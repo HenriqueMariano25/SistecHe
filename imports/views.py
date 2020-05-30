@@ -1,15 +1,15 @@
 from django.utils import timezone
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import auth
 import xlrd
 import pandas as pd
 from xlrd.timemachine import xrange
 import locale
-from datetime import datetime
+from datetime import datetime, date
 
-from base.models import SubSector, Employee, Sector, ImportHistory
+from base.models import SubSector, Employee, Sector, ImportHistory, ReleasedHour
 
 
 def employees(request):
@@ -168,3 +168,26 @@ def reset_extra_hours(request):
 def reset_all_employees_extra_time():
     Employee.objects.all().update(extra_hour=0.0)
     return None
+
+
+def extra_hour_limit(request):
+    today = date.today()
+    users = User.objects.filter(is_superuser=False)
+    released_hour = ReleasedHour.objects.filter(create_at__year=today.year, create_at__month=today.month, create_at__day=today.day).order_by('user','-create_at').distinct('user')
+    data = {
+        'users': users,
+        'released_hour': released_hour
+    }
+    return render(request, 'extra_hour_limit.html', data)
+
+
+def update_extra_hour_limit(request):
+    if request.method == 'POST':
+        released_hour = request.POST['time_released']
+        reason = request.POST['reason']
+        user = get_object_or_404(User, id=request.POST['user'])
+        hour = ReleasedHour(released_hour=released_hour, reason=reason, user=user, made_by=request.user.id,
+                            create_at=timezone.localtime(timezone.now()))
+        if hour.save:
+            hour.save()
+        return redirect('extra_hour_limit')

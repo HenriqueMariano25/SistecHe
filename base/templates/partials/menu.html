@@ -4,6 +4,8 @@
     <a href="{% url 'index' %}">Home</a>
     <a href="{% url 'employees' %}">Funcionários</a>
     <a href="{% url 'extra_hour' %}">Hora Extra</a>
+    <a href="{% url 'extra_hour_limit' %}">Limite de hora extra</a>
+
     {% if user.is_authenticated %}
         <a>Ola, {{ user.first_name }}</a>
         <a href="{% url 'logout' %}">Sair</a>

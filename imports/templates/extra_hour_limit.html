@@ -1,0 +1,51 @@
+<head>
+    <title>Importação|Funcionários</title>
+</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Limit</h1>
+    <table class="table">
+        <thead class="theadAF">
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Setor</th>
+            <th>Ultimo login</th>
+            <th>Tempo liberado</th>
+            <th>Motivo</th>
+            <th></th>
+            <th>Ultima alteração</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.userprofileinfo.sector.name }}</td>
+                <td>{{ user.last_login|date:'d/m/Y H:i' }}</td>
+                <form action="{% url 'update_extra_hour_limit' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="user" value="{{ user.id }}">
+                    {% for hour in released_hour %}
+                        {% if hour.user == user %}
+                            <td><input type="time" name="time_released" value="{{ hour.released_hour|date:'H:i' }}"></td>
+                            <td><input type="text" name="reason" value="{{ hour.reason }}"></td>
+                            <td><input type="submit" value="Salvar"></td>
+                            <td>{{ hour.create_at|date:'d/m/Y H:i' }} por
+                                {% for u in users %}
+                                    {% if u.id == hour.made_by %}
+                                        {{ u.first_name }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
