@@ -6,6 +6,8 @@ from django.contrib import auth
 import xlrd
 import pandas as pd
 from xlrd.timemachine import xrange
+import locale
+from datetime import datetime
 
 from base.models import SubSector, Employee, Sector, ImportHistory
 
@@ -15,7 +17,7 @@ def employees(request):
         employees = Employee.objects.all().order_by('name')
         import_history = ImportHistory.objects.filter(type="employees").last()
         if import_history:
-            import_history = import_history.created_at.strftime("%d/%m/%Y - %H:%M")
+            import_history = import_history.created_at
         if request.method == 'POST':
             search = request.POST['search']
             if 'search' in request.POST:
@@ -31,7 +33,7 @@ def employees(request):
 
 
 def update_employees(request):
-    import_history = ImportHistory(type="employees", made_by=request.user, created_at=timezone.now())
+    import_history = ImportHistory(type="employees", made_by=request.user, created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
     import_history.save()
     if request.method == 'POST':
         excel = request.FILES['excel']
@@ -82,9 +84,7 @@ def update_employees(request):
                                         admission_date=admission_date, manager=manager,
                                         leader_name=leader_name, sub_sector=subSector)
                     employee.save()
-        data = {'employees': Employee.objects.all().order_by('name'),
-                'sectors': Sector.objects.all()}
-        return render(request, 'employees.html', data)
+        return redirect('employees')
 
 
 def update_employees_leader(request):
@@ -120,13 +120,20 @@ def update_employees_sector(request):
 
 
 def extra_hour(request):
-    employees = Employee.objects.all().order_by('-extra_hour')
-    data = {'employees': employees}
-    return render(request, 'extra_hour.html',data)
+    if request.user.is_authenticated:
+        employees = Employee.objects.all().order_by('-extra_hour')
+        import_history = ImportHistory.objects.filter(type="extra_hour").last()
+        if import_history:
+            import_history = import_history.created_at
+
+        data = {'employees': employees,
+                'import_history': import_history,
+                'import_history_create_at': import_history}
+        return render(request, 'extra_hour.html', data)
 
 
 def update_extra_hour(request):
-    import_history = ImportHistory(type="extra_hour", made_by=request.user, created_at=timezone.now())
+    import_history = ImportHistory(type="extra_hour", made_by=request.user, created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
     import_history.save()
     if request.method == 'POST':
         excel = request.FILES['excel']
@@ -144,7 +151,4 @@ def update_extra_hour(request):
             employee.extra_hour = extra_hour
             if employee.save:
                 employee.save()
-                print(employee)
-        employees = Employee.objects.all().order_by('-extra_hour')
-        data = {'employees': employees}
-        return render(request, 'extra_hour.html', data)
+        return redirect('extra_hour')

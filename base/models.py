@@ -35,4 +35,4 @@ class Employee(models.Model):
 class ImportHistory(models.Model):
     type = models.CharField(max_length=50)
     made_by = models.ForeignKey(User, on_delete=models.PROTECT)
-    created_at = models.DateTimeField()
+    created_at = models.CharField(max_length=50)
