@@ -19,7 +19,8 @@ def employees(request):
         data = {'employees': employees,
                 'sectors': Sector.objects.all(),
                 'import_history': import_history,
-                'import_history_create_at':import_history.created_at.strftime("%d/%m/%Y - %H:%M")}
+                # 'import_history_create_at':import_history.created_at.strftime("%d/%m/%Y - %H:%M")
+        }
         return render(request, 'employees.html', data)
     else:
         return redirect('login')
