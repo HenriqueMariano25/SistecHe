@@ -126,7 +126,10 @@ def extra_hour(request):
         import_history = ImportHistory.objects.filter(type="extra_hour").last()
         if import_history:
             import_history = import_history.created_at
-
+        if request.method == "POST":
+            search = request.POST['search']
+            if 'search' in request.POST:
+                employees = employees.filter(name__icontains=search)
         data = {'employees': employees,
                 'import_history': import_history,
                 'import_history_create_at': import_history}

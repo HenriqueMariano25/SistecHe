@@ -11,7 +11,11 @@
         <input type="file" name="excel">
         <input type="submit">
     </form>
-
+    <form method="POST" action="{% url 'extra_hour' %}">
+        {% csrf_token %}
+        <input type="text" name="search">
+        <input type="submit">
+    </form>
     <form method="POST" action="{% url 'reset_extra_hours' %}">
         {% csrf_token %}
         <input type="submit" value="Zerar Hora Extra" >
