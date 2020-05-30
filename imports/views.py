@@ -3,14 +3,19 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
+import xlrd
 import pandas as pd
+from xlrd.timemachine import xrange
+
 from base.models import SubSector, Employee, Sector, ImportHistory
 
 
 def employees(request):
-    employees = Employee.objects.all().order_by('name')
-    import_history = ImportHistory.objects.filter(type="employees").last()
     if request.user.is_authenticated:
+        employees = Employee.objects.all().order_by('name')
+        import_history = ImportHistory.objects.filter(type="employees").last()
+        if import_history:
+            import_history = import_history.created_at.strftime("%d/%m/%Y - %H:%M")
         if request.method == 'POST':
             search = request.POST['search']
             if 'search' in request.POST:
@@ -19,7 +24,7 @@ def employees(request):
         data = {'employees': employees,
                 'sectors': Sector.objects.all(),
                 'import_history': import_history,
-                'import_history_create_at':import_history.created_at.strftime("%d/%m/%Y - %H:%M")}
+                'import_history_create_at':import_history}
         return render(request, 'employees.html', data)
     else:
         return redirect('login')
@@ -71,7 +76,7 @@ def update_employees(request):
                             employee.admission_date = admission_date
                             employee.manager = manager
                             employee.sub_sector = subSector
-
+                            employee.save()
                 else:
                     employee = Employee(name=name, occupation=occupation, registration=registration,
                                         admission_date=admission_date, manager=manager,
@@ -115,7 +120,31 @@ def update_employees_sector(request):
 
 
 def extra_hour(request):
-    employees = Employee.objects.all().order_by('name')
+    employees = Employee.objects.all().order_by('-extra_hour')
     data = {'employees': employees}
-
     return render(request, 'extra_hour.html',data)
+
+
+def update_extra_hour(request):
+    import_history = ImportHistory(type="extra_hour", made_by=request.user, created_at=timezone.now())
+    import_history.save()
+    if request.method == 'POST':
+        excel = request.FILES['excel']
+        workbook = xlrd.open_workbook(file_contents=excel.read())
+        sheet = workbook.sheet_by_index(1)
+        for row_num in xrange(sheet.nrows):
+            row = sheet.row_values(row_num)
+            if row[0] == "" or row[0] == "MATRICULA":
+                continue
+            registration = int(row[0])
+            extra_hour = round(row[4],1)
+            employee = Employee.objects.filter(registration=registration).first()
+            if not employee:
+                continue
+            employee.extra_hour = extra_hour
+            if employee.save:
+                employee.save()
+                print(employee)
+        employees = Employee.objects.all().order_by('-extra_hour')
+        data = {'employees': employees}
+        return render(request, 'extra_hour.html', data)

@@ -6,6 +6,11 @@
 
 {% block content %}
     <h1>Welcome to the import extra hours</h1>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'update_extra_hour' %}">
+        {% csrf_token %}
+        <input type="file" name="excel">
+        <input type="submit">
+    </form>
     {% if import_history %}
         <h2>Última Atualização: {{ import_history_create_at }} por {{ user.first_name }}</h2>
     {% endif %}
