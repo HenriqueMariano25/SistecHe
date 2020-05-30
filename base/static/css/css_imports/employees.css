@@ -1,4 +1,33 @@
-.checkE{
+.checkE {
     height: 20px;
     width: 20px;
+}
+
+input[type='file'] {
+    display: none
+}
+
+.input-wrapper label {
+    background-color: #00102f;
+    border: 2px solid #00102f;
+    border-radius: 5px;
+    color: #fff;
+    margin: 10px;
+    padding: 6px 20px;
+
+}
+
+.input-wrapper label:hover {
+    background-color: white;
+    border: 2px solid #00102f;
+    border-radius: 5px;
+    color:  #00102f;
+
+}
+.btnE{
+    width: 100px;
+}
+.navBgE{
+    background: #ededed;
+    border-radius: 5px;
 }

@@ -41,7 +41,7 @@ $(document).ready(function () {
             var csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
             var employee_registration = tr.querySelector("#employee_registration").textContent;
             console.log(employee_registration)
-        //     console.log($('input[name=csrfmiddlewaretoken]').val())
+            //     console.log($('input[name=csrfmiddlewaretoken]').val())
             ajax_effective_sector(csrf, id_sector, employee_registration);
         });
     });
