@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+.containerMargin{
+    margin-top: 100px;
+}
+.contLogin{
+    width: 100%;
+    max-width: 500px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.containerMax{
+    max-width: 480px;
+}
+.centered{
+    margin: 0 auto;
+    float: none;
+}
+.soonLogin{
+    width: 320px;
+    height: 165px;
+}
+.textLogin{
+    font-family: 'Righteous', cursive;
+    color: #00102f;
+}
