@@ -26,14 +26,15 @@ def employees(request):
         data = {'employees': employees,
                 'sectors': Sector.objects.all(),
                 'import_history': import_history,
-                'import_history_create_at':import_history}
+                'import_history_create_at': import_history}
         return render(request, 'employees.html', data)
     else:
         return redirect('login')
 
 
 def update_employees(request):
-    import_history = ImportHistory(type="employees", made_by=request.user, created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
+    import_history = ImportHistory(type="employees", made_by=request.user,
+                                   created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
     import_history.save()
     if request.method == 'POST':
         excel = request.FILES['excel']
@@ -70,15 +71,15 @@ def update_employees(request):
 
                 if not employee == None:
                     if not employee.name == name and employee.occupation == occupation and \
-                                employee.admission_date == admission_date and employee.manager == manager and \
-                                employee.leader_name == leader_name and employee.sub_sector == subSector:
-                            employee.name = name
-                            employee.occupation = occupation
-                            employee.leader_name = leader_name
-                            employee.admission_date = admission_date
-                            employee.manager = manager
-                            employee.sub_sector = subSector
-                            employee.save()
+                            employee.admission_date == admission_date and employee.manager == manager and \
+                            employee.leader_name == leader_name and employee.sub_sector == subSector:
+                        employee.name = name
+                        employee.occupation = occupation
+                        employee.leader_name = leader_name
+                        employee.admission_date = admission_date
+                        employee.manager = manager
+                        employee.sub_sector = subSector
+                        employee.save()
                 else:
                     employee = Employee(name=name, occupation=occupation, registration=registration,
                                         admission_date=admission_date, manager=manager,
@@ -133,7 +134,8 @@ def extra_hour(request):
 
 
 def update_extra_hour(request):
-    import_history = ImportHistory(type="extra_hour", made_by=request.user, created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
+    import_history = ImportHistory(type="extra_hour", made_by=request.user,
+                                   created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
     import_history.save()
     if request.method == 'POST':
         excel = request.FILES['excel']
@@ -144,7 +146,7 @@ def update_extra_hour(request):
             if row[0] == "" or row[0] == "MATRICULA":
                 continue
             registration = int(row[0])
-            extra_hour = round(row[4],1)
+            extra_hour = round(row[4], 1)
             employee = Employee.objects.filter(registration=registration).first()
             if not employee:
                 continue
@@ -152,3 +154,14 @@ def update_extra_hour(request):
             if employee.save:
                 employee.save()
         return redirect('extra_hour')
+
+
+def reset_extra_hours(request):
+    if request.method == 'POST':
+        reset_all_employees_extra_time()
+        return redirect('extra_hour')
+
+
+def reset_all_employees_extra_time():
+    Employee.objects.all().update(extra_hour=0.0)
+    return None
