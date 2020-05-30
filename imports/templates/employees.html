@@ -9,17 +9,29 @@
     <div class="divAll">
         <h1 class="text-center textTitleAll"><strong>IMPORTAR EFETIVO | AG</strong></h1>
 
-        <form method="POST" enctype="multipart/form-data" action="{% url 'update_employees' %}">
-            {% csrf_token %}
-            <input type="file" name="excel">
-            <input type="submit">
-        </form>
+        <nav class="navbar navbar-expand-lg navbar-dark mt-5 bg-light">
+            <div class="col-6">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'update_employees' %}">
+                    {% csrf_token %}
+                    <input type="file" name="excel">
+                    <input type="submit">
+                </form>
+            </div>
+            <div class="col-6">
+                <form method="POST" action="{% url 'employees' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div>
+                            <input class="form-control mr-sm-2" type="text" name="search">
+                        </div>
+                        <div class="ml-1">
+                            <input class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </nav>
 
-        <form method="POST" action="{% url 'employees' %}">
-            {% csrf_token %}
-            <input type="text" name="search">
-            <input type="submit">
-        </form>
         {% if import_history %}
             <h2>Última Atualização: {{ import_history_create_at }} por {{ user.first_name }}</h2>
         {% endif %}
@@ -51,11 +63,12 @@
                     <td>{{ employee.occupation }}</td>
                     <td>{{ employee.leader_name }}</td>
                     <td>{{ employee.sub_sector.name }}</td>
-                    <td><select name="selected_sector" id="selected_sector" class="form-control selected_sector" value="1">
+                    <td><select name="selected_sector" id="selected_sector" class="form-control selected_sector"
+                                value="1">
                         <option value="0">Selecione um setor</option>
                         {% for sector in sectors %}
                             {% if sector.id == employee.sector.id %}
-                                <option value="{{ sector.id }}"selected="selected">{{ sector.name }}</option>
+                                <option value="{{ sector.id }}" selected="selected">{{ sector.name }}</option>
                             {% else %}
                                 <option value="{{ sector.id }}">{{ sector.name }}</option>
                             {% endif %}
