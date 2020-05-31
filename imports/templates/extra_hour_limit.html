@@ -6,6 +6,12 @@
 
 {% block content %}
     <h1>Limit</h1>
+    <form method="POST" action="{% url 'extra_hour_limit' %}">
+        {% csrf_token %}
+        <input type="text" name="search">
+        <input type="submit">
+    </form>
+
     <table class="table">
         <thead class="theadAF">
         <tr>

@@ -174,6 +174,11 @@ def extra_hour_limit(request):
     released_hour = ReleasedHour.objects.filter(create_at__year=today.year, create_at__month=today.month,
                                                 create_at__day=today.day).order_by('user', '-create_at').distinct(
         'user')
+    if request.method == "POST":
+        search = request.POST['search']
+        if 'search' in request.POST:
+            users = users.filter(username__icontains=search)
+
     data = {
         'users': users,
         'released_hour': released_hour
