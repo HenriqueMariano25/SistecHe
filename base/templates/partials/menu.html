@@ -1,16 +1,65 @@
 {% load static %}
+<nav class="navbar navbar-fixed-width navbar-expand-lg navbar-dark menu" style="background-color: #00102f">
+    <div class="container-fluid" style="list-style-type: none;">
 
-<div>
-    <a href="{% url 'index' %}">Home</a>
-    <a href="{% url 'employees' %}">Funcionários</a>
-    <a href="{% url 'extra_hour' %}">Hora Extra</a>
-    <a href="{% url 'extra_hour_limit' %}">Limite de hora extra</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="ml-5">
+            <a class="navbar-brand " href="{% url 'index' %}">
+                <img src="{% static 'img/logo.jpg' %}" class="soon align-top navbar-brand d-inline-block">
+            </a>
+        </div>
 
-    {% if user.is_authenticated %}
-        <a>Ola, {{ user.first_name }}</a>
-        <a href="{% url 'logout' %}">Sair</a>
-    {% else %}
-        <a href="{% url 'login' %}">Login</a>
-    {% endif %}
+        <div class="collapse navbar-collapse ml-5" id="navbarNavDropdown">
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown navFont">
+                        <a href="#" class="nav-link dropdown-toggle" id="navbarNavDropdown" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Relatório
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item navFont" href="{% url 'index' %}">Relatório por Turno | AG</a>
+                            <a class="dropdown-item navFont" href="{% url 'index' %}">Relatório por Líder | AG</a>
+                        </div>
+                    </li>
 
-</div>
+                    <li class="nav-item dropdown navFont">
+                        <a href="#" class="nav-link dropdown-toggle" id="marcacaoDrop" data-toggle="dropdown">Agendamento</a>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item navFont" href="{% url 'index' %}">Agendar Colaboradores | AG</a>
+                            <a class="dropdown-item navFont" href="{% url 'index' %}">Editar Agendados | AG</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown navFont">
+                        <a href="" class="nav-link dropdown-toggle" id="marcacaoDrop"
+                           data-toggle="dropdown">Importação</a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'employees' %}" class="dropdown-item navFont">Importar Efetivo | AG</a>
+                            <a href="{% url 'extra_hour' %}" class="dropdown-item navFont">Importar Hora Extra | AG</a>
+                            <a href="{% url 'extra_hour_limit' %}" class="dropdown-item navFont">Configurar Hora Limite</a>
+                        </div>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav mr-5">
+                    <li class="nav-item dropdown navFont">
+                        <a href="" class="nav-link dropdown-toggle" id="marcacaoDrop"
+                           data-toggle="dropdown">Ola,{{user.first_name}}</a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'index' %}" class="dropdown-item navFont">Alterar Senha</a>
+                            <a href="{% url 'logout' %}" class="dropdown-item navFont">Sair</a>
+                        </div>
+                    </li>
+                </ul>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

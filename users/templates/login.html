@@ -2,13 +2,28 @@
 {% load static %}
 
 {% block content %}
-    <h1>Login</h1>
-    <form action="{% url 'login' %}" method="POST">
-        {% csrf_token %}
-        <label for="login"><b>Email</b></label>
-        <input type="text" id="login" name="login" placeholder="Entre com o login cadastrado" required>
-        <label for="password"><b>Senha</b></label>
-        <input id="password" type="password"  name="password" placeholder="Digite aqui sua senha" required>
-        <button class="btn btn-success" type="submit">Entrar</button>
-    </form>
+    <body class="text-center">
+    <div class="containerMargin">
+        <div class="container-fluid contLogin">
+            <img src="{% static 'img/logocoa3.png' %}" class="soonLogin">
+            <div class="containerMax centered mt-1 p-3">
+                    <h2 class="text-center textLogin">SISTEC_HE</h2>
+                    <form action="{% url 'login' %}" method="POST">
+                        <div class="mb-3">
+                            {% csrf_token %}
+                            <label for="login"></label>
+                            <input type="text" id="login" class="form-control" name="login"
+                                   placeholder="Insira o Nome de Usuário" required>
+                            <label for="password"></label>
+                            <input id="password" type="password" class="form-control" name="password"
+                                   placeholder="Insira a senha" required>
+                            <div class="mt-4">
+                                <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+    </body>
 {% endblock %}

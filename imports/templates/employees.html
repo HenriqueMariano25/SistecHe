@@ -5,63 +5,96 @@
 {% load static %}
 
 {% block content %}
-    <h1>Welcome to the import effective</h1>
-    <form method="POST" enctype="multipart/form-data" action="{% url 'update_employees' %}">
-        {% csrf_token %}
-        <input type="file" name="excel">
-        <input type="submit">
-    </form>
-    <form method="POST" action="{% url 'employees' %}">
-        {% csrf_token %}
-        <input type="text" name="search">
-        <input type="submit">
-    </form>
-    {% if import_history %}
-        <h2>Última Atualização: {{ import_history.created_at }} por {{ import_history.made_by.first_name }}</h2>
-    {% endif %}
-    <table id="tabelaEfetivo" class="table border border-dark">
-        <thead class="theadAF">
-        <tr>
-            <th scope="col">Líder</th>
-            <th scope="col">Matricula</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Função</th>
-            <th scope="col">Líder</th>
-            <th scope="col">Disciplina</th>
-            <th scope="col">Setor</th>
-        </tr>
-        </thead>
-        <tbody>
-'           {% csrf_token %}
-        {% for employee in employees %}
+    <body style="background: #F5F5F5">
+    <div class="divAll">
+        <h1 class="text-center textTitleAll"><strong>IMPORTAR EFETIVO | AG</strong></h1>
 
-            <tr class="tr-employee">
-                {% if employee.leader == True %}
-                    <td><input class="leader checkE" type="checkbox" value="{{ employee.registration }}"
-                               name="checks[leader]" id="check_leader" checked></td>
-                {% else %}
-                    <td><input class="leader checkE" type="checkbox" value="{{ employee.registration }}"
-                               name="checks[leader]" id="check_leader"></td>
-                {% endif %}
-                <td id="employee_registration" class="registration">{{ employee.registration }}</td>
-                <td >{{ employee.name }}</td>
-                <td>{{ employee.occupation }}</td>
-                <td>{{ employee.leader_name }}</td>
-                <td>{{ employee.sub_sector.name }}</td>
-                <td><select name="selected_sector" id="selected_sector" class="selected_sector" value="1">
-                    <option value="0">Selecione um setor</option>
-                    {% for sector in sectors %}
-                        {%  if sector.id == employee.sector.id %}
-                            <option value="{{ sector.id }}" selected="selected">{{ sector.name }}</option>
-                        {% else %}
-                            <option value="{{ sector.id }}">{{ sector.name }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select></td>
+        <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
+            <div class="col-6 pt-3">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'update_employees' %}">
+                    {% csrf_token %}
+                    <div class='input-wrapper '>
+                        <label for='input-file'>
+                            Selecionar um arquivo
+                        </label>
+                        <input id='input-file' type='file' name='excel' value=''/>
+                        <span id='file-name'></span>
+                        <input type="submit" class="btn btn-primary btnE">
+                    </div>
+                </form>
+            </div>
+            <div class="col-6 pt-3">
+                <form method="POST" action="{% url 'employees' %}">
+                    {% csrf_token %}
+                    <div class="row justify-content-end">
+                        <div>
+                            <input class="form-control mr-sm-2" type="text" name="search">
+                        </div>
+                        <div class="ml-1">
+                            <input class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </nav>
+
+        {% if import_history %}
+            <h2>Última Atualização: {{ import_history.created_at }} por {{ import_history.made_by.first_name }}</h2>
+        {% endif %}
+        <table id="tabelaEfetivo" class="table border border-dark">
+            <thead class="theadAll">
+            <tr>
+                <th scope="col">Líder</th>
+                <th scope="col">Matricula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Função</th>
+                <th scope="col">Líder</th>
+                <th scope="col">Disciplina</th>
+                <th scope="col">Setor</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
+            </thead>
+            <tbody>
+            {% csrf_token %}
+            {% for employee in employees %}
+                <tr class="tr-employee">
+                    {% if employee.leader == True %}
+                        <td><input class="leader checkE" type="checkbox" value="{{ employee.registration }}"
+                                   name="checks[leader]" id="check_leader" checked></td>
+                    {% else %}
+                        <td><input class="leader checkE" type="checkbox" value="{{ employee.registration }}"
+                                   name="checks[leader]" id="check_leader"></td>
+                    {% endif %}
+                    <td id="employee_registration" class="registration">{{ employee.registration }}</td>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.occupation }}</td>
+                    <td>{{ employee.leader_name }}</td>
+                    <td>{{ employee.sub_sector.name }}</td>
+                    <td><select name="selected_sector" id="selected_sector" class="form-control selected_sector"
+                                value="1">
+                        <option value="0">Selecione um setor</option>
+                        {% for sector in sectors %}
+                            {% if sector.id == employee.sector.id %}
+                                <option value="{{ sector.id }}" selected="selected">{{ sector.name }}</option>
+                            {% else %}
+                                <option value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </body>
+    <script>
+     var $input = document.getElementById('input-file'),
+        $fileName = document.getElementById('file-name');
 
+    $input.addEventListener('change', function () {
+        $fileName.textContent = this.value;
+        console.log($input);
+    });
+</script>
+
+{% endblock %}
 
