@@ -17,7 +17,7 @@
         <input type="submit">
     </form>
     {% if import_history %}
-        <h2>Última Atualização: {{ import_history_create_at }} por {{ user.first_name }}</h2>
+        <h2>Última Atualização: {{ import_history.created_at }} por {{ import_history.made_by.first_name }}</h2>
     {% endif %}
     <table id="tabelaEfetivo" class="table border border-dark">
         <thead class="theadAF">

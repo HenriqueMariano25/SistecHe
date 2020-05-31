@@ -11,4 +11,5 @@ urlpatterns = [
     path('hora_extra/zerar_hora_extra', views.reset_extra_hours, name='reset_extra_hours'),
     path('limite_hora_extra', views.extra_hour_limit, name='extra_hour_limit'),
     path('limite_hora_extra/atualizar', views.update_extra_hour_limit, name='update_extra_hour_limit'),
+    path('hora_extra/limit_hora_extra_por_mes', views.update_extra_hour_month, name='update_extra_hour_month'),
 ]

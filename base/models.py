@@ -52,7 +52,13 @@ class UserProfileInfo(models.Model):
 
 class ReleasedHour(models.Model):
     released_hour = models.TimeField()
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     reason = models.CharField(max_length=150)
     made_by = models.IntegerField()
+    create_at = models.DateTimeField()
+
+
+class LimitHour(models.Model):
+    hours = models.FloatField()
+    made_by = models.ForeignKey(User, on_delete=models.PROTECT)
     create_at = models.DateTimeField()

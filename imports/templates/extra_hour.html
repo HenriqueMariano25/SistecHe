@@ -16,12 +16,18 @@
         <input type="text" name="search">
         <input type="submit">
     </form>
+    <form method="POST" action="{% url 'update_extra_hour_month' %}">
+        {% csrf_token %}
+        <label>Limite de hora extra no mês</label>
+        <input type="text" name="hours" value="{{ limit_hour.hours }}">
+        <input type="submit">
+    </form>
     <form method="POST" action="{% url 'reset_extra_hours' %}">
         {% csrf_token %}
         <input type="submit" value="Zerar Hora Extra" >
     </form>
     {% if import_history %}
-        <h2>Última Atualização: {{ import_history_create_at }} por {{ user.first_name }}</h2>
+        <h2>Última Atualização: {{ import_history.created_at }} por {{ import_history.made_by.first_name }}</h2>
     {% endif %}
     <table id="tableExtraHours" class="table border border-dark">
         <thead class="theadAF">

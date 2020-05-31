@@ -9,15 +9,13 @@ from xlrd.timemachine import xrange
 import locale
 from datetime import datetime, date
 
-from base.models import SubSector, Employee, Sector, ImportHistory, ReleasedHour
+from base.models import SubSector, Employee, Sector, ImportHistory, ReleasedHour, LimitHour
 
 
 def employees(request):
     if request.user.is_authenticated:
         employees = Employee.objects.all().order_by('name')
         import_history = ImportHistory.objects.filter(type="employees").last()
-        if import_history:
-            import_history = import_history.created_at
         if request.method == 'POST':
             search = request.POST['search']
             if 'search' in request.POST:
@@ -25,8 +23,8 @@ def employees(request):
 
         data = {'employees': employees,
                 'sectors': Sector.objects.all(),
-                'import_history': import_history,
-                'import_history_create_at': import_history}
+                'import_history': import_history
+                }
         return render(request, 'employees.html', data)
     else:
         return redirect('login')
@@ -124,15 +122,15 @@ def extra_hour(request):
     if request.user.is_authenticated:
         employees = Employee.objects.all().order_by('-extra_hour')
         import_history = ImportHistory.objects.filter(type="extra_hour").last()
-        if import_history:
-            import_history = import_history.created_at
+        limit_hour = LimitHour.objects.last()
         if request.method == "POST":
             search = request.POST['search']
             if 'search' in request.POST:
                 employees = employees.filter(name__icontains=search)
         data = {'employees': employees,
                 'import_history': import_history,
-                'import_history_create_at': import_history}
+                'limit_hour': limit_hour,
+                }
         return render(request, 'extra_hour.html', data)
 
 
@@ -173,7 +171,9 @@ def reset_all_employees_extra_time():
 def extra_hour_limit(request):
     today = date.today()
     users = User.objects.filter(is_superuser=False)
-    released_hour = ReleasedHour.objects.filter(create_at__year=today.year, create_at__month=today.month, create_at__day=today.day).order_by('user','-create_at').distinct('user')
+    released_hour = ReleasedHour.objects.filter(create_at__year=today.year, create_at__month=today.month,
+                                                create_at__day=today.day).order_by('user', '-create_at').distinct(
+        'user')
     data = {
         'users': users,
         'released_hour': released_hour
@@ -191,3 +191,12 @@ def update_extra_hour_limit(request):
         if hour.save:
             hour.save()
         return redirect('extra_hour_limit')
+
+
+def update_extra_hour_month(request):
+    if request.method == "POST":
+        hours = request.POST['hours']
+        limit = LimitHour(hours=hours, made_by=request.user, create_at=timezone.localtime(timezone.now()))
+        if limit.save:
+            limit.save()
+        return redirect('extra_hour')
