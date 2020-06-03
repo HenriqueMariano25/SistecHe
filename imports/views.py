@@ -169,8 +169,21 @@ def reset_all_employees_extra_time():
 
 
 def extra_hour_limit(request):
+    print(User.objects.all())
     today = date.today()
-    users = User.objects.filter(is_superuser=False)
+    teste = User.objects.prefetch_related('releasedhours').filter(is_superuser=False)
+    for tes in teste:
+        print(tes.releasedhours.filter(create_at__year=today.year, create_at__month=today.month,
+                                       create_at__day=today.day).order_by('user', '-create_at').distinct(
+            'user'))
+
+    users = User.objects.prefetch_related('releasedhours').filter(is_superuser=False)
+                                                                  # releasedhours__create_at__year=today.year,
+                                                                  # releasedhours__create_at__month=today.month,
+                                                                  # releasedhours__create_at__day=today.day)
+    for user in users:
+        print(user.releasedhours.last())
+
     released_hour = ReleasedHour.objects.filter(create_at__year=today.year, create_at__month=today.month,
                                                 create_at__day=today.day).order_by('user', '-create_at').distinct(
         'user')
@@ -191,7 +204,7 @@ def update_extra_hour_limit(request):
         released_hour = request.POST['time_released']
         reason = request.POST['reason']
         user = get_object_or_404(User, id=request.POST['user'])
-        hour = ReleasedHour(released_hour=released_hour, reason=reason, user=user, made_by=request.user.id,
+        hour = ReleasedHour(released_hour=released_hour, reason=reason, user=user, made_by=request.user.username,
                             create_at=timezone.localtime(timezone.now()))
         if hour.save:
             hour.save()

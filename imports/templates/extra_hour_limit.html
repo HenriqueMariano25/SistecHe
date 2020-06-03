@@ -35,20 +35,39 @@
                 <form action="{% url 'update_extra_hour_limit' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="user" value="{{ user.id }}">
-                    {% for hour in released_hour %}
-                        {% if hour.user == user %}
-                            <td><input type="time" name="time_released" value="{{ hour.released_hour|date:'H:i' }}"></td>
-                            <td><input type="text" name="reason" value="{{ hour.reason }}"></td>
-                            <td><input type="submit" value="Salvar"></td>
-                            <td>{{ hour.create_at|date:'d/m/Y H:i' }} por
-                                {% for u in users %}
-                                    {% if u.id == hour.made_by %}
-                                        {{ u.first_name }}
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                        {% endif %}
-                    {% endfor %}
+                    {#                    {% if released_hour != None %}#}
+                    {#                        {% for hour in released_hour %}#}
+                    {#                            {% if hour.user == user %}#}
+                    {#                                <td><input type="time" name="time_released" value="{{ hour.released_hour|date:'H:i' }}">#}
+                    {#                                </td>#}
+                    {#                                <td><input type="text" name="reason" value="{{ hour.reason }}"></td>#}
+                    {#                                <td><input type="submit" value="Salvar"></td>#}
+                    {#                                <td>{{ hour.create_at|date:'d/m/Y H:i' }} por#}
+                    {#                                    {% for u in users %}#}
+                    {#                                        {% if u.id == hour.made_by %}#}
+                    {#                                            {{ u.first_name }}#}
+                    {#                                        {% endif %}#}
+                    {#                                    {% endfor %}#}
+                    {#                                </td>#}
+                    {#                            {% else %}#}
+                    {#                                <td><input type="time" name="time_released"></td>#}
+                    {#                                <td><input type="text" name="reason"></td>#}
+                    {#                                <td><input type="submit" value="Salvar"></td>#}
+                    {#                            {% endif %}#}
+                    {#                        {% endfor %}#}
+                    {#                    {% else %}#}
+                    <td><input type="time" name="time_released"
+                               value="{{ user.releasedhours.last.released_hour|date:'H:i' }}">
+                    </td>
+                    <td><input type="text" name="reason" value="{{ user.releasedhours.last.reason }}"></td>
+                    <td><input type="submit" value="Salvar"></td>
+                    {% if user.releasedhours.last %}
+                    <td>{{ user.releasedhours.last.create_at|date:'d/m/Y H:i' }}
+                        por {{ user.releasedhours.last.made_by }}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+
                 </form>
             </tr>
         {% endfor %}
