@@ -12,9 +12,7 @@ def scheduling_employees(request):
     print(Scheduling.objects.all())
     leaders = Employee.objects.filter(leader=True, sector=request.user.userprofileinfo.sector)
     shifts = Shift.objects.all()
-
     data = {"leaders": leaders, "shifts": shifts}
-
     return render(request, 'scheduling_employees.html', data)
 
 
@@ -35,7 +33,6 @@ def selected_leader(request):
 
 
 def finalize_employee_scheduling(request):
-
     print(request.POST)
     scheduling_date = request.POST['scheduling_date']
     reason = request.POST['reason']
@@ -57,3 +54,39 @@ def finalize_employee_scheduling(request):
             emplo_sched.save()
     messages.success(request, "Agendamento realizado com sucesso")
     return redirect('scheduling_employees')
+
+
+def search_employee_scheduling(request):
+    search = request.GET['search']
+    if 'search' in request.GET:
+        employees = Employee.objects.filter(name__icontains=search, sector=request.user.userprofileinfo.sector)
+        print(employees)
+        leaders_res = []
+        leaders_burst_res = []
+        employees_res = []
+        employees_burst_res = []
+        for employee in employees:
+            employees_json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
+                            occupation=employee.occupation, extra_hour=employee.extra_hour,
+                            leader_name=employee.leader_name)
+
+            leader = Employee.objects.get(name=employee.leader_name)
+            leader_json_obj = dict(name=leader.name)
+
+            print(employee.extra_hour)
+
+            if employee.extra_hour + 7.30 > 24.0:
+                employees_burst_res.append(employees_json_obj)
+                if not leader_json_obj in leaders_burst_res:
+                    leaders_burst_res.append(leader_json_obj)
+            else:
+                employees_res.append(employees_json_obj)
+                if not leader_json_obj in leaders_res:
+                    leaders_res.append(leader_json_obj)
+
+        data = {'leaders': leaders_res,
+                'employees': employees_res,
+                'employees_burst': employees_burst_res,
+                'leaders_burst': leaders_burst_res,}
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
