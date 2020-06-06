@@ -5,33 +5,34 @@
 {% load static %}
 
 {% block content %}
-    <h1>Agendar funcionario</h1>
-    <h1>Lider</h1>
-    <p id="leader_name"></p>
-    <h1>Função</h1>
-    <p id="leader_occupation"></p>
-    <select id="select_leader_scheduling">
-        <option value="0">Selecione um lider</option>
-        {% for leader in leaders %}
-            <option value="{{ leader.id }}">{{ leader.name }}</option>
-        {% endfor %}
-    </select>
-    <p>ou</p>
-    <div class="">
-        <input type="text" name="seach_employee">
-        <input type="submit" id="submit_search_employee">
-    </div>
-    {% include 'partials/_alerts.html' %}
-    <form id="scheduling_employees" action="{% url 'finalize_employee_scheduling' %}" method="post">
-        {% csrf_token %}
-        <input type="date" name="scheduling_date">
-        <select name="shift">
-            <option>Selecione um turno</option>
-            {% for shift in shifts %}
-                <option value="{{ shift.id }}">{{ shift.name }}</option>
-            {% endfor %}
-        </select>
-        <input type="text" name="reason">
+    <body style="background: #F5F5F5">
+    <div class="divAll">
+        <h1 class="text-center textTitleAll"><strong>AGENDAMENTO DE HORA EXTRA | AG</strong></h1>
+        <!-- <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgH"> -->
+            <select id="select_leader_scheduling">
+                <option value="0">Selecione um lider</option>
+                {% for leader in leaders %}
+                    <option value="{{ leader.id }}">{{ leader.name }}</option>
+                {% endfor %}
+            </select>
+            <p>ou</p>
+            <div class="">
+                <input type="text" name="seach_employee">
+                <input type="submit" id="submit_search_employee">
+            </div>
+            {% include 'partials/_alerts.html' %}
+            <form id="scheduling_employees" action="{% url 'finalize_employee_scheduling' %}" method="post">
+                {% csrf_token %}
+                <input type="date" name="scheduling_date">
+                <select name="shift">
+                    <option>Selecione um turno</option>
+                    {% for shift in shifts %}
+                        <option value="{{ shift.id }}">{{ shift.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="reason">
+
+        <!-- </nav> -->
 
         <table id="table_funcionario_lider" class="table ">
             <thead class="theadAF">
@@ -47,7 +48,7 @@
 
             </tbody>
         </table>
-    <div class="float-right mb-lg-5">
+        <div class="float-right mb-lg-5">
             <input type="submit" value="Agendar" class="btn btn-success">
         </div>
     </form>
@@ -65,7 +66,9 @@
 {#            <tbody id="tbody_he_estourada" class="text-light rowNegados">#}
             <tbody id="tbody_he_estourada" class=" rowNegados">
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
+    </body>
 {% endblock %}
