@@ -22,7 +22,7 @@ $("#select_leader_scheduling").change(function () {
                 check_box.setAttribute("type", "checkbox");
                 check_box.setAttribute("value", data['employees'][i]['registration']);
                 check_box.setAttribute("name", "registrations");
-                check_box.setAttribute("class", "check_employee");
+                check_box.setAttribute("class", "check_employee checkS");
                 // check_box.setAttribute("onclick", "teste()");
 
                 agendarTd.appendChild(check_box);
@@ -88,6 +88,7 @@ $('#submit_search_employee').click(function () {
 function add_employees_leader_table(leaders, employees,table) {
     for (var x = 0; x < leaders.length; x++) {
         var leaderTr = document.createElement("tr")
+        leaderTr.setAttribute("class","leaderNotS")
         nameLeaderTd = document.createElement("td")
         nameLeaderTd.setAttribute("width", "100%")
         nameLeaderTd.setAttribute("colspan", 5)
@@ -101,19 +102,19 @@ function add_employees_leader_table(leaders, employees,table) {
                 const employeeTr = document.createElement("tr");
                 const schedulingTd = document.createElement("td");
                 const registrationTd = document.createElement("td");
-                registrationTd.setAttribute("class", "registration");
+                registrationTd.setAttribute("class", "registration pt-3");
                 var nameTd = document.createElement("td");
-                nameTd.setAttribute("class", "name")
+                nameTd.setAttribute("class", "name pt-3")
                 const occupationTd = document.createElement("td");
-                occupationTd.setAttribute("class", "occupation");
+                occupationTd.setAttribute("class", "occupation pt-3");
                 const accumuledHourTd = document.createElement("td");
-                accumuledHourTd.setAttribute("class", "accumuled_hour");
+                accumuledHourTd.setAttribute("class", "accumuled_hour pt-3 TESTE444");
 
                 const check_box = document.createElement("input");
                 check_box.setAttribute("type", "checkbox");
                 check_box.setAttribute("value", employees[i]['registration']);
                 check_box.setAttribute("name", "registrations");
-                check_box.setAttribute("class", "check_employee");
+                check_box.setAttribute("class", "check_employee checkS");
 
                 schedulingTd.appendChild(check_box);
                 registrationTd.textContent = employees[i]['registration'];
