@@ -62,3 +62,22 @@ class LimitHour(models.Model):
     hours = models.FloatField()
     made_by = models.ForeignKey(User, on_delete=models.PROTECT)
     create_at = models.DateTimeField()
+
+
+class Shift(models.Model):
+    name = models.CharField(max_length=50)
+    start_time = models.TimeField()
+    final_time = models.TimeField()
+    duration = models.FloatField()
+
+class Scheduling(models.Model):
+    date = models.DateField(null=False,blank=False)
+    reason = models.CharField(max_length=200,null=False,blank=False)
+    shift = models.ForeignKey(Shift, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    sector = models.ForeignKey(Sector, on_delete=models.PROTECT)
+
+class Emplo_Schedu(models.Model):
+    employee = models.ForeignKey(User, on_delete=models.PROTECT)
+    scheduling = models.ForeignKey(Scheduling, on_delete=models.PROTECT)
+    plus_he = models.FloatField(default=0.0)

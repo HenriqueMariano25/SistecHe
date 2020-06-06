@@ -17,21 +17,6 @@ $(document).ready(function () {
             },
         });
     });
-    // $('.selected_sector').change(function () {
-    //     id_sector = $(this).val();
-    //     if (id_sector !== "0") {
-    //         $.ajax({
-    //             url: 'setor',
-    //             data: {
-    //                 'sector': id_sector,
-    //             },
-    //             dataType: 'json',
-    //             success: function (data) {
-    //             },
-    //         });
-    //     }
-    //     alert(id_sector);
-    // });
 
     var allTrs = document.querySelectorAll('.tr-employee');
     allTrs.forEach(function (tr) {
@@ -40,8 +25,6 @@ $(document).ready(function () {
             var id_sector = tr.querySelector("#selected_sector").value;
             var csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
             var employee_registration = tr.querySelector("#employee_registration").textContent;
-            console.log(employee_registration)
-            //     console.log($('input[name=csrfmiddlewaretoken]').val())
             ajax_effective_sector(csrf, id_sector, employee_registration);
         });
     });
@@ -64,6 +47,4 @@ $(document).ready(function () {
             }
         });
     }
-
-
 });

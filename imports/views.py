@@ -6,7 +6,6 @@ from django.contrib import auth
 import xlrd
 import pandas as pd
 from xlrd.timemachine import xrange
-import locale
 from datetime import datetime, date
 
 from base.models import SubSector, Employee, Sector, ImportHistory, ReleasedHour, LimitHour
@@ -169,20 +168,11 @@ def reset_all_employees_extra_time():
 
 
 def extra_hour_limit(request):
-    print(User.objects.all())
     today = date.today()
-    teste = User.objects.prefetch_related('releasedhours').filter(is_superuser=False)
-    for tes in teste:
-        print(tes.releasedhours.filter(create_at__year=today.year, create_at__month=today.month,
-                                       create_at__day=today.day).order_by('user', '-create_at').distinct(
-            'user'))
-
     users = User.objects.prefetch_related('releasedhours').filter(is_superuser=False)
                                                                   # releasedhours__create_at__year=today.year,
                                                                   # releasedhours__create_at__month=today.month,
                                                                   # releasedhours__create_at__day=today.day)
-    for user in users:
-        print(user.releasedhours.last())
 
     released_hour = ReleasedHour.objects.filter(create_at__year=today.year, create_at__month=today.month,
                                                 create_at__day=today.day).order_by('user', '-create_at').distinct(
