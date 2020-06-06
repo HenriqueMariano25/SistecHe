@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-6 row ">
                         <div class="col">
-                            <input type="text" class="form-control" value="Nome do lider" name="seach_employee">
+                            <input type="text" class="form-control" placeholder="Nome do Funcionário" value="" name="seach_employee">
                         </div>
                         <div class="col">
                             <input type="submit" class="btn  btn-outline-success my-2 my-sm-0" value="Procurar"
@@ -39,7 +39,7 @@
         </div>
         {% include 'partials/_alerts.html' %}
 
-        <form id="scheduling_employees" action="{% url 'finalize_employee_scheduling' %}" method="post">
+        <form id="scheduling_employees" class="pb-2" action="{% url 'finalize_employee_scheduling' %}" method="post">
             {% csrf_token %}
             <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 ">
                 <div class="container">
@@ -59,28 +59,30 @@
                     </div>
                 </div>
             </nav>
-            <table id="table_funcionario_lider" class="table ">
-                <thead class="theadAF">
+            <h1 class="text-center mt-5 mb-3 textOkS">Habilitados para Agendamento</h1>
+            <table id="table_funcionario_lider" class="table border border-dark">
+                <thead class="theadAll">
                 <tr>
-                    <td scope="col"><input type="checkbox" id="select_all">Agendar</td>
-                    <td scope="col">Matrícula</td>
-                    <td scope="col">Nome</td>
-                    <td scope="col">Função</td>
-                    <td scope="col">Hora Acumulada</td>
+                    <td scope="col"><input type="checkbox" class="checkS" id="select_all"></td>
+                    <td class="pt-3" scope="col">Matrícula</td>
+                    <td class="pt-3" scope="col">Nome</td>
+                    <td class="pt-3" scope="col">Função</td>
+                    <td class="pt-3" scope="col">Hora Acumulada</td>
                 </tr>
                 </thead>
                 <tbody id="tbody_funcionario_lider">
 
                 </tbody>
             </table>
-            <div class="float-right mb-lg-5">
-                <input type="submit" value="Agendar" class="btn btn-success">
+            <div class="float-right mb-5">
+                <input type="submit" value="Agendar" style="font-size: 25px" class="btnSche btn btn-success ">
             </div>
         </form>
+        <h1 class=" text-center mt-5 mb-3 textNotS">Agendamento não Permitido</h1>
         <div id="he_estourada">
-            <h4 class="text-center mt-lg-5 mb-lg-3 fontTitleA">Agendamento não Permitido</h4>
+
             <table id="table_he_estourada" class="table border border-dark">
-                <thead class="theadAF">
+                <thead class="theadAll">
                 <tr>
                     <td scope="col">Matrícula</td>
                     <td scope="col">Nome</td>
@@ -89,7 +91,7 @@
                 </tr>
                 </thead>
                 {#            <tbody id="tbody_he_estourada" class="text-light rowNegados">#}
-                <tbody id="tbody_he_estourada" class=" rowNegados">
+                <tbody id="tbody_he_estourada" class="RowNotS border border-dark">
 
                 </tbody>
             </table>
