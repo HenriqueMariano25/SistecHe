@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'start',
     'base',
     'users',
-    'scheduling'
+    'scheduling',
+    'report',
 ]
 
 MIDDLEWARE = [

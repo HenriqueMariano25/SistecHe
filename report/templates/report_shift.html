@@ -1,0 +1,19 @@
+<head>
+    <title>Agendamento|Funcionários</title>
+</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Relatório por turno|AG</h1>
+    <form action="{% url 'report_shift' %}" method="get">
+        <input type="date" name="date">
+        <select name="shift">
+            <option>Selecione um turno</option>
+            {% for shift in shifts %}
+                <option value="{{ shift.id }}">{{ shift.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="visualizar">
+    </form>
+{% endblock %}
