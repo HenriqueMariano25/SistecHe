@@ -21,45 +21,36 @@
         <input type="text" name="seach_employee" onclick="teste()">
         <input type="submit">
     </form>
+    {% include 'partials/_alerts.html' %}
     <form id="scheduling_employees" action="{% url 'finalize_employee_scheduling' %}" method="post">
         {% csrf_token %}
-        <input type="date" name="scheduling_date" required>
-        <select name="">
+        <input type="date" name="scheduling_date">
+        <select name="shift">
             <option>Selecione um turno</option>
             {% for shift in shifts %}
                 <option value="{{ shift.id }}">{{ shift.name }}</option>
             {% endfor %}
         </select>
         <input type="text" name="reason">
+
+        <table id="table_funcionario_lider" class="table ">
+            <thead class="theadAF">
+            <tr>
+                <td scope="col">Agendar</td>
+                <td scope="col">Matrícula</td>
+                <td scope="col">Nome</td>
+                <td scope="col">Função</td>
+                <td scope="col">Hora Acumulada</td>
+            </tr>
+            </thead>
+            <tbody id="tbody_funcionario_lider">
+
+            </tbody>
+        </table>
+    <div class="float-right mb-lg-5">
+            <input type="submit" value="Agendar" class="btn btn-success">
+        </div>
     </form>
-    <table id="table_employees_to_schedule" class="table">
-        <thead class="theadAF">
-        <tr>
-            <td scope="col">Agendar</td>
-            <td scope="col">Matrícula</td>
-            <td scope="col">Nome</td>
-            <td scope="col">Função</td>
-            <td scope="col">Hora Acumulada</td>
-        </tr>
-        </thead>
-        <tbody id="tbody_funcionario_lider">
-
-        </tbody>
-    </table>
-    <table id="table_funcionario_lider" class="table ">
-        <thead class="theadAF">
-        <tr>
-            <td scope="col">Agendar</td>
-            <td scope="col">Matrícula</td>
-            <td scope="col">Nome</td>
-            <td scope="col">Função</td>
-            <td scope="col">Hora Acumulada</td>
-        </tr>
-        </thead>
-        <tbody id="tbody_funcionario_lider">
-
-        </tbody>
-    </table>
     <div id="he_estourada">
         <h4 class="text-center mt-lg-5 mb-lg-3 fontTitleA">Agendamento não Permitido</h4>
         <table id="table_he_estourada" class="table border border-dark">
@@ -75,8 +66,5 @@
 
             </tbody>
         </table>
-        <div class="float-right mb-lg-5">
-            <input type="submit" value="Agendar" class="btn btn-success">
-        </div>
     </div>
 {% endblock %}

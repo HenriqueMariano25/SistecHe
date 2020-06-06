@@ -1,12 +1,3 @@
-// $(document).ready(function () {
-//     $(".check_employee").click(function () {
-//         registration = ($(this).val());
-//         alert("oi");
-//     });
-// });
-
-
-
 $("#select_leader_scheduling").change(function () {
     $("#tbody_funcionario_lider").children().remove();
     $("#tbody_he_estourada").children().remove();
@@ -17,16 +8,20 @@ $("#select_leader_scheduling").change(function () {
                 var funcionarioTr = document.createElement("tr");
                 var agendarTd = document.createElement("td");
                 var matriculaTd = document.createElement("td");
+                matriculaTd.setAttribute("class","registration");
                 var nomeTd = document.createElement("td");
+                nomeTd.setAttribute("class","name")
                 var funcaoTd = document.createElement("td");
+                funcaoTd.setAttribute("class","occupation");
                 var horaAcumuladaTd = document.createElement("td");
+                horaAcumuladaTd.setAttribute("class","accumuled_hour");
 
                 var check_box = document.createElement("input");
                 check_box.setAttribute("type", "checkbox");
                 check_box.setAttribute("value", data['employees'][i]['registration']);
                 check_box.setAttribute("name", "registrations");
                 check_box.setAttribute("class", "check_employee");
-                check_box.setAttribute("onclick", "teste()");
+                // check_box.setAttribute("onclick", "teste()");
 
                 agendarTd.appendChild(check_box);
                 matriculaTd.textContent = data['employees'][i]['registration'];
@@ -36,9 +31,11 @@ $("#select_leader_scheduling").change(function () {
 
                 if (data['employees'][i]['extra_hour'] >= limite - 7.30) {
                     var tabela_funcionario = document.querySelector('#table_he_estourada tbody');
+                    // tabela_funcionario.setAttribute("onclick", "teste()");
                 } else {
                     funcionarioTr.appendChild(agendarTd);
                     var tabela_funcionario = document.querySelector('#table_funcionario_lider tbody');
+                    // tabela_funcionario.setAttribute("onclick", "teste()");
                 }
 
                 funcionarioTr.appendChild(matriculaTd);
@@ -50,7 +47,6 @@ $("#select_leader_scheduling").change(function () {
             }
             $("#leader_name").text(data['leader']['name']);
             $("#leader_occupation").text(data['leader']['occupation']);
-
         })
         .fail(function () {
             $("#nome_lider").text("");
@@ -64,34 +60,30 @@ $("#select_leader_scheduling").change(function () {
 
 
 
-$("#scheduling_employees").on("ajax:success", function (event) {
-    console.log(event.detail);
-    lider = $("#lider option:selected").val();
-    if (lider != 0) {
-        teste = $('texto_msg_erro');
-        msg_erro = event.detail[0].erro
-        if (msg_erro != undefined) {
-            alert(msg_erro);
-        } else {
-            $("#tbody_funcionario_lider").children().remove();
-            $("#tbody_he_estourada").children().remove();
-            $("#agendar_data").val("0");
-            $("#agendar_turno").val("");
-            $("#agendar_motivo").val("");
-            $("#nome_lider").text("");
-            $("#funcao_lider").text("");
-            $("#select_lider_marcacao").val("0");
-            $(".msg-erro p").text("Agendamento realizado com sucesso");
-            $(".msg-erro").show();
-            $("body").mouseup(function () {
-                $(".msg-erro").hide();
-            });
-        }
-    } else {
-        alert("Favor selecione um lider");
-    }
-});
-
-function teste(){
-    console.log($(this).parent());
-}
+// $("#scheduling_employees").on("ajax:success", function (event) {
+//     console.log(event.detail);
+//     lider = $("#lider option:selected").val();
+//     if (lider != 0) {
+//         teste = $('texto_msg_erro');
+//         msg_erro = event.detail[0].erro
+//         if (msg_erro != undefined) {
+//             alert(msg_erro);
+//         } else {
+//             $("#tbody_funcionario_lider").children().remove();
+//             $("#tbody_he_estourada").children().remove();
+//             $("#agendar_data").val("0");
+//             $("#agendar_turno").val("");
+//             $("#agendar_motivo").val("");
+//             $("#nome_lider").text("");
+//             $("#funcao_lider").text("");
+//             $("#select_lider_marcacao").val("0");
+//             $(".msg-erro p").text("Agendamento realizado com sucesso");
+//             $(".msg-erro").show();
+//             $("body").mouseup(function () {
+//                 $(".msg-erro").hide();
+//             });
+//         }
+//     } else {
+//         alert("Favor selecione um lider");
+//     }
+// });
