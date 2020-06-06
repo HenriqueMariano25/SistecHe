@@ -1,55 +1,106 @@
 <head>
-    <title>Importação|Hora Extra</title>
+    <title>IMPORTAÇÃO HORA EXTRA | AG</title>
 </head>
 {% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
-    <h1>Welcome to the import extra hours</h1>
-    <form method="POST" enctype="multipart/form-data" action="{% url 'update_extra_hour' %}">
-        {% csrf_token %}
-        <input type="file" name="excel">
-        <input type="submit">
-    </form>
-    <form method="POST" action="{% url 'extra_hour' %}">
-        {% csrf_token %}
-        <input type="text" name="search">
-        <input type="submit">
-    </form>
-    <form method="POST" action="{% url 'update_extra_hour_month' %}">
-        {% csrf_token %}
-        <label>Limite de hora extra no mês</label>
-        <input type="text" name="hours" value="{{ limit_hour.hours }}">
-        <input type="submit">
-    </form>
-    <form method="POST" action="{% url 'reset_extra_hours' %}">
-        {% csrf_token %}
-        <input type="submit" value="Zerar Hora Extra" >
-    </form>
-    {% if import_history %}
-        <h2>Última Atualização: {{ import_history.created_at }} por {{ import_history.made_by.first_name }}</h2>
-    {% endif %}
-    <table id="tableExtraHours" class="table border border-dark">
-        <thead class="theadAF">
-        <tr>
-            <th scope="col">Matricula</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Função</th>
-            <td scope="col">Hora Extra</td>
-        </tr>
-        </thead>
-        <tbody>
-        {% for employee in employees %}
+    <body style="background: #F5F5F5">
+    <div class="divAll">
+        <h1 class="text-center textTitleAll"><strong>IMPORTAR HORA EXTRA | AG</strong></h1>
+        <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgH">
+            <div class="col-4 pt-3">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'update_extra_hour' %}">
+                    {% csrf_token %}
+                    <div class='input-wrapper '>
+                        <label for='input-file'>
+                            Selecionar um arquivo
+                        </label>
+                        <input id='input-file' type='file' name='excel' value=''/>
+                        <span id='file-name'></span>
+                        <input type="submit" class="btn btn-primary btnE">
+                    </div>
+                </form>
+            </div>
+            <div class="col pt-3">
+                <form method="POST" action="{% url 'update_extra_hour_month' %}">
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="col-5 text-right pt-1">
+                            <label class="textLimiteHE">Limite de HE no Mês:</label>
+                        </div>
+                        <div class="col-5">
+                            <input type="text" class="form-control" name="hours" value="{{ limit_hour.hours }}">
+                        </div>
+                        <div class="col-2">
+                            <input type="submit" value="Atualizar" class="btn btn-primary">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col pt-3">
+                <form method="POST" action="{% url 'extra_hour' %}">
+                    {% csrf_token %}
+                    <div class="row justify-content-end">
+                        <div>
+                            <input class="form-control mr-sm-2" type="text" name="search">
+                        </div>
+                        <div class="ml-1">
+                            <input class="btn btn-outline-success my-2 my-sm-0" value="Procurar" type="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row pt-3">
+                <div class="">
+                    {% if import_history %}
+                        <h2 class="text-danger textHistoryH">Última Atualização: {{ import_history.created_at }}
+                            por {{ import_history.made_by.first_name }}</h2>
+                    {% endif %}
+                </div>
+                <div class="ml-5">
+                    <form method="POST" action="{% url 'reset_extra_hours' %}">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger" value="Zerar Hora Extra">
+                    </form>
+                </div>
+            </div>
+        </div>
 
-            <tr class="tr-employee">
-                <td>{{ employee.registration }}</td>
-                <td>{{ employee.name }}</td>
-                <td>{{ employee.occupation }}</td>
-                <td>{{ employee.extra_hour }}</td>
+        <table id="tableExtraHours" class="table border border-dark">
+            <thead class="theadAll">
+            <tr>
+                <th scope="col">Matricula</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Função</th>
+                <th scope="col">Hora Extra</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for employee in employees %}
+
+                <tr class="tr-employee">
+                    <td>{{ employee.registration }}</td>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.occupation }}</td>
+                    <td>{{ employee.extra_hour }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        var $input = document.getElementById('input-file'),
+            $fileName = document.getElementById('file-name');
+
+        $input.addEventListener('change', function () {
+            $fileName.textContent = this.value;
+            console.log($input);
+        });
+    </script>
+    </body>
 {% endblock %}
 
 
