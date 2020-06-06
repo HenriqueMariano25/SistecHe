@@ -78,6 +78,6 @@ class Scheduling(models.Model):
     sector = models.ForeignKey(Sector, on_delete=models.PROTECT)
 
 class Emplo_Schedu(models.Model):
-    employee = models.ForeignKey(User, on_delete=models.PROTECT)
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
     scheduling = models.ForeignKey(Scheduling, on_delete=models.PROTECT)
     plus_he = models.FloatField(default=0.0)
