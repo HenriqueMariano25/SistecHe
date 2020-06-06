@@ -5,66 +5,70 @@
 {% load static %}
 
 {% block content %}
-    <h1>Agendar funcionario</h1>
-    <h1>Lider</h1>
-    <p id="leader_name"></p>
-    <h1>Função</h1>
-    <p id="leader_occupation"></p>
-    <select id="select_leader_scheduling">
-        <option>Selecione um lider</option>
-        {% for leader in leaders %}
-            <option value="{{ leader.id }}">{{ leader.name }}</option>
-        {% endfor %}
-    </select>
-    <p>ou</p>
-    <form method="post">
-        <input type="text" name="seach_employee" onclick="teste()">
-        <input type="submit">
-    </form>
-    {% include 'partials/_alerts.html' %}
-    <form id="scheduling_employees" action="{% url 'finalize_employee_scheduling' %}" method="post">
-        {% csrf_token %}
-        <input type="date" name="scheduling_date">
-        <select name="shift">
-            <option>Selecione um turno</option>
-            {% for shift in shifts %}
-                <option value="{{ shift.id }}">{{ shift.name }}</option>
+    <body style="background: #F5F5F5">
+    <div class="divAll">
+        <h1>Agendar funcionario</h1>
+        <h1>Lider</h1>
+        <p id="leader_name"></p>
+        <h1>Função</h1>
+        <p id="leader_occupation"></p>
+        <select id="select_leader_scheduling">
+            <option>Selecione um lider</option>
+            {% for leader in leaders %}
+                <option value="{{ leader.id }}">{{ leader.name }}</option>
             {% endfor %}
         </select>
-        <input type="text" name="reason">
+        <p>ou</p>
+        <form method="post">
+            <input type="text" name="seach_employee" onclick="teste()">
+            <input type="submit">
+        </form>
+        {% include 'partials/_alerts.html' %}
+        <form id="scheduling_employees" action="{% url 'finalize_employee_scheduling' %}" method="post">
+            {% csrf_token %}
+            <input type="date" name="scheduling_date">
+            <select name="shift">
+                <option>Selecione um turno</option>
+                {% for shift in shifts %}
+                    <option value="{{ shift.id }}">{{ shift.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="reason">
 
-        <table id="table_funcionario_lider" class="table ">
-            <thead class="theadAF">
-            <tr>
-                <td scope="col">Agendar</td>
-                <td scope="col">Matrícula</td>
-                <td scope="col">Nome</td>
-                <td scope="col">Função</td>
-                <td scope="col">Hora Acumulada</td>
-            </tr>
-            </thead>
-            <tbody id="tbody_funcionario_lider">
+            <table id="table_funcionario_lider" class="table ">
+                <thead class="theadAF">
+                <tr>
+                    <td scope="col">Agendar</td>
+                    <td scope="col">Matrícula</td>
+                    <td scope="col">Nome</td>
+                    <td scope="col">Função</td>
+                    <td scope="col">Hora Acumulada</td>
+                </tr>
+                </thead>
+                <tbody id="tbody_funcionario_lider">
 
-            </tbody>
-        </table>
-    <div class="float-right mb-lg-5">
-            <input type="submit" value="Agendar" class="btn btn-success">
+                </tbody>
+            </table>
+            <div class="float-right mb-lg-5">
+                <input type="submit" value="Agendar" class="btn btn-success">
+            </div>
+        </form>
+        <div id="he_estourada">
+            <h4 class="text-center mt-lg-5 mb-lg-3 fontTitleA">Agendamento não Permitido</h4>
+            <table id="table_he_estourada" class="table border border-dark">
+                <thead class="theadAF">
+                <tr>
+                    <td scope="col">Matrícula</td>
+                    <td scope="col">Nome</td>
+                    <td scope="col">Função</td>
+                    <td scope="col">Hora Acumulada</td>
+                </tr>
+                </thead>
+                <tbody id="tbody_he_estourada" class="text-light rowNegados">
+
+                </tbody>
+            </table>
         </div>
-    </form>
-    <div id="he_estourada">
-        <h4 class="text-center mt-lg-5 mb-lg-3 fontTitleA">Agendamento não Permitido</h4>
-        <table id="table_he_estourada" class="table border border-dark">
-            <thead class="theadAF">
-            <tr>
-                <td scope="col">Matrícula</td>
-                <td scope="col">Nome</td>
-                <td scope="col">Função</td>
-                <td scope="col">Hora Acumulada</td>
-            </tr>
-            </thead>
-            <tbody id="tbody_he_estourada" class="text-light rowNegados">
-
-            </tbody>
-        </table>
     </div>
+    </body>
 {% endblock %}
