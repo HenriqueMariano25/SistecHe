@@ -14,8 +14,8 @@
             <input type="submit">
         </form>
 
-        <table class="table">
-            <thead class="theadAF">
+        <table class="table border border-dark">
+            <thead class="theadAll">
             <tr>
                 <th>Nome</th>
                 <th>Email</th>
@@ -30,10 +30,10 @@
             <tbody>
             {% for user in users %}
                 <tr>
-                    <td>{{ user.first_name }} {{ user.last_name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.userprofileinfo.sector.name }}</td>
-                    <td>{{ user.last_login|date:'d/m/Y H:i' }}</td>
+                    <td class="pt-4">{{ user.first_name }} {{ user.last_name }}</td>
+                    <td class="pt-4">{{ user.email }}</td>
+                    <td class="pt-4">{{ user.userprofileinfo.sector.name }}</td>
+                    <td class="pt-4">{{ user.last_login|date:'d/m/Y H:i' }}</td>
                     <form action="{% url 'update_extra_hour_limit' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="user" value="{{ user.id }}">
@@ -58,13 +58,13 @@
                         {#                            {% endif %}#}
                         {#                        {% endfor %}#}
                         {#                    {% else %}#}
-                        <td><input type="time" name="time_released"
+                        <td><input type="time" class="form-control" name="time_released"
                                    value="{{ user.releasedhours.last.released_hour|date:'H:i' }}">
                         </td>
-                        <td><input type="text" name="reason" value="{{ user.releasedhours.last.reason }}"></td>
-                        <td><input type="submit" value="Salvar"></td>
+                        <td><input type="text" class="form-control" name="reason" value="{{ user.releasedhours.last.reason }}"></td>
+                        <td><input type="submit" class="btn btn-success" value="Salvar"></td>
                         {% if user.releasedhours.last %}
-                            <td>{{ user.releasedhours.last.create_at|date:'d/m/Y H:i' }}
+                            <td class="pt-4">{{ user.releasedhours.last.create_at|date:'d/m/Y H:i' }}
                                 por {{ user.releasedhours.last.made_by }}</td>
                         {% else %}
                             <td></td>
