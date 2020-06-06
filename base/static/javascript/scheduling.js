@@ -137,32 +137,6 @@ function add_employees_leader_table(leaders, employees,table) {
         }
     }
 }
-
-
-// $("#scheduling_employees").on("ajax:success", function (event) {
-//     console.log(event.detail);
-//     lider = $("#lider option:selected").val();
-//     if (lider != 0) {
-//         teste = $('texto_msg_erro');
-//         msg_erro = event.detail[0].erro
-//         if (msg_erro != undefined) {
-//             alert(msg_erro);
-//         } else {
-//             $("#tbody_funcionario_lider").children().remove();
-//             $("#tbody_he_estourada").children().remove();
-//             $("#agendar_data").val("0");
-//             $("#agendar_turno").val("");
-//             $("#agendar_motivo").val("");
-//             $("#nome_lider").text("");
-//             $("#funcao_lider").text("");
-//             $("#select_lider_marcacao").val("0");
-//             $(".msg-erro p").text("Agendamento realizado com sucesso");
-//             $(".msg-erro").show();
-//             $("body").mouseup(function () {
-//                 $(".msg-erro").hide();
-//             });
-//         }
-//     } else {
-//         alert("Favor selecione um lider");
-//     }
-// });
+$("#select_all").click(function(){
+    $('input:checkbox').not(this).prop('checked', this.checked);
+});
