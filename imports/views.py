@@ -6,7 +6,7 @@ from django.contrib import auth
 import xlrd
 import pandas as pd
 from xlrd.timemachine import xrange
-from datetime import datetime, date
+from datetime import datetime, date, time
 
 from base.models import SubSector, Employee, Sector, ImportHistory, ReleasedHour, LimitHour
 
@@ -30,26 +30,48 @@ def employees(request):
 
 
 def update_employees(request):
+    SECTORS = {
+        'ADMINISTRACAO': Sector.objects.get(name="Administração"),
+        'PLANEJAMENTO': Sector.objects.get(name="Planejamento"),
+        'PRODUCAO': Sector.objects.get(name="Produção"),
+        'CONSTRUCAO & MONTAGEM': Sector.objects.get(name="Produção"),
+        'SMSRS': Sector.objects.get(name="SMSRS"),
+        'QUALIDADE': Sector.objects.get(name="Qualidade"),
+        'ENGENHARIA': Sector.objects.get(name="Engenharia"),
+        'COMISSIONAMENTO': Sector.objects.get(name="Comissionamento"),
+        'SUPRIMENTOS OBRA': Sector.objects.get(name="Suprimentos"),
+        'SUPRIMENTOS SP': Sector.objects.get(name="Suprimentos"),
+        'DIRETORIA DE CONTRATO': Sector.objects.get(name="Diretoria de Contrato"),
+        'GERENCIA ADCON': Sector.objects.get(name="Administração Contratual"),
+    }
+
     import_history = ImportHistory(type="employees", made_by=request.user,
                                    created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
     import_history.save()
     if request.method == 'POST':
         excel = request.FILES['excel']
-        datas = pd.read_excel(excel.file)
-        for data in datas.index:
-            registration = str(datas['Matricula'][data])[-8:]
-            demission_date = datas['Data de demissao (DD/MM/AAAA)'][data]
-            name = datas['Funcionario'][data]
-            leader_name = datas['Lider equipe'][data]
-            admission_date = datas['Data de admissao (DD/MM/AAAA)'][data]
-            occupation = datas['Descricao funcao'][data]
-            manager = datas['Nome gestor'][data]
+        workbook = xlrd.open_workbook(file_contents=excel.read())
+        sheet = workbook.sheet_by_index(0)
+        for row_num in xrange(sheet.nrows):
+            row = sheet.row_values(row_num)
+            if row[0] == "" or row[0] == "Id reduzido":
+                continue
+            registration = str(row[2])[-8:]
+            demission_date = row[4]
+            name = row[1]
+            leader_name = row[8]
+            admission_date = date.fromordinal(693594 + int(row[3]))
+            occupation = row[5]
+            manager = row[9]
+            sector = row[12].split('-')[1].strip()
+            sector = SECTORS[sector]
+
             if type(demission_date) == str:
                 demission_date = demission_date.strip()
-
+            #
             if type(demission_date) == float:
                 demission_date = ""
-
+            #
             if registration != " ":
                 employee = Employee.objects.filter(registration=registration).first()
                 if not employee is None and demission_date != "":
@@ -59,29 +81,31 @@ def update_employees(request):
                 if not demission_date == "":
                     continue
 
-                subsector = str(datas['Empresa'][data]).split('-')[0]  # print(SubSector.objects.filter(name=subsector))
+                subsector = str(row[10]).split('-')[0]
                 if SubSector.objects.filter(name=subsector).exists():
                     subSector = SubSector.objects.filter(name=subsector).first()
                 else:
                     subSector = SubSector(name=subsector)
                     subSector.save()
-
-                if not employee == None:
-                    if not employee.name == name and employee.occupation == occupation and \
-                            employee.admission_date == admission_date and employee.manager == manager and \
-                            employee.leader_name == leader_name and employee.sub_sector == subSector:
+                if not employee is None:
+                    if not employee.sector == sector or employee.name == name or employee.occupation == occupation or \
+                            employee.admission_date == admission_date or employee.manager == manager or \
+                            employee.leader_name == leader_name or employee.sub_sector == subSector:
                         employee.name = name
                         employee.occupation = occupation
                         employee.leader_name = leader_name
                         employee.admission_date = admission_date
                         employee.manager = manager
                         employee.sub_sector = subSector
-                        employee.save()
+                        employee.sector = sector
+                        if employee.save:
+                            employee.save()
                 else:
                     employee = Employee(name=name, occupation=occupation, registration=registration,
                                         admission_date=admission_date, manager=manager,
-                                        leader_name=leader_name, sub_sector=subSector)
-                    employee.save()
+                                        leader_name=leader_name, sub_sector=subSector, sector=sector)
+                    if employee.save:
+                        employee.save()
         return redirect('employees')
 
 
@@ -170,9 +194,9 @@ def reset_all_employees_extra_time():
 def extra_hour_limit(request):
     today = date.today()
     users = User.objects.prefetch_related('releasedhours').filter(is_superuser=False)
-                                                                  # releasedhours__create_at__year=today.year,
-                                                                  # releasedhours__create_at__month=today.month,
-                                                                  # releasedhours__create_at__day=today.day)
+    # releasedhours__create_at__year=today.year,
+    # releasedhours__create_at__month=today.month,
+    # releasedhours__create_at__day=today.day)
 
     released_hour = ReleasedHour.objects.filter(create_at__year=today.year, create_at__month=today.month,
                                                 create_at__day=today.day).order_by('user', '-create_at').distinct(

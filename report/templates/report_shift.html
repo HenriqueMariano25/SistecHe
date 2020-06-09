@@ -4,9 +4,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block content %}
     <h1>Relatório por turno|AG</h1>
-    <form action="{% url 'report_shift' %}" method="post">
+    <form action="" method="post" id="form_report_shift">
         {% csrf_token %}
         <input type="date" name="date">
         <select name="shift">
@@ -17,43 +18,7 @@
         </select>
         <input type="submit" value="visualizar">
     </form>
-    {% if shifts_res %}
-        {% for shift_y in shifts_res %}
-            {% for sector in sectors %}
-{#                {% ifchanged sector == "oii" %}#}
-{##}
-{#                {% endifchanged %}#}
-{#                {{ sector.name }}#}
-                {% for leader in leaders %}
-                    {% if leader.sector == shift_y %}
-                        {% for emplo_schedu in emplo_schedus %}
-                            {% if emplo_schedu.scheduling.shift == shift_y %}
-                                {% ifequal leader.name emplo_schedu.employee.leader_name %}
-                                     <h5>{{ emplo_schedu.employee.name }}</h5>
+    <div class="reports_info setorDiv">
 
-                                {% endifequal %}
-                                <h5>{{ emplo_schedu.employee.name }}</h5>
-                                <h5>{{ emplo_schedu.employee.leader_name }}</h5>
-                                     <h5>{{ leader.name }}</h5>
-                            {% ifchanged emplo_schedu.scheduling.shift %}
-                                <h1>{{ emplo_schedu.employee.name }}</h1>
-                            {% endifchanged %}
-                            {{ emplo_schedu.employee.name }}
-                        {% endif %}
-                        {#                {{ emplo_schedu.employee.name}}#}
-                    {% endfor %}
-
-                    {% endif %}
-                    <h3>{{ leader }}</h3>
-                    {#            {% ifchanged shift_y %}#}
-                    <h1>{{ shift_y.name }}</h1>
-                    {#            {% endifchanged %}#}
-
-                {% endfor %}
-            {% endfor %}
-        {% endfor %}
-    {% endif %}
-    <table>
-
-    </table>
+    </div>
 {% endblock %}
