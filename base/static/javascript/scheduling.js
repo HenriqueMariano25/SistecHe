@@ -7,8 +7,8 @@ $("#select_leader_scheduling").change(function () {
     $.ajax("agendamento/lider_selecionado?lider_id=" + this.value)
         .done(function (data) {
             for (var i = 0; i < data['employees'].length; i++) {
-                var funcionarioTr = document.createElement("tr");
-                var agendarTd = document.createElement("td");
+                    var funcionarioTr = document.createElement("tr");
+                    var agendarTd = document.createElement("td");
                 var matriculaTd = document.createElement("td");
                 matriculaTd.setAttribute("class", "registration");
                 var nomeTd = document.createElement("td");

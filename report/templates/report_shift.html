@@ -21,4 +21,40 @@
     <div class="reports_info setorDiv">
 
     </div>
+{#    {% if shifts_res %}#}
+{#        {% for shift_y in shifts_res %}#}
+{#            {% if shift_y|x_present_y:emplo_schedus %}#}
+{#                <h1>{{ shift_y.name }}</h1>#}
+{##}
+{#                {% for sector in sectors %}#}
+{#                    {{ sector.name }}#}
+{#                    {% for leader in leaders %}#}
+{#                        {% if leader.sector == sector %}#}
+{#                            {% ifchanged leader.sector %}#}
+                                {#                        {% if leader.sector_id == sector.id %}#}
+{#                                {% if shift_y|x_present_y:emplo_schedus %}#}
+{#                                    <h3>{{ leader.name }}</h3>#}
+{#                                {% endif %}#}
+{#                                {% if emplo_schedus|leaders_present_sector:teste %}#}
+{##}
+{#                                {% endif %}#}
+{#                                    {% if emplo_schedus|leaders_present_sector: %}#}
+{#                                    <p>testesteste</p>#}
+{#                                    {{ emplo_schedus.employee.leader }}#}
+{#                                    {% for emplo_schedu in emplo_schedus %}#}
+{#                                        {% if emplo_schedu.scheduling.shift == shift_y %}#}
+{#                                            {% ifequal leader.name emplo_schedu.employee.leader_name %}#}
+{#                                                <h5>{{ emplo_schedu.employee.name }}</h5>#}
+{#                                            {% endifequal %}#}
+{#                                        {% endif %}#}
+{#                                    {% endfor %}#}
+{#                                                            {% endif %}#}
+{#                                {% endif %}#}
+{#                            {% endifchanged %}#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                {% endfor %}#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#    {% endif %}#}
 {% endblock %}

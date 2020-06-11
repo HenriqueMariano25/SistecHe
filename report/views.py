@@ -62,7 +62,7 @@ def shift_preview(request):
     for emplo_schedu in emplo_schedus:
         # scheduling = Scheduling.objects.get(id=emplo_schedu.)
         leader = Employee.objects.get(name=emplo_schedu.employee.leader_name).to_json()
-        print(leader)
+        # print(leader)
         if not leader in leaders:
             leaders.append(leader)
 
@@ -70,13 +70,17 @@ def shift_preview(request):
 
     emplo_schedus_data = [emplo_schedu.to_json() for emplo_schedu in emplo_schedus]
     print(emplo_schedus_data)
-    print(shifts_res)
-    print(leaders)
-    print(sectors)
+    # print(shifts_res)
+    # print(leaders)
+    # print(sectors)
+    print(date)
+    date_split = date.split('-')
+    formatted_date = date_split[2] + "/" + date_split[1] + "/" +date_split[0]
     response = {
         'emplo_schedus_data': emplo_schedus_data,
         'shifts_res': shifts_res,
         'leaders':leaders,
         'sectors':sectors,
+        'date':formatted_date,
     }
     return JsonResponse(response)
