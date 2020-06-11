@@ -6,17 +6,36 @@
 
 
 {% block content %}
-    <h1>Relatório por Lider|AG</h1>
-    <form action="" method="post" id="form_report_leader">
-        {% csrf_token %}
-        <input type="date" name="date">
-        <select name="shift">
-            <option value="0">Todos os turnos</option>
-            {% for shift in shifts %}
-                <option value="{{ shift.id }}">{{ shift.name }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="visualizar">
+    <h1 class="text-center textTitleAll"><strong>RELATÓRIO POR LIDER | AG</strong></h1>
+
+<form action="" method="post" id="form_report_leader">
+        <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
+            <div class="container-fluid">
+                {% csrf_token %}
+                <div class="col-5 row">
+                    <div id="divVoid" class="col-7">
+                    </div>
+                    <div class="col-5">
+                        <input type="date" class="form-control" name="date">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <select class="form-control" name="shift">
+                        <option value="0">Todos os turnos</option>
+                        {% for shift in shifts %}
+                            <option value="{{ shift.id }}">{{ shift.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-5 row">
+                    <div class="col-5">
+                        <input type="submit" class="btn btn-info btn-block" value="visualizar">
+                    </div>
+                    <div id="divVoid" class="col-7">
+                    </div>
+                </div>
+            </div>
+        </nav>
     </form>
     <div class="reports_info setorDiv">
 

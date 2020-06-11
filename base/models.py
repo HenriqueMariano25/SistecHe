@@ -118,7 +118,7 @@ class Scheduling(models.Model):
             'date': self.date,
             'reason': self.reason,
             'shift': self.shift.to_json(),
-            'user': self.user.to_json(),
+            # 'user': self.user.to_json(),
             'sector': self.sector.to_json()
         }
 
