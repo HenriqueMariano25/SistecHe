@@ -15,7 +15,12 @@ $("#form_report_shift").submit(function (event) {
             const date = data.date
             console.log(data)
             page.children().remove()
-            page.append('<h1>'+date+'</h1>')
+            page.append('<div class="row bg-dark">' +
+                '<div class="bg-danger">' +
+                '<h1 class="dateReport text-right testesadasdas">' + date + '</h1> ' +
+                '</div>' +
+                '<img src="https://i.pinimg.com/originals/88/dd/e1/88dde1160aaebf6bfe42750b87afe11c.png" class="soonReport">' +
+                '</div>')
             for (var x = 0; x < data['shifts_res'].length; x++) {
                 if (data.emplo_schedus_data.find(emplo_schedus => emplo_schedus.scheduling.shift.id === data.shifts_res[x].id)) {
                     page.append('<h1 class="display-4 text-center turnoTitle">' + data['shifts_res'][x]['name'] + '</h1>')
@@ -31,7 +36,7 @@ $("#form_report_shift").submit(function (event) {
                             page.append('<h1 class="text-center text-muted">' + value.name + '</h1>')
                             var tr = ""
                             var table = '<table class="table fontTableGE" id="table_reports_info">\n' +
-                                '  <thead>\n' +
+                                '  <thead class="theadAll">\n' +
                                 '      <tr>\n' +
                                 '          <th>Matricula</th>\n' +
                                 '          <th>Funcionário</th>\n' +
@@ -75,16 +80,26 @@ $("#form_report_leader").submit(function (event) {
             const shifts = data.shifts_res
             const date = data.date
             page.children().remove()
-            page.append('<h1>'+date+'</h1>')
+            page.append('<div class="row ">' +
+                '<div class="col-3">' +
+                '<img src="https://i.pinimg.com/originals/88/dd/e1/88dde1160aaebf6bfe42750b87afe11c.png" class="soonReport">' +
+                '</div>' +
+                '<div class="col-6">' +
+                '<h1 class="text-center textTitleReport"><strong>RELATÓRIO POR LIDER | AG</strong></h1>' +
+                '</div>' +
+                '<div class="col-3">' +
+                '<h1 class="dateReport text-right ">' + date + '</h1> ' +
+                '</div>' +
+                '</div>')
             for (var x = 0; x < shifts.length; x++) {
                 if (emplo_schedus.find(emplo_schedus => emplo_schedus.scheduling.shift.id === shifts[x].id)) {
-                    page.append('<h1 class="display-4 text-center turnoTitle">' + shifts[x].name + '</h1>')
+                    page.append('<h1 class="display-4 text-center mt-5 turnTitle">' + shifts[x].name + '</h1>')
                     $.each(leaders, function (key, value) {
                         if (emplo_schedus.find(emplo_schedus => emplo_schedus.employee.leader_name === value.name && emplo_schedus.scheduling.shift.id === shifts[x].id)) {
-                            page.append('<h1 class="text-center text-muted">' + value.name + '</h1>')
+                            page.append('<h1 class="text-center text-muted leaderTitle mt-5 mb-4">' + value.name + '</h1>')
                             var tr = ""
                             var table = '<table class="table fontTableGE" id="table_reports_info">\n' +
-                                '  <thead>\n' +
+                                '  <thead class="theadAll">\n' +
                                 '      <tr>\n' +
                                 '          <th>Matricula</th>\n' +
                                 '          <th>Funcionário</th>\n' +
