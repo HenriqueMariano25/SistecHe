@@ -1,13 +1,13 @@
 <head>
-    <title>Agendamento|Funcionários</title>
+    <title>Relatorio|Por Lider</title>
 </head>
 {% extends 'base.html' %}
 {% load static %}
 
 
 {% block content %}
-    <h1>Relatório por turno|AG</h1>
-    <form action="" method="post" id="form_report_shift">
+    <h1>Relatório por Lider|AG</h1>
+    <form action="" method="post" id="form_report_leader">
         {% csrf_token %}
         <input type="date" name="date">
         <select name="shift">
