@@ -7,4 +7,5 @@ urlpatterns = [
     path('por_turno/pdf',views.shift_pdf, name='shift_pdf'),
     path('por_lider',views.report_leader, name='report_leader'),
     path('por_lider/preview',views.leader_preview, name='leader_preview'),
+    path('por_lider/pdf',views.leader_pdf, name='leader_pdf'),
 ]

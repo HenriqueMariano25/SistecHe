@@ -19,7 +19,7 @@ $("#form_report_shift").submit(function (event) {
                 '<div class="bg-danger">' +
                 '<h1 class="dateReport text-right testesadasdas">' + date + '</h1> ' +
                 '</div>' +
-                '<a href="por_turno/pdf?data='+date_input+'&turno='+shift_input+'">TEste</a>' + 
+                '<a target="_blank" href="por_turno/pdf?data='+date_input+'&turno='+shift_input+'">TEste</a>' +
                 '<img src="https://i.pinimg.com/originals/88/dd/e1/88dde1160aaebf6bfe42750b87afe11c.png" class="soonReport">' +
                 '</div>')
             for (var x = 0; x < data['shifts_res'].length; x++) {
@@ -68,12 +68,12 @@ $("#form_report_shift").submit(function (event) {
 
 $("#form_report_leader").submit(function (event) {
     event.preventDefault()
-    let date = $("[name=date]").val()
-    let shift = $("[name=shift]").val()
+    let date_input = $("[name=date]").val()
+    let shift_input = $("[name=shift]").val()
     page = $('.reports_info')
     $.ajax({
         url: 'por_lider/preview',
-        data: {'date': date, 'shift': shift},
+        data: {'date': date_input, 'shift': shift_input},
         dateType: 'json',
         success: function (data) {
             const leaders = data.leaders
@@ -89,9 +89,10 @@ $("#form_report_leader").submit(function (event) {
                 '<h1 class="text-center textTitleReport"><strong>RELATÓRIO POR LIDER | AG</strong></h1>' +
                 '</div>' +
                 '<div class="col-3">' +
-                '<h1 class="dateReport text-right ">' + date + '</h1> ' +
+                '<h1 class="dateReport text-right ">' + date + '</h1>' +
                 '</div>' +
                 '</div>')
+            page.append('<a target="_blank" href="por_lider/pdf?data='+date_input+'&turno='+shift_input+'">TEste</a>')
             for (var x = 0; x < shifts.length; x++) {
                 if (emplo_schedus.find(emplo_schedus => emplo_schedus.scheduling.shift.id === shifts[x].id)) {
                     page.append('<h1 class="display-4 text-center mt-5 turnTitle">' + shifts[x].name + '</h1>')

@@ -1,0 +1,46 @@
+{% load emplo_in_leader %}
+
+<p>Contador: {{ count_employees }}</p>
+<p>Data: {{ date }}</p>
+
+{% if shifts_res %}
+    {% for shift in shifts_res %}
+        <h1 class="display-4 text-center turnoTitle">{{ shift.name }}</h1>
+        {% for leader in leaders %}
+            {% for shi in leader|emplo_in_leader:emplo_schedus_data %}
+                {% ifequal shi.id shift.id %}
+                    <h1 class="text-center text-muted">{{ leader.name }}</h1>
+                    <table class="table fontTableGE">
+                        <thead>
+                        <tr>
+                            <th>Matricula</th>
+                            <th>Funcionário</th>
+                            <th>Função</th>
+                            <th>Motivo</th>
+                            <th>HE Previsto</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for emplo_schedu in emplo_schedus_data %}
+                            {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi %}
+                                <tr>
+                                    <td>{{ emplo_schedu.employee.registration }}</td>
+                                    <td>{{ emplo_schedu.employee.name }}</td>
+                                    <td>{{ emplo_schedu.employee.occupation }}</td>
+                                    <td>{{ emplo_schedu.scheduling.reason }}</td>
+                                    <td>{{ emplo_schedu.employee.extra_hour }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {#                                {{ shi }}#}
+                {% endifequal %}
+            {% endfor %}
+
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+{% if error %}
+    {{ error }}
+{% endif %}
