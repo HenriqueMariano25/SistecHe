@@ -12,20 +12,27 @@
     <link rel="stylesheet" href="{% static 'css/css_imports/extra_hour_limit.css' %}">
     <link rel="stylesheet" href="{% static 'css/css_scheduling/scheduling_employees.css' %}">
     <link rel="stylesheet" href="{% static 'css/css_partials/menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/css_partials/footer.css' %}">
     <link rel="stylesheet" href="{% static 'css/css_users/login.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <script type="text/javascript" src="{% static 'javascript/Jquery/jquery-3.5.1.min.js' %}" type="javascript"></script>
+    <script type="text/javascript" src="{% static 'javascript/Jquery/jquery-3.5.1.min.js' %}"
+            type="javascript"></script>
 </head>
-<body>
-    {% if user.is_authenticated %}
-        {% include 'partials/menu.html' %}
-    {% endif %}
 
-    {% block content %}
-    {% endblock %}
-    <script type="text/javascript" src="{% static 'javascript/imports.js' %}"></script>
-    <script type="text/javascript" src="{% static 'javascript/scheduling.js' %}"></script>
-    <script type="text/javascript" src="{% static 'javascript/reports.js' %}"></script>
-    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}" type="javascript"></script>
+{% if user.is_authenticated %}
+    {% include 'partials/menu.html' %}
+{% endif %}
+ <body style="background: #F5F5F5">
+    <div class="divAll">
+{% block content %}
+{% endblock %}
+
+{% include 'partials/footer.html' %}
+
+<script type="text/javascript" src="{% static 'javascript/imports.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/scheduling.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascript/reports.js' %}"></script>
+<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}" type="javascript"></script>
+</div>
 </body>
 </html>
