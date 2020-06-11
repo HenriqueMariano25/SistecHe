@@ -5,97 +5,92 @@
 {% load static %}
 
 {% block content %}
-    <body style="background: #F5F5F5">
-    <div class="divAll">
+    <h1 class="text-center textTitleAll"><strong>AGENDAMENTO DE HORA EXTRA | AG</strong></h1>
+    <div class="container">
 
-        <h1 class="text-center textTitleAll"><strong>AGENDAMENTO DE HORA EXTRA | AG</strong></h1>
-        <div class="container">
-
-            <div class="col">
-                <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5">
-                    <div class="col-2 voidDiv">
-                    </div>
-                    <div class="col-4">
-                        <div class="col ">
-                            <select class="form-control" id="select_leader_scheduling">
-                                <option value="0">Selecione um lider</option>
-                                {% for leader in leaders %}
-                                    <option value="{{ leader.id }}">{{ leader.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-6 row ">
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="Nome do Funcionário" value="" name="seach_employee">
-                        </div>
-                        <div class="col">
-                            <input type="submit" class="btn  btn-outline-success my-2 my-sm-0" value="Procurar"
-                                   id="submit_search_employee">
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        {% include 'partials/_alerts.html' %}
-
-        <form id="scheduling_employees" class="pb-2" action="{% url 'finalize_employee_scheduling' %}" method="post">
-            {% csrf_token %}
-            <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 ">
-                <div class="container">
-                    <div class="col">
-                        <input type="date" class="form-control" name="scheduling_date">
-                    </div>
-                    <div class="col">
-                        <select class="form-control" name="shift">
-                            <option>Selecione um turno</option>
-                            {% for shift in shifts %}
-                                <option value="{{ shift.id }}">{{ shift.name }}</option>
+        <div class="col">
+            <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5">
+                <div class="col-2 voidDiv">
+                </div>
+                <div class="col-4">
+                    <div class="col ">
+                        <select class="form-control" id="select_leader_scheduling">
+                            <option value="0">Selecione um lider</option>
+                            {% for leader in leaders %}
+                                <option value="{{ leader.id }}">{{ leader.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
+                </div>
+                <div class="col-6 row ">
                     <div class="col">
-                        <input class="form-control" placeholder="Motivo" type="text" name="reason">
+                        <input type="text" class="form-control" placeholder="Nome do Funcionário" value=""
+                               name="seach_employee">
+                    </div>
+                    <div class="col">
+                        <input type="submit" class="btn  btn-outline-success my-2 my-sm-0" value="Procurar"
+                               id="submit_search_employee">
                     </div>
                 </div>
             </nav>
-            <h1 class="text-center mt-5 mb-3 textOkS">Habilitados para Agendamento</h1>
-            <table id="table_funcionario_lider" class="table border border-dark">
-                <thead class="theadAll">
-                <tr>
-                    <td scope="col"><input type="checkbox" class="checkS" id="select_all"></td>
-                    <td class="pt-3" scope="col">Matrícula</td>
-                    <td class="pt-3" scope="col">Nome</td>
-                    <td class="pt-3" scope="col">Função</td>
-                    <td class="pt-3" scope="col">Hora Acumulada</td>
-                </tr>
-                </thead>
-                <tbody id="tbody_funcionario_lider">
-
-                </tbody>
-            </table>
-            <div class="float-right mb-5">
-                <input type="submit" value="Agendar" style="font-size: 25px" class="btnSche btn btn-success ">
-            </div>
-        </form>
-        <h1 class=" text-center mt-5 mb-3 textNotS">Agendamento não Permitido</h1>
-        <div id="he_estourada">
-
-            <table id="table_he_estourada" class="table border border-dark">
-                <thead class="theadAll">
-                <tr>
-                    <td scope="col">Matrícula</td>
-                    <td scope="col">Nome</td>
-                    <td scope="col">Função</td>
-                    <td scope="col">Hora Acumulada</td>
-                </tr>
-                </thead>
-                {#            <tbody id="tbody_he_estourada" class="text-light rowNegados">#}
-                <tbody id="tbody_he_estourada" class="RowNotS border border-dark">
-
-                </tbody>
-            </table>
         </div>
     </div>
-    </body>
+    <form id="scheduling_employees" class="pb-2" action="{% url 'finalize_employee_scheduling' %}" method="post">
+        {% csrf_token %}
+        <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 ">
+            <div class="container">
+                <div class="col">
+                    <input type="date" class="form-control" name="scheduling_date">
+                </div>
+                <div class="col">
+                    <select class="form-control" name="shift">
+                        <option>Selecione um turno</option>
+                        {% for shift in shifts %}
+                            <option value="{{ shift.id }}">{{ shift.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col">
+                    <input class="form-control" placeholder="Motivo" type="text" name="reason">
+                </div>
+            </div>
+        </nav>
+        {% include 'partials/_alerts.html' %}
+        <h1 class="text-center mt-5 mb-3 textOkS">Habilitados para Agendamento</h1>
+        <table id="table_funcionario_lider" class="table border border-dark">
+            <thead class="theadAll">
+            <tr>
+                <td scope="col"><input type="checkbox" class="checkS" id="select_all"></td>
+                <td class="pt-3" scope="col">Matrícula</td>
+                <td class="pt-3" scope="col">Nome</td>
+                <td class="pt-3" scope="col">Função</td>
+                <td class="pt-3" scope="col">Hora Acumulada</td>
+            </tr>
+            </thead>
+            <tbody id="tbody_funcionario_lider">
+
+            </tbody>
+        </table>
+        <div class="float-right mb-5">
+            <input type="submit" value="Agendar" style="font-size: 25px" class="btnSche btn btn-success ">
+        </div>
+    </form>
+    <h1 class=" text-center mt-5 mb-3 textNotS">Agendamento não Permitido</h1>
+    <div id="he_estourada">
+
+        <table id="table_he_estourada" class="table border border-dark">
+            <thead class="theadAll">
+            <tr>
+                <td scope="col">Matrícula</td>
+                <td scope="col">Nome</td>
+                <td scope="col">Função</td>
+                <td scope="col">Hora Acumulada</td>
+            </tr>
+            </thead>
+            {#            <tbody id="tbody_he_estourada" class="text-light rowNegados">#}
+            <tbody id="tbody_he_estourada" class="RowNotS border border-dark">
+
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

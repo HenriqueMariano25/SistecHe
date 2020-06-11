@@ -5,8 +5,6 @@
 {% load static %}
 
 {% block content %}
-    <body style="background: #F5F5F5">
-    <div class="divAll">
         <h1 class="text-center textTitleAll"><strong>IMPORTAR EFETIVO | AG</strong></h1>
 
         <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
@@ -19,7 +17,7 @@
                         </label>
                         <input id='input-file' type='file' name='excel' value=''/>
                         <span id='file-name'></span>
-                        <input type="submit" value="Importar" class="btn btn-primary btnE">
+                        <input type="submit" value="Importar" class="btn btn-success btnE">
                     </div>
                 </form>
             </div>
@@ -85,8 +83,6 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-    </body>
     <script>
      var $input = document.getElementById('input-file'),
         $fileName = document.getElementById('file-name');

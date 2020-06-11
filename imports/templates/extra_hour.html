@@ -5,8 +5,6 @@
 {% load static %}
 
 {% block content %}
-    <body style="background: #F5F5F5">
-    <div class="divAll">
         <h1 class="text-center textTitleAll"><strong>IMPORTAR HORA EXTRA | AG</strong></h1>
         <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgH">
             <div class="col-4 pt-3">
@@ -90,7 +88,6 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
     <script>
         var $input = document.getElementById('input-file'),
             $fileName = document.getElementById('file-name');
@@ -100,7 +97,7 @@
             console.log($input);
         });
     </script>
-    </body>
+
 {% endblock %}
 
 

@@ -21,7 +21,8 @@
                             Relatório
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item navFont" href="{% url 'report_shift' %}">Relatório por Turno | AG</a>
+                            <a class="dropdown-item navFont" href="{% url 'report_shift' %}">Relatório por Turno |
+                                AG</a>
                             <a class="dropdown-item navFont" href="{% url 'index' %}">Relatório por Líder | AG</a>
                         </div>
                     </li>
@@ -29,7 +30,8 @@
                     <li class="nav-item dropdown navFont">
                         <a href="#" class="nav-link dropdown-toggle" id="marcacaoDrop" data-toggle="dropdown">Agendamento</a>
                         <div class="dropdown-menu ">
-                            <a class="dropdown-item navFont" href="{% url 'scheduling_employees' %}">Agendar Colaboradores | AG</a>
+                            <a class="dropdown-item navFont" href="{% url 'scheduling_employees' %}">Agendar
+                                Colaboradores | AG</a>
                             <a class="dropdown-item navFont" href="{% url 'index' %}">Editar Agendados | AG</a>
                         </div>
                     </li>
@@ -39,7 +41,8 @@
                         <div class="dropdown-menu">
                             <a href="{% url 'employees' %}" class="dropdown-item navFont">Importar Efetivo | AG</a>
                             <a href="{% url 'extra_hour' %}" class="dropdown-item navFont">Importar Hora Extra | AG</a>
-                            <a href="{% url 'extra_hour_limit' %}" class="dropdown-item navFont">Configurar Usuários | AG</a>
+                            <a href="{% url 'extra_hour_limit' %}" class="dropdown-item navFont">Configurar Usuários |
+                                AG</a>
                         </div>
                     </li>
                 </ul>
@@ -50,7 +53,7 @@
                 <ul class="navbar-nav mr-5">
                     <li class="nav-item dropdown navFont">
                         <a href="" class="nav-link dropdown-toggle" id="marcacaoDrop"
-                           data-toggle="dropdown">Ola,{{user.first_name}}</a>
+                           data-toggle="dropdown">Olá, {{ user.first_name }}</a>
                         <div class="dropdown-menu">
                             <a href="{% url 'index' %}" class="dropdown-item navFont">Alterar Senha</a>
                             <a href="{% url 'logout' %}" class="dropdown-item navFont">Sair</a>
