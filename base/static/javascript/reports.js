@@ -1,11 +1,11 @@
 $("#form_report_shift").submit(function (event) {
     event.preventDefault()
-    let date = $("[name=date]").val()
-    let shift = $("[name=shift]").val()
+    let date_input = $("[name=date]").val()
+    let shift_input = $("[name=shift]").val()
     page = $('.reports_info')
     $.ajax({
         url: 'por_turno/preview',
-        data: {'date': date, 'shift': shift},
+        data: {'date': date_input, 'shift': shift_input},
         dateType: 'json',
         success: function (data) {
             const leaders = data.leaders
@@ -15,6 +15,7 @@ $("#form_report_shift").submit(function (event) {
             const date = data.date
             console.log(data)
             page.children().remove()
+            page.append('<a href="por_turno/pdf?data='+date_input+'&turno='+shift_input+'">TEste</a>')
             page.append('<h1>'+date+'</h1>')
             for (var x = 0; x < data['shifts_res'].length; x++) {
                 if (data.emplo_schedus_data.find(emplo_schedus => emplo_schedus.scheduling.shift.id === data.shifts_res[x].id)) {
