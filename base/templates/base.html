@@ -23,17 +23,18 @@
 {% if user.is_authenticated %}
     {% include 'partials/menu.html' %}
 {% endif %}
- <body style="background: #F5F5F5">
-    <div class="divAll">
-{% block content %}
-{% endblock %}
+<body style="background: #F5F5F5">
+<div class="divAll">
+    {% block content %}
+    {% endblock %}
 
-{% include 'partials/footer.html' %}
+    {% include 'partials/footer.html' %}
 
-<script type="text/javascript" src="{% static 'javascript/imports.js' %}"></script>
-<script type="text/javascript" src="{% static 'javascript/scheduling.js' %}"></script>
-<script type="text/javascript" src="{% static 'javascript/reports.js' %}"></script>
-<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}" type="javascript"></script>
+    <script type="text/javascript" src="{% static 'javascript/imports.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/scheduling.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/approval.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/reports.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}" type="javascript"></script>
 </div>
 </body>
 </html>

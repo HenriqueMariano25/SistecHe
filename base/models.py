@@ -127,11 +127,13 @@ class Emplo_Schedu(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     scheduling = models.ForeignKey(Scheduling, on_delete=models.PROTECT)
     plus_he = models.FloatField(default=0.0)
+    authorized = models.BooleanField(default=True)
 
     def to_json(self):
         return {
             'id': self.id,
             'employee': self.employee.to_json(),
             'scheduling': self.scheduling.to_json(),
-            'plus_he': self.plus_he
+            'plus_he': self.plus_he,
+            'authorized': self.authorized
         }

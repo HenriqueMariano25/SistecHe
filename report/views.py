@@ -1,8 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.template.loader import render_to_string
-
-from base.models import Shift, Employee, Emplo_Schedu, Scheduling, Sector
+from base.models import Shift, Employee, Emplo_Schedu, Sector
 from base.utils import render_to_pdf
 
 

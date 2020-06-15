@@ -1,0 +1,46 @@
+<head>
+    <title>Relatorio|Por Lider</title>
+</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <form action="" method="" id="form_director_list">
+        <div class="col-5 row">
+            <div id="divVoid" class="col-7">
+            </div>
+            <div class="col-5">
+                <input type="date" class="form-control" name="date">
+            </div>
+        </div>
+        <div class="col-2">
+            <select class="form-control" name="shift">
+                <option value="0">Todos os turnos</option>
+                {% for shift in shifts %}
+                    <option value="{{ shift.id }}">{{ shift.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-2">
+            <select class="form-control" name="sector">
+                <option value="0">Todos os setores</option>
+                {% for sector in sectors %}
+                    <option value="{{ sector.id }}">{{ sector.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-5 row">
+            <div class="col-5">
+                <input type="submit" class="btn btn-info btn-block" value="visualizar">
+            </div>
+            <div id="divVoid" class="col-7">
+            </div>
+        </div>
+    </form>
+
+        <div class="director_list">
+
+        </div>
+    <h1>Oi</h1>
+    </form>
+{% endblock %}
