@@ -56,10 +56,10 @@
             {% for employee in employees %}
                 <tr class="tr-employee">
                     {% if employee.leader == True %}
-                        <td class="pt-3"><input class="checkE  leader " type="checkbox" value="{{ employee.registration }}"
+                        <td class="pt-3"><input class="checkE  leader" type="checkbox" value="{{ employee.registration }}"
                                    name="checks[leader]" id="check_leader" checked></td>
                     {% else %}
-                        <td class="pt-3"><input class="checkE leader " type="checkbox" value="{{ employee.registration }}"
+                        <td class="pt-3"><input class="checkE leader" type="checkbox" value="{{ employee.registration }}"
                                    name="checks[leader]" id="check_leader"></td>
                     {% endif %}
                     <td id="employee_registration" class="pt-4 registration">{{ employee.registration }}</td>
@@ -67,7 +67,9 @@
                     <td class="pt-4">{{ employee.occupation }}</td>
                     <td class="pt-4">{{ employee.leader_name }}</td>
                     <td class="pt-4" >{{ employee.sub_sector.name }}</td>
-                    <td ><select  name="selected_sector" id="selected_sector" class="form-control selected_sector pr-5"
+                    <td class="pt-4" >{{ employee.sector.name }}</td>
+                    
+                    <!-- <td><select  name="selected_sector" id="selected_sector" class="form-control selected_sector pr-5"
                                 value="1">
                         <option value="0">Setor</option>
                         {% for sector in sectors %}
@@ -77,7 +79,7 @@
                                 <option class="pr-5" value="{{ sector.id }}">{{ sector.name }}</option>
                             {% endif %}
                         {% endfor %}
-                    </select></td>
+                    </select></td> -->
                     <td></td>
                 </tr>
             {% endfor %}

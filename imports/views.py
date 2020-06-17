@@ -69,10 +69,10 @@ def update_employees(request):
 
             if type(demission_date) == str:
                 demission_date = demission_date.strip()
-            #
+            
             if type(demission_date) == float:
                 demission_date = ""
-            #
+            
             if registration != " ":
                 employee = Employee.objects.filter(registration=registration).first()
                 if not employee is None and demission_date != "":
@@ -107,6 +107,16 @@ def update_employees(request):
                                         leader_name=leader_name, sub_sector=subSector, sector=sector)
                     if employee.save:
                         employee.save()
+        for row_num in xrange(sheet.nrows):
+            row = sheet.row_values(row_num)
+            if row[0] == "" or row[0] == "Id reduzido":
+                continue
+            leader_name = row[8]
+            leader = Employee.objects.filter(name=leader_name).first()
+            if leader:
+                leader.leader = True
+                leader.save()
+            
         return redirect('employees')
 
 
