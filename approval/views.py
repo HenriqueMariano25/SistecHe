@@ -56,3 +56,17 @@ def director_list(request):
     }
 
     return JsonResponse(response)
+
+def approval_scheduluing(request):
+    registration = request.POST['registration']
+    situation = request.POST['situation']
+    date = request.POST['date']
+    emplo_schedu = Emplo_Schedu.objects.get(scheduling__date=date,employee__registration=registration)
+    if situation == 'yes':
+        emplo_schedu.authorized = True
+    elif situation == 'no':
+        emplo_schedu.authorized = False
+    if emplo_schedu.save:
+        emplo_schedu.save()
+        response = {"result":"OK"}
+    return JsonResponse(response)

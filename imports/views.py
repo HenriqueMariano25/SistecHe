@@ -41,6 +41,7 @@ def update_employees(request):
         'COMISSIONAMENTO': Sector.objects.get(name="Comissionamento"),
         'SUPRIMENTOS OBRA': Sector.objects.get(name="Suprimentos"),
         'SUPRIMENTOS SP': Sector.objects.get(name="Suprimentos"),
+        'PRESERVAÇÃO': Sector.objects.get(name="Suprimentos"),
         'DIRETORIA DE CONTRATO': Sector.objects.get(name="Diretoria de Contrato"),
         'GERENCIA ADCON': Sector.objects.get(name="Administração Contratual"),
     }

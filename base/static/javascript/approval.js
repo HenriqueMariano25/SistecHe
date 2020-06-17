@@ -6,7 +6,7 @@ $("#form_director_list").submit(function (event) {
     page = $('.director_list')
     $.ajax({
         url: 'diretor/lista',
-        data: {'date': date, 'shift': shift, 'sector':sector},
+        data: {'date': date, 'shift': shift, 'sector': sector},
         dateType: 'json',
         success: function (data) {
             const shifts = data.shifts
@@ -16,7 +16,7 @@ $("#form_director_list").submit(function (event) {
             console.log("teste")
             page.children().remove()
             page.append('<form action="" method="post" id="approve_schedule">' +
-            '<div class="row bg-dark">' +
+                '<div class="row bg-dark">' +
                 '<div class="bg-danger">' +
                 '<h1 class="dateReport text-right">' + date + '</h1> ' +
                 '</div>' +
@@ -48,13 +48,13 @@ $("#form_director_list").submit(function (event) {
                                 '<tbody>'
                             employees_leaders = emplo_schedus.filter(emplo_schedus => emplo_schedus.employee.leader_name === value.name)
                             $.each(employees_leaders, function (key, value) {
-                                if(value.authorized === true){
-                                    checkbox = '<input id="check_leader" type="checkbox" value="teste" checked on_click="is_authorized()">'
-                                }else{
-                                    checkbox = '<input id="check_leader" type="checkbox" value="teste" on_click="is_authorized()>'
+                                if (value.authorized === true) {
+                                    checkbox = '<input id="check_approval" type="checkbox" value="' + value.employee.registration + '" class="check_approval" checked>'
+                                } else {
+                                    checkbox = '<input id="check_approval" type="checkbox" value="' + value.employee.registration + '" class="check_approval">'
                                 }
                                 tr = tr + '<tr>\n' +
-                                    '  <td>'+checkbox+'</td>\n' +
+                                    '  <td>' + checkbox + '</td>\n' +
                                     '  <td>' + value.employee.registration + '</td>\n' +
                                     '  <td>' + value.employee.name + '</td>\n' +
                                     '  <td>' + value.employee.occupation + '</td>\n' +
@@ -63,11 +63,34 @@ $("#form_director_list").submit(function (event) {
                                     '</tr>'
                             })
                             page.append(table + tr)
-                            approve_schedule = '<div style="position:fixed ">'+
-                                             '<input type="submit">'+
-                                                 '</div>'+
-                                                 '</form>'
-                            page.append(approve_schedule)
+                            $(".check_approval").click(function () {
+                                date = $("[name='date']").val()
+                                alert(date)
+                                registration = $(this).val()
+                                if ($(this).prop("checked") === true) {
+                                    situation = 'yes'
+                                } else {
+                                    situation = 'no'
+                                }
+                                // alert(situation + registration)
+                                var csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+                                $.ajax({
+                                    type: 'POST',
+                                    url:'aprovacao',
+                                    data: {'registration': registration, 'situation': situation,'csrfmiddlewaretoken': csrf,'date':date},
+                                    dateType: 'json',
+                                    success: function(data){  
+                                        alert("Opa bom dia")
+                                        console.log(data)
+                                    }
+                                })
+                            })
+                            // approve_schedule = '<div style="position:fixed ">'+
+                            //                  '<input type="submit">'+
+                            //                      '</div>'+
+                            //                      '</form>'
+                            // page.append(approve_schedule)
+
                         }
                     })
                 }
@@ -76,6 +99,3 @@ $("#form_director_list").submit(function (event) {
         }
     })
 })
-$("#approve_schedule").submit(function () {
-        alert("teste")
-    })
