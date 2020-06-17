@@ -36,23 +36,28 @@
                             <a class="dropdown-item navFont" href="{% url 'index' %}">Editar Agendados | AG</a>
                         </div>
                     </li>
-                    <li class="nav-item dropdown navFont">
-                        <a href="" class="nav-link dropdown-toggle" id="marcacaoDrop"
-                           data-toggle="dropdown">Importação</a>
-                        <div class="dropdown-menu">
-                            <a href="{% url 'employees' %}" class="dropdown-item navFont">Importar Efetivo | AG</a>
-                            <a href="{% url 'extra_hour' %}" class="dropdown-item navFont">Importar Hora Extra | AG</a>
-                            <a href="{% url 'extra_hour_limit' %}" class="dropdown-item navFont">Configurar Usuários |
-                                AG</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown navFont">
-                        <a href="" class="nav-link dropdown-toggle" id="marcacaoDrop"
-                           data-toggle="dropdown">Aprovação</a>
-                        <div class="dropdown-menu">
-                            <a href="{% url 'approval_director' %}" class="dropdown-item navFont">Aprovação do Diretor</a>
-                        </div>
-                    </li>
+                    {% if user.userprofileinfo.permission == 2 %}
+                        <li class="nav-item dropdown navFont">
+                            <a href="" class="nav-link dropdown-toggle" id="marcacaoDrop"
+                               data-toggle="dropdown">Importação</a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'employees' %}" class="dropdown-item navFont">Importar Efetivo | AG</a>
+                                <a href="{% url 'extra_hour' %}" class="dropdown-item navFont">Importar Hora Extra | AG</a>
+                                <a href="{% url 'extra_hour_limit' %}" class="dropdown-item navFont">Configurar Usuários |
+                                    AG</a>
+                            </div>
+                        </li>
+                    {% endif %}
+                    {% if user.userprofileinfo.permission == 3 %}
+                        <li class="nav-item dropdown navFont">
+                            <a href="" class="nav-link dropdown-toggle" id="marcacaoDrop"
+                               data-toggle="dropdown">Aprovação</a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'approval_director' %}" class="dropdown-item navFont">Aprovação do
+                                    Diretor</a>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
             {% endif %}
         </div>
