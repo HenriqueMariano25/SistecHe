@@ -1,1 +1,1 @@
-web: gunicorn sisteche.wsgi --log-file -
+web: gunicorn sistecHe.wsgi --log-file -
