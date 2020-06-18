@@ -1,8 +1,9 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from base.models import Shift, Employee, Emplo_Schedu, Sector
-from base.utils import render_to_pdf
-
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
 
 def report_shift(request):
     shifts = Shift.objects.all()
@@ -65,9 +66,6 @@ def shift_pdf(request):
         if emplo_schedus.filter(scheduling__shift=shift):
             shifts.append(shift)
 
-
-    # print(shifts)
-
     for emplo_schedu in emplo_schedus:
         leader = Employee.objects.get(name=emplo_schedu.employee.leader_name)
         if not leader in leaders:
@@ -96,8 +94,24 @@ def shift_pdf(request):
         response = {
             'error':'Sem marcações'
         }
-    pdf = render_to_pdf('pdf/report_shift_pdf.html', response)
-    return HttpResponse(pdf, content_type='application/pdf')
+
+    html_string =render_to_string('pdf/report_shift_pdf.html',response)
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output = open(output.name, 'rb')
+        response.write(output.read())
+
+    return response
+
+    # pdf = render_to_pdf('pdf/report_shift_pdf.html', response)
+    # return HttpResponse(pdf, content_type='application/pdf')
 
 
 def report_leader(request):
@@ -180,5 +194,18 @@ def leader_pdf(request):
         response = {
             'error': 'Sem marcações'
         }
-    pdf = render_to_pdf('pdf/report_leader_pdf.html', response)
-    return HttpResponse(pdf, content_type='application/pdf')
+
+    html_string = render_to_string('pdf/report_leader_pdf.html', response)
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output = open(output.name, 'rb')
+        response.write(output.read())
+
+    return response
