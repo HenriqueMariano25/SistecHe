@@ -10,7 +10,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 def scheduling_employees(request):
     print(Scheduling.objects.all())
-    leaders = Employee.objects.filter(leader=True, sector=request.user.userprofileinfo.sector)
+    leaders = Employee.objects.filter(leader=True, sector=request.user.userprofileinfo.sector).order_by('name')
     shifts = Shift.objects.all()
     data = {"leaders": leaders, "shifts": shifts}
     return render(request, 'scheduling_employees.html', data)
@@ -33,7 +33,6 @@ def selected_leader(request):
 
 
 def finalize_employee_scheduling(request):
-    print(request.POST)
     scheduling_date = request.POST['scheduling_date']
     reason = request.POST['reason']
     registrations = request.POST.getlist('registrations')
