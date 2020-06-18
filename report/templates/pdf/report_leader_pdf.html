@@ -1,7 +1,26 @@
 {% load emplo_in_leader %}
+<html>
+<head>
+    <title>Relatório | Por Líder</title>
+</head>
+<body style='font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif'>
 
-<p>Contador: {{ count_employees }}</p>
-<p>Data: {{ date }}</p>
+<div class="container-fluid mb-5">
+    <div class="row">
+        <div class="col-4">
+            <img src="https://i.pinimg.com/originals/88/dd/e1/88dde1160aaebf6bfe42750b87afe11c.png"
+                 style="width: 200px;height: 80px">
+        </div>
+        <div class="col-6">
+            <h3 class="text-center text mt-4"><strong>RELATÓRIO POR LIDER | AG</strong></h3>
+        </div>
+        <div class="col-3 text-right">
+            <p class="mt-4"
+               style='font-size: 25px;'>{{ date }}</p>
+        </div>
+    </div>
+</div>
+{#<p class="text-right" style="font-size:20px;">Funcionários Agendados: {{ count_employees }}</p>#}
 
 {% if shifts_res %}
     {% for shift in shifts_res %}
@@ -9,18 +28,19 @@
         {% for leader in leaders %}
             {% for shi in leader|emplo_in_leader:emplo_schedus_data %}
                 {% ifequal shi.id shift.id %}
-                    <h1 class="text-center text-muted">{{ leader.name }}</h1>
-                    <table class="table fontTableGE">
-                        <thead>
+                    <h4 class="text-center mt-4 mb-3" style="color:rgb(70,70,70)">{{ leader.name }}</h4>
+                    <table style="width:100%;padding: 105px;margin-bottom: 10px">
+                        <thead style="background-color: #00102f;color:white;">
                         <tr>
-                            <th>Matricula</th>
+                            <th>Matrícula</th>
                             <th>Funcionário</th>
                             <th>Função</th>
                             <th>Motivo</th>
                             <th>HE Previsto</th>
                         </tr>
                         </thead>
-                        <tbody>
+
+                        <tbody >
                         {% for emplo_schedu in emplo_schedus_data %}
                             {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi %}
                                 <tr>
@@ -44,3 +64,8 @@
 {% if error %}
     {{ error }}
 {% endif %}
+<style>
+
+</style>
+</body>
+</html>

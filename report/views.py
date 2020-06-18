@@ -5,6 +5,8 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
 
+from sistecHe import settings
+
 
 def report_shift(request):
     shifts = Shift.objects.all()
@@ -98,7 +100,10 @@ def shift_pdf(request):
 
     html_string = render_to_string('pdf/report_shift_pdf.html', response)
     html = HTML(string=html_string)
-    result = html.write_pdf()
+    result = html.write_pdf(stylesheets=[
+            settings.BASE_DIR + '/base/static/css/css_report/report.css',
+            settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
+        ],)
 
     response = HttpResponse(content_type='application/pdf;')
     response['Content-Disposition'] = 'inline; filename=list_people.pdf'
@@ -199,7 +204,10 @@ def leader_pdf(request):
 
     html_string = render_to_string('pdf/report_leader_pdf.html', response)
     html = HTML(string=html_string)
-    result = html.write_pdf()
+    result = html.write_pdf(stylesheets=[
+            settings.BASE_DIR + '/base/static/css/css_report/report.css',
+            settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
+        ],)
 
     response = HttpResponse(content_type='application/pdf;')
     response['Content-Disposition'] = 'inline; filename=list_people.pdf'

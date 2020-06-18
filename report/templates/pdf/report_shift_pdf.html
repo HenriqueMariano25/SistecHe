@@ -1,59 +1,77 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-
 <html lang="pt-br">
 <head>
-    <title>Relatorio|Por Turno</title>
+    <title>Relatório | Por Turno</title>
+    {% load static %}
 </head>
-
 {% load emplo_in_leader %}
+<body style='font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif'>
+<div class="container-fluid mb-5">
+    <div class="row">
+        <div class="col-4">
+            <img src="https://i.pinimg.com/originals/88/dd/e1/88dde1160aaebf6bfe42750b87afe11c.png"
+                 style="width: 200px;height: 80px">
+        </div>
+        <div class="col-6">
+            <h3 class="text-center text mt-4"><strong>RELATÓRIO POR TURNO | AG</strong></h3>
+        </div>
+        <div class="col-3 text-right">
+            <p class="mt-4"
+               style='font-size: 25px;'>{{ date }}</p>
+        </div>
+    </div>
+</div>
+{#<p class="text-right" style="font-size:20px;">Funcionários Agendados: {{ count_employees }}</p>#}
 
-<p>Contador: {{ count_employees }}</p>
-<p>Data: {{ date }}</p>
 
-    {% if shifts_res %}
-        {% for shift in shifts_res %}
-            <h1 class="display-4 text-center turnoTitle">{{ shift.name }}</h1>
-            {% for sector in sectors %}
+{% if shifts_res %}
+    {% for shift in shifts_res %}
+        <h1 class="display-4 text-center turnoTitle">{{ shift.name }}</h1>
+        {% for sector in sectors %}
 
-                {% for leader in leaders %}
-                    {% ifequal leader.sector sector %}
+            {% for leader in leaders %}
+                {% ifequal leader.sector sector %}
 
-                        {% for shi in leader|emplo_in_leader:emplo_schedus_data %}
-                            {% ifequal shi.id shift.id %}
-                                <h2 class="fontSetorGE">{{ sector.name }}</h2>
-                                <h1 class="text-center text-muted">{{ leader.name }}</h1>
-                                <table class="table fontTableGE">
-                                    <thead>
-                                    <tr>
-                                        <th>Matricula</th>
-                                        <th>Funcionário</th>
-                                        <th>Função</th>
-                                        <th>Motivo</th>
-                                        <th>HE Previsto</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                    {% for shi in leader|emplo_in_leader:emplo_schedus_data %}
+                        {% ifequal shi.id shift.id %}
+                            <h2 class="fontSetorGE text-left">{{ sector.name }}</h2>
+                            <h4 class="text-center mt-4 mb-3" style="color:rgb(70,70,70)">{{ leader.name }}</h4>
+                            <table style="width:100%;padding: 105px;">
+                                <thead style="background-color: #00102f;color:white;">
+                                <tr>
+                                    <th>Matrícula</th>
+                                    <th>Funcionário</th>
+                                    <th>Função</th>
+                                    <th>Motivo</th>
+                                    <th>HE Previsto</th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 {% for emplo_schedu in emplo_schedus_data %}
-                                    {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi%}
-                                            <tr>
-                                              <td>{{ emplo_schedu.employee.registration }}</td>
-                                              <td>{{ emplo_schedu.employee.name }}</td>
-                                              <td>{{ emplo_schedu.employee.occupation }}</td>
-                                              <td>{{ emplo_schedu.scheduling.reason }}</td>
-                                              <td>{{ emplo_schedu.employee.extra_hour }}</td>
-                                            </tr>
+                                    {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi %}
+                                        <tr>
+                                            <td>{{ emplo_schedu.employee.registration }}</td>
+                                            <td>{{ emplo_schedu.employee.name }}</td>
+                                            <td>{{ emplo_schedu.employee.occupation }}</td>
+                                            <td>{{ emplo_schedu.scheduling.reason }}</td>
+                                            <td>{{ emplo_schedu.employee.extra_hour }}</td>
+                                        </tr>
                                     {% endif %}
                                 {% endfor %}
-                                    </tbody></table>
-                                {#                                {{ shi }}#}
-                            {% endifequal %}
-                        {% endfor %}
-                    {% endifequal %}
+                                </tbody>
+                            </table>
+                            {#                                {{ shi }}#}
+                        {% endifequal %}
+                    {% endfor %}
+                {% endifequal %}
 
-                {% endfor %}
             {% endfor %}
         {% endfor %}
-    {% endif %}
-    {% if error %}
-        {{ error }}
-    {% endif %}
+    {% endfor %}
+{% endif %}
+{% if error %}
+    {{ error }}
+{% endif %}
+</body>
+</html>
+
