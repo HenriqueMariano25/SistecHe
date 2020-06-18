@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
 
+
 def report_shift(request):
     shifts = Shift.objects.all()
     data = {'shifts': shifts}
@@ -18,13 +19,13 @@ def shift_preview(request):
     if shift_params != 0:
         shifts_res = Shift.objects.filter(id=int(shift_params))
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, scheduling__shift_id=shift_params)
+            scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
         shifts_res = [shift.to_json() for shift in shifts_res]
     else:
         shifts_res_date = Shift.objects.all()
         shifts_res = [shift.to_json() for shift in shifts_res_date]
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date)
+            scheduling__date=date, authorized=True)
 
     leaders = []
     for emplo_schedu in emplo_schedus:
@@ -46,6 +47,7 @@ def shift_preview(request):
     }
     return JsonResponse(response)
 
+
 def shift_pdf(request):
     date = request.GET['data']
     shift_params = int(request.GET['turno'])
@@ -53,11 +55,11 @@ def shift_pdf(request):
     if shift_params != 0:
         shifts_res = Shift.objects.filter(id=int(shift_params))
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, scheduling__shift_id=shift_params)
+            scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
     else:
         shifts_res = Shift.objects.all()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date)
+            scheduling__date=date, authorized=True)
 
     leaders = []
     shifts = []
@@ -70,7 +72,6 @@ def shift_pdf(request):
         leader = Employee.objects.get(name=emplo_schedu.employee.leader_name)
         if not leader in leaders:
             leaders.append(leader)
-
 
     for leader in leaders:
         sector = Sector.objects.get(id=leader.sector_id)
@@ -88,14 +89,14 @@ def shift_pdf(request):
             'leaders': leaders,
             'sectors': sectors,
             'date': formatted_date,
-            'count_employees':count_employees,
+            'count_employees': count_employees,
         }
     else:
         response = {
-            'error':'Sem marcações'
+            'error': 'Sem marcações'
         }
 
-    html_string =render_to_string('pdf/report_shift_pdf.html',response)
+    html_string = render_to_string('pdf/report_shift_pdf.html', response)
     html = HTML(string=html_string)
     result = html.write_pdf()
 
@@ -128,13 +129,13 @@ def leader_preview(request):
         shifts_res = Shift.objects.filter(id=int(shift_params))
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift_id=shift_params,
-            employee__sector_id=request.user.userprofileinfo.sector_id)
+            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True)
         shifts_res = [shift.to_json() for shift in shifts_res]
     else:
         shifts_res_date = Shift.objects.all()
         shifts_res = [shift.to_json() for shift in shifts_res_date]
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, employee__sector_id=request.user.userprofileinfo.sector_id)
+            scheduling__date=date, employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True)
 
     leaders = []
     for emplo_schedu in emplo_schedus:
@@ -161,11 +162,12 @@ def leader_pdf(request):
     if shift_params != 0:
         shifts_res = Shift.objects.filter(id=int(shift_params))
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, scheduling__shift_id=shift_params,employee__sector_id=request.user.userprofileinfo.sector_id)
+            scheduling__date=date, scheduling__shift_id=shift_params,
+            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True)
     else:
         shifts_res = Shift.objects.all()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date,employee__sector_id=request.user.userprofileinfo.sector_id)
+            scheduling__date=date, employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True)
 
     leaders = []
     shifts = []
