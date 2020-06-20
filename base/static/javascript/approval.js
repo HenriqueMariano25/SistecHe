@@ -29,11 +29,11 @@ $("#form_director_list").submit(function (event) {
 
             for (var x = 0; x < shifts.length; x++) {
                 if (emplo_schedus.find(emplo_schedus => emplo_schedus.scheduling.shift.id === shifts[x].id)) {
-                    page.append('<h1 class="display-4 text-center turnoTitle">' + shifts[x].name + '</h1>')
+                    page.append('<p class="text-center titleShiftsApro"><strong>' + shifts[x].name + '</strong></p>')
                 }
                 for (y = 0; y < sectors.length; y++) {
                     if (emplo_schedus.find(emplo_schedus => emplo_schedus.employee.sector.id === sectors[y].id && emplo_schedus.scheduling.shift.id === shifts[x].id)) {
-                        page.append('<h2 class="fontSetorGE">' + sectors[y].name + '</h2>')
+                        page.append('<h1 class="fontSetorGE">' + sectors[y].name + '</h1>')
                     }
                     leaders_sector = leaders.filter(leaders => leaders.sector.id === sectors[y].id)
                     $.each(leaders_sector, function (key, value) {
