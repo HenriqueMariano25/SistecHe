@@ -170,13 +170,18 @@ def update_employees_sector(request):
 
 def extra_hour(request):
     if request.user.is_authenticated:
-        employees = Employee.objects.all().order_by('-extra_hour')
+        employees_list = Employee.objects.all().order_by('-extra_hour')
+
+        paginator = Paginator(employees_list, 20)
+        page = request.GET.get('page')
+        employees = paginator.get_page(page)
+
         import_history = ImportHistory.objects.filter(type="extra_hour").last()
         limit_hour = LimitHour.objects.last()
         if request.method == "POST":
             search = request.POST['search']
             if 'search' in request.POST:
-                employees = employees.filter(name__icontains=search)
+                employees = employees_list.filter(name__icontains=search)
         data = {'employees': employees,
                 'import_history': import_history,
                 'limit_hour': limit_hour,
