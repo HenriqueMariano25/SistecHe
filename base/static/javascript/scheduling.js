@@ -136,7 +136,6 @@ function add_employees_leader_table(leaders, employees, table) {
 }
 $('#form_scheduling_employees').submit(function (event) {
     event.preventDefault()
-    // const registrations = $('[name=registrations]:checked').val()
     let registrations = $("input:checkbox[name=registrations]:checked").map(function(){return $(this).val()}).get()
     let date = $('[name=scheduling_date]').val()
     let leader = $('[name=leader]').val()
