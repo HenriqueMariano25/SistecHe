@@ -14,7 +14,6 @@
 }
 
 .textNotS {
-    padding-left: 110px;
     font-size: 30px;
     font-family: 'Lato';
 }
@@ -33,4 +32,9 @@
 .leaderNotS{
     color: black;
     background: #F5F5F5;
+}
+
+.textAlertS{
+    font-size: 15px;
+    margin-bottom: 5px;
 }
