@@ -134,42 +134,48 @@ function add_employees_leader_table(leaders, employees, table) {
         }
     }
 }
+
 $('#form_scheduling_employees').submit(function (event) {
     event.preventDefault()
     // const registrations = $('[name=registrations]:checked').val()
-    let registrations = $("input:checkbox[name=registrations]:checked").map(function(){return $(this).val()}).get()
+    let registrations = $("input:checkbox[name=registrations]:checked").map(function () {
+        return $(this).val()
+    }).get()
     let date = $('[name=scheduling_date]').val()
     let leader = $('[name=leader]').val()
     let shift = $('[name=shift]').val()
     let reason = $('[name=reason]').val()
     let csrf = $('[name=csrfmiddlewaretoken]').val()
     $.ajax({
-        url:'funcionario/agendar',
-        method:'post',
-        data:{
-            'scheduling_date':date,
-            'reason':reason,
-            'registrations':registrations,
-            'shift':shift,
-            'leader':leader,
-            'csrfmiddlewaretoken':csrf,
+        url: 'funcionario/agendar',
+        method: 'post',
+        data: {
+            'scheduling_date': date,
+            'reason': reason,
+            'registrations': registrations,
+            'shift': shift,
+            'leader': leader,
+            'csrfmiddlewaretoken': csrf,
         },
         dataType: 'json',
         success: function (data) {
-            if(typeof data.scheduled_employees !== "undefined" ){
+            if (typeof data.scheduled_employees !== "undefined") {
                 let div_alerts = $('#alerts_scheduling')
                 div_alerts.children().remove();
                 let scheduled_employees = data.scheduled_employees
                 console.log(scheduled_employees)
-                div_alerts.append('<h1>Os funcionarios abaixo já foram agendados</h1>')
+                div_alerts.append('<div class="alert alert-danger"><h3 class="alert-heading"><strong>Os Funcionários Abaixo Já Foram Agendados</strong></h3></div>')
                 $.each(scheduled_employees, function (key, value) {
                     console.log(value)
-                    div_alerts.append('<p>'+value.employee.registration+' '+value.employee.name+'</p>')
+                    div_alerts.append('<div class="alert alert-danger">' +
+                        ' <p class="textAlertS">' + value.employee.registration + '  -  ' + value.employee.name + '</p>' +
+                        ' </div>')
                 })
-            }else{
+
+            } else {
                 let div_alerts = $('#alerts_scheduling')
                 div_alerts.children().remove();
-                div_alerts.append('<h1>Agendamento realiza com sucesso</h1>')
+                div_alerts.append('<div class="alert alert-success text-center"><h3><strong>Agendamento Realiza com Sucesso</strong></h3></div>')
                 $("#tbody_funcionario_lider").children().remove();
                 $("#tbody_he_estourada").children().remove();
                 $('[name=leader]').val(0)
@@ -230,13 +236,13 @@ $("#edit_scheduling").submit(function (event) {
                         method: "POST",
                         url: "deletar",
                         data: {
-                            'date':date,
+                            'date': date,
                             'csrfmiddlewaretoken': csrf,
                             'registration': registration,
                         },
                         dataType: "json",
                         success: function (data) {
-                            if (data.status === "success"){
+                            if (data.status === "success") {
                                 row.remove();
                             }
                         }
