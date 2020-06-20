@@ -7,8 +7,8 @@ $("#select_leader_scheduling").change(function () {
     $.ajax("agendamento/lider_selecionado?lider_id=" + this.value)
         .done(function (data) {
             for (var i = 0; i < data['employees'].length; i++) {
-                    var funcionarioTr = document.createElement("tr");
-                    var agendarTd = document.createElement("td");
+                var funcionarioTr = document.createElement("tr");
+                var agendarTd = document.createElement("td");
                 var matriculaTd = document.createElement("td");
                 matriculaTd.setAttribute("class", "registration");
                 var nomeTd = document.createElement("td");
@@ -74,21 +74,21 @@ $('#submit_search_employee').click(function () {
             console.log(data);
             console.log("oi");
             console.log(data['employees'].length)
-            if(data['employees'].length > 0){
-                add_employees_leader_table(data['leaders'],data['employees'],'#table_funcionario_lider tbody')
+            if (data['employees'].length > 0) {
+                add_employees_leader_table(data['leaders'], data['employees'], '#table_funcionario_lider tbody')
             }
-            if(data['employees_burst'].length > 0){
-                add_employees_leader_table(data['leaders_burst'],data['employees_burst'],'#table_he_estourada tbody')
+            if (data['employees_burst'].length > 0) {
+                add_employees_leader_table(data['leaders_burst'], data['employees_burst'], '#table_he_estourada tbody')
             }
 
         }
     })
 })
 
-function add_employees_leader_table(leaders, employees,table) {
+function add_employees_leader_table(leaders, employees, table) {
     for (var x = 0; x < leaders.length; x++) {
         var leaderTr = document.createElement("tr")
-        leaderTr.setAttribute("class","leaderNotS")
+        leaderTr.setAttribute("class", "leaderNotS")
         nameLeaderTd = document.createElement("td")
         nameLeaderTd.setAttribute("width", "100%")
         nameLeaderTd.setAttribute("colspan", 5)
@@ -124,7 +124,7 @@ function add_employees_leader_table(leaders, employees,table) {
 
                 var employee_table = document.querySelector(table);
 
-                if(table == '#table_funcionario_lider tbody'){
+                if (table == '#table_funcionario_lider tbody') {
                     employeeTr.appendChild(schedulingTd);
                 }
 
@@ -138,6 +138,72 @@ function add_employees_leader_table(leaders, employees,table) {
         }
     }
 }
-$("#select_all").click(function(){
+
+$("#select_all").click(function () {
     $('input:checkbox').not(this).prop('checked', this.checked);
 });
+
+$("#edit_scheduling").submit(function (e) {
+    e.preventDefault()
+    let date = $('#date').val()
+    let csrf = $('[name=csrfmiddlewaretoken]').val()
+    $.ajax({
+        url: 'editar/lista',
+        method: "POST",
+        dataType: 'json',
+        data: {
+            'csrfmiddlewaretoken': csrf,
+            'date': date,
+        },
+        success: function (data) {
+            const emplo_schedus = data.emplo_schedus
+            page = $('#list_edit_employees_')
+            let table = '<table class="table fontTableGE" id="table_reports_info">\n' +
+                '  <thead class="theadAll">\n' +
+                '      <tr>\n' +
+                '          <th>Matricula</th>\n' +
+                '          <th>Funcionário</th>\n' +
+                '          <th>Função</th>\n' +
+                '          <th>Motivo</th>\n' +
+                '          <th>HE Previsto</th>\n' +
+                '          <th>Deletar</th>\n' +
+                '       </tr>\n' +
+                '   </thead>\n' +
+                '<tbody>'
+            $.each(emplo_schedus, function (key, value) {
+                let tr = '<tr>\n' +
+                    '  <td id="employee_registration">' + value.employee.registration + '</td>\n' +
+                    '  <td>' + value.employee.name + '</td>\n' +
+                    '  <td>' + value.employee.occupation + '</td>\n' +
+                    '  <td>' + value.scheduling.reason + '</td>\n' +
+                    '  <td>' + value.employee.extra_hour + '</td>\n' +
+                    '  <td><button class="delete_employees">Deletar</button></td>\n' +
+                    '</tr>'
+                table = table + tr
+            })
+            page.append(table)
+            $(".delete_employees").click(function () {
+                const result = confirm("Deseja mesmo excluir essa marcação ?")
+                if (result === true) {
+                    let row = ($(this).parent().parent())
+                    let registration = row.find("#employee_registration").text()
+                    $.ajax({
+                        method: "POST",
+                        url: "deletar",
+                        data: {
+                            'date':date,
+                            'csrfmiddlewaretoken': csrf,
+                            'registration': registration,
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === "success"){
+                                row.remove();
+                            }
+                        }
+                    })
+                }
+            });
+        }
+    })
+})

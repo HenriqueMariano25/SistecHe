@@ -89,3 +89,25 @@ def search_employee_scheduling(request):
                 'leaders_burst': leaders_burst_res,}
 
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def edit_scheduling_employees(request):
+    return render(request, 'edit_scheduling_employees.html')
+
+
+def edit_scheduling_employees_list(request):
+    date = request.POST['date']
+    emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+        scheduling__date=date, employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True)
+    emplo_schedus_json = [emplo_schedu.to_json() for emplo_schedu in emplo_schedus]
+    response = {
+        'emplo_schedus':emplo_schedus_json,
+    }
+    return JsonResponse(response)
+
+def delete_emplo_scheduling(request):
+    registration = request.POST['registration']
+    date = request.POST['date']
+    emplo_schedu = Emplo_Schedu.objects.get(scheduling__date=date,employee__registration=registration)
+    emplo_schedu.delete()
+    return JsonResponse({'status':'success'})

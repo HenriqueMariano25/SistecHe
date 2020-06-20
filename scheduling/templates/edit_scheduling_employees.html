@@ -1,0 +1,17 @@
+<head>
+    <title>Agendamento|Funcionários</title>
+</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Editar agendamento</h1>
+    <form action="" method="post" id="edit_scheduling">
+        {% csrf_token %}
+        <input type="date" name="date" id="date">
+        <input type="submit">
+    </form>
+    <div id="list_edit_employees_">
+
+    </div>
+{% endblock %}
