@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-4">
                     <div class="col ">
-                        <select class="form-control" id="select_leader_scheduling">
+                        <select class="form-control" id="select_leader_scheduling" name="leader">
                             <option value="0">Selecione um lider</option>
                             {% for leader in leaders %}
                                 <option value="{{ leader.id }}">{{ leader.name }}</option>
@@ -35,15 +35,15 @@
             </nav>
         </div>
     </div>
-    <form id="scheduling_employees" class="pb-2" action="{% url 'finalize_employee_scheduling' %}" method="post">
+    <form id="form_scheduling_employees" class="pb-2" action="" method="post">
         {% csrf_token %}
         <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 ">
             <div class="container">
                 <div class="col">
-                    <input type="date" class="form-control" name="scheduling_date">
+                    <input type="date" class="form-control" name="scheduling_date" required>
                 </div>
                 <div class="col">
-                    <select class="form-control" name="shift">
+                    <select class="form-control" name="shift" required>
                         <option>Selecione um turno</option>
                         {% for shift in shifts %}
                             <option value="{{ shift.id }}">{{ shift.name }}</option>
@@ -51,11 +51,13 @@
                     </select>
                 </div>
                 <div class="col">
-                    <input class="form-control" placeholder="Motivo" type="text" name="reason">
+                    <input class="form-control" placeholder="Motivo" type="text" name="reason" required>
                 </div>
             </div>
         </nav>
-        {% include 'partials/_alerts.html' %}
+        <div id="alerts_scheduling">
+
+        </div>
         <h1 class="text-center mt-5 mb-3 textOkS">Habilitados para Agendamento</h1>
         <table id="table_funcionario_lider" class="table border border-dark">
             <thead class="theadAll">
