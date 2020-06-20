@@ -2,23 +2,27 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib import auth
 import xlrd
-import pandas as pd
 from xlrd.timemachine import xrange
-from datetime import datetime, date, time
+from datetime import date
+from django.core.paginator import Paginator
 
 from base.models import SubSector, Employee, Sector, ImportHistory, ReleasedHour, LimitHour
 
 
 def employees(request):
     if request.user.is_authenticated:
-        employees = Employee.objects.all().order_by('name')
+        employees_list = Employee.objects.all().order_by('name')
+
+        paginator = Paginator(employees_list, 20)
+        page = request.GET.get('page')
+        employees = paginator.get_page(page)
+
         import_history = ImportHistory.objects.filter(type="employees").last()
         if request.method == 'POST':
             search = request.POST['search']
             if 'search' in request.POST:
-                employees = employees.filter(name__icontains=search)
+                employees = employees_list.filter(name__icontains=search)
 
         data = {'employees': employees,
                 'sectors': Sector.objects.all(),
@@ -46,9 +50,6 @@ def update_employees(request):
         'GERENCIA ADCON': Sector.objects.get(name="Administração Contratual"),
     }
 
-    import_history = ImportHistory(type="employees", made_by=request.user,
-                                   created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
-    import_history.save()
     if request.method == 'POST':
         excel = request.FILES['excel']
         workbook = xlrd.open_workbook(file_contents=excel.read())
@@ -57,29 +58,40 @@ def update_employees(request):
             row = sheet.row_values(row_num)
             if row[0] == "" or row[0] == "Id reduzido":
                 continue
+
+            demission_date = row[4]
+
+            if type(demission_date) == str:
+                demission_date = demission_date.strip()
+
+            if type(demission_date) == float:
+                demission_date = ""
+
+            if not demission_date == "":
+                continue
+
+            occupation = row[5]
+
+            if occupation == "JOVEM APRENDIZ":
+                continue
+
+            if row[12] != "":
+                sector = row[12].split('-')[1].strip()
+                sector = SECTORS[sector]
+            else:
+                continue
+
             registration = str(row[2])[-8:]
             demission_date = row[4]
             name = row[1]
             leader_name = row[8]
             admission_date = date.fromordinal(693594 + int(row[3]))
-            occupation = row[5]
             manager = row[9]
-            sector = row[12].split('-')[1].strip()
-            sector = SECTORS[sector]
 
-            if type(demission_date) == str:
-                demission_date = demission_date.strip()
-            
-            if type(demission_date) == float:
-                demission_date = ""
-            
             if registration != " ":
                 employee = Employee.objects.filter(registration=registration).first()
                 if not employee is None and demission_date != "":
                     employee.delete()
-                    continue
-
-                if not demission_date == "":
                     continue
 
                 subsector = str(row[10]).split('-')[0]
@@ -116,7 +128,11 @@ def update_employees(request):
             if leader:
                 leader.leader = True
                 leader.save()
-            
+
+        import_history = ImportHistory(type="employees", made_by=request.user,
+                                       created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
+        import_history.save()
+
         return redirect('employees')
 
 
