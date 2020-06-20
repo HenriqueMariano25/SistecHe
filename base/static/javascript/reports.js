@@ -13,7 +13,6 @@ $("#form_report_shift").submit(function (event) {
             const shifts = data.shifts_res
             const sectors = data.sectors
             const date = data.date
-            console.log(data)
             page.children().remove()
             page.append('<div class="container ">' +
                 '<div class="row justify-content-center">' +
