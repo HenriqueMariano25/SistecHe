@@ -105,9 +105,9 @@ def shift_pdf(request):
     html_string = render_to_string('pdf/report_shift_pdf.html', response)
     html = HTML(string=html_string)
     result = html.write_pdf(stylesheets=[
-            settings.BASE_DIR + '/base/static/css/css_report/report.css',
-            settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
-        ],)
+        settings.BASE_DIR + '/base/static/css/css_report/report.css',
+        settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
+    ], )
 
     response = HttpResponse(content_type='application/pdf;')
     response['Content-Disposition'] = 'inline; filename=list_people.pdf'
@@ -125,12 +125,41 @@ def shift_pdf(request):
 
 
 def generate_excel_shift(request):
-    # date = request.GET['date']
-    # response = HttpResponse(content_type='application/ms-excel')
-    # response['Content-Disposition'] = 'attachment; filename'
-    # print(date)
-    pass
+    shifts = Shift.objects.all()
+    date = request.GET['date']
+    print(date)
 
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="relatorio_turno' + date + '.xlsx"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    for shift in shifts:
+        ws = wb.add_sheet(shift.name)
+
+        # Sheet header, first row
+        row_num = 0
+
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+
+        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo', 'Setor']
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        # Sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+            scheduling__date=date, authorized=True, scheduling__shift=shift).order_by("employee__sector","employee__leader_name","employee__name")
+        rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
+                                         'employee__leader_name', 'scheduling__reason', 'employee__sector__name')
+        for row in rows:
+            row_num += 1
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
 
 
 def report_leader(request):
@@ -170,7 +199,7 @@ def leader_preview(request):
         'shifts_res': shifts_res,
         'leaders': leaders,
         'date': formatted_date,
-        'count_employees':count_employees,
+        'count_employees': count_employees,
     }
     return JsonResponse(response)
 
@@ -220,9 +249,9 @@ def leader_pdf(request):
     html_string = render_to_string('pdf/report_leader_pdf.html', response)
     html = HTML(string=html_string)
     result = html.write_pdf(stylesheets=[
-            settings.BASE_DIR + '/base/static/css/css_report/report.css',
-            settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
-        ],)
+        settings.BASE_DIR + '/base/static/css/css_report/report.css',
+        settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
+    ], )
 
     response = HttpResponse(content_type='application/pdf;')
     response['Content-Disposition'] = 'inline; filename=list_people.pdf'
@@ -233,4 +262,43 @@ def leader_pdf(request):
         output = open(output.name, 'rb')
         response.write(output.read())
 
+    return response
+
+
+def generate_excel_leader(request):
+    shifts = Shift.objects.all()
+    date = request.GET['date']
+    print(date)
+
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="relatorio_lider' + date + '.xlsx"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    for shift in shifts:
+        ws = wb.add_sheet(shift.name)
+
+        # Sheet header, first row
+        row_num = 0
+
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+
+        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo']
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        # Sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+            scheduling__date=date, scheduling__shift=shift,
+            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True).order_by("employee__leader_name","employee__name")
+        rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
+                                         'employee__leader_name', 'scheduling__reason')
+        for row in rows:
+            row_num += 1
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
     return response
