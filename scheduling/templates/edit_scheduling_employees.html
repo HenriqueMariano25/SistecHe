@@ -5,11 +5,20 @@
 {% load static %}
 
 {% block content %}
-    <h1>Editar agendamento</h1>
+    <h1 class="text-center textTitleAll"><strong>EDITAR AGENDADOS | AG</strong></h1>
+
     <form action="" method="post" id="edit_scheduling">
-        {% csrf_token %}
-        <input type="date" name="date" id="date">
-        <input type="submit">
+        <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
+            {% csrf_token %}
+            <div class="container justify-content-center ">
+                <div class="col-3 ">
+                   <input type="date" class="form-control" name="date" id="date" required>
+                </div>
+                <div class="col-2">
+                    <input type="submit" class="btn btn-block btn-info">
+                </div>
+            </div>
+        </nav>
     </form>
     <div id="list_edit_employees_">
 

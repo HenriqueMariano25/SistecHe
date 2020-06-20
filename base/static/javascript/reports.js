@@ -16,7 +16,7 @@ $("#form_report_shift").submit(function (event) {
             page.children().remove()
             page.append('<div class="container ">' +
                 '<div class="row justify-content-center">' +
-                '<div class="col-4">' +
+                '<div class="col-4 mb-4">' +
                 '<a target="_blank" class="btn btn-success btn-block mb-3" style="font-size: 20px" href="por_turno/pdf?data=' + date_input + '&turno=' + shift_input + '">Gerar PDF</a>' +
                 '</div>' +
                 '</div>' +
@@ -93,7 +93,7 @@ $("#form_report_leader").submit(function (event) {
             page.children().remove()
             page.append('<div class="container ">' +
                 '<div class="row justify-content-center">' +
-                '<div class="col-4">' +
+                '<div class="col-4 mb-4">' +
                 '<a target="_blank" class="btn btn-success btn-block mb-3" style="font-size: 20px" href="por_lider/pdf?data=' + date_input + '&turno=' + shift_input + '">Gerar PDF</a>' +
                 '</div>' +
                 '</div>' +

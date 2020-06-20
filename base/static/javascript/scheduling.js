@@ -210,12 +210,12 @@ $("#edit_scheduling").submit(function (event) {
                 '<tbody>'
             $.each(emplo_schedus, function (key, value) {
                 let tr = '<tr>\n' +
-                    '  <td id="employee_registration">' + value.employee.registration + '</td>\n' +
-                    '  <td>' + value.employee.name + '</td>\n' +
-                    '  <td>' + value.employee.occupation + '</td>\n' +
-                    '  <td>' + value.scheduling.reason + '</td>\n' +
-                    '  <td>' + value.employee.extra_hour + '</td>\n' +
-                    '  <td><button class="delete_employees">Deletar</button></td>\n' +
+                    '  <td style="padding-top: 17px" id="employee_registration">' + value.employee.registration + '</td>\n' +
+                    '  <td style="padding-top: 17px">' + value.employee.name + '</td>\n' +
+                    '  <td style="padding-top: 17px">' + value.employee.occupation + '</td>\n' +
+                    '  <td style="padding-top: 17px">' + value.scheduling.reason + '</td>\n' +
+                    '  <td style="padding-top: 17px">' + value.employee.extra_hour + '</td>\n' +
+                    '  <td><button class="delete_employees btn btn-danger btn-block">Deletar</button></td>\n' +
                     '</tr>'
                 table = table + tr
             })
