@@ -1,19 +1,36 @@
-from django.core import serializers
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib import messages
-from base.models import Employee, Shift, Scheduling, Emplo_Schedu
+from django.shortcuts import render
+from base.models import Employee, Shift, Scheduling, Emplo_Schedu, ReleasedHour
 import json
-from django.core.serializers.json import DjangoJSONEncoder
+from django.contrib.auth.decorators import login_required
+from datetime import datetime, date
+from pytz import timezone
 
-
+@login_required(login_url='/usuario/login')
 def scheduling_employees(request):
-    print(Scheduling.objects.all())
-    leaders = Employee.objects.filter(leader=True, sector=request.user.userprofileinfo.sector).order_by('name')
-    shifts = Shift.objects.all()
-    data = {"leaders": leaders, "shifts": shifts}
-    return render(request, 'scheduling_employees.html', data)
+    today = date.today()
+    date_and_time_current = datetime.now()
+    timezone_string = timezone('America/Sao_Paulo')
+    date_and_time_sao_paulo = date_and_time_current.astimezone(timezone_string)
+    time_sao_paulo_string = date_and_time_sao_paulo.strftime('%H:%M')
+    user_released_hour = ReleasedHour.objects.filter(user_id=request.user.id,create_at__year=today.year, create_at__month=today.month,
+                                                create_at__day=today.day).last()
+
+    if user_released_hour:
+        if user_released_hour.released_hour.strftime('%H:%M') > time_sao_paulo_string:
+            leaders = Employee.objects.filter(leader=True, sector=request.user.userprofileinfo.sector).order_by('name')
+            shifts = Shift.objects.all()
+            data = {"leaders": leaders, "shifts": shifts}
+            return render(request, 'scheduling_employees.html', data)
+        else:
+            return render(request, 'time_lock.html')
+    elif "14:00" > time_sao_paulo_string:
+        leaders = Employee.objects.filter(leader=True, sector=request.user.userprofileinfo.sector).order_by('name')
+        shifts = Shift.objects.all()
+        data = {"leaders": leaders, "shifts": shifts}
+        return render(request, 'scheduling_employees.html', data)
+    else:
+        return render(request, 'time_lock.html')
 
 
 def selected_leader(request):
@@ -39,11 +56,8 @@ def finalize_employee_scheduling(request):
     reason = request.POST['reason']
     registrations = request.POST.getlist('registrations[]')
     shift = request.POST['shift']
-
     scheduled_employees = []
-
     unscheduled_employees = []
-
     for registration in registrations:
         emplo_schedu = Emplo_Schedu.objects.filter(scheduling__date=scheduling_date,
                                                    employee__registration=registration).first()

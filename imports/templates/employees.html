@@ -5,71 +5,93 @@
 {% load static %}
 
 {% block content %}
-        <h1 class="text-center textTitleAll"><strong>IMPORTAR EFETIVO | AG</strong></h1>
+    <h1 class="text-center textTitleAll"><strong>IMPORTAR EFETIVO | AG</strong></h1>
 
-        <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
-            <div class="col-6 pt-3">
-                <form method="POST" enctype="multipart/form-data" action="{% url 'update_employees' %}">
-                    {% csrf_token %}
-                    <div class='input-wrapper '>
-                        <label for='input-file'>
-                            Selecionar um arquivo
-                        </label>
-                        <input id='input-file' type='file' name='excel' value=''/>
-                        <span id='file-name'></span>
-                        <input type="submit" value="Importar" class="btn btn-success btnE">
+    <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
+        <div class="col-6 pt-3">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'update_employees' %}">
+                {% csrf_token %}
+                <div class='input-wrapper '>
+                    <label for='input-file'>
+                        Selecionar um arquivo
+                    </label>
+                    <input id='input-file' type='file' name='excel' value=''/>
+                    <span id='file-name'></span>
+                    <input type="submit" value="Importar" class="btn btn-success btnE">
+                </div>
+            </form>
+        </div>
+        <div class="col-6 pt-3">
+            <form method="POST" action="{% url 'employees' %}">
+                {% csrf_token %}
+                <div class="row justify-content-end">
+                    <div>
+                        <input class="form-control mr-sm-2" type="text" name="search">
                     </div>
-                </form>
-            </div>
-            <div class="col-6 pt-3">
-                <form method="POST" action="{% url 'employees' %}">
-                    {% csrf_token %}
-                    <div class="row justify-content-end">
-                        <div>
-                            <input class="form-control mr-sm-2" type="text" name="search">
-                        </div>
-                        <div class="ml-1">
-                            <input class="btn btn-outline-success my-2 my-sm-0" value="Buscar" type="submit">
-                        </div>
+                    <div class="ml-1">
+                        <input class="btn btn-outline-success my-2 my-sm-0" value="Buscar" type="submit">
                     </div>
-                </form>
-            </div>
-        </nav>
-        {% if import_history %}
-            <h2 class="text-danger textHistoryH mb-3">Última Atualização: {{ import_history.created_at }} por {{ import_history.made_by.first_name }}</h2>
-        {% endif %}
-        <table id="tabelaEfetivo" class="table border border-dark">
-            <thead class="theadAll">
-            <tr>
-                <th class="mr-n5" scope="col">Líder</th>
-                <th class="mr-n5" scope="col">Matricula</th>
-                <th class="mr-n5" scope="col">Nome</th>
-                <th class="mr-n5" scope="col">Função</th>
-                <th class="mr-n5" scope="col">Líder</th>
-                <th class="mr-n5" style="padding-right: 5px" scope="col">Disciplina</th>
-                <th class=""  scope="col">Setor</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% csrf_token %}
-            {% for employee in employees %}
-                <tr class="tr-employee">
-                    {% if employee.leader == True %}
-                        <td class="pt-3"><input class="checkE  leader" type="checkbox" value="{{ employee.registration }}"
-                                   name="checks[leader]" id="check_leader" checked></td>
-                    {% else %}
-                        <td class="pt-3"><input class="checkE leader" type="checkbox" value="{{ employee.registration }}"
-                                   name="checks[leader]" id="check_leader"></td>
-                    {% endif %}
-                    <td id="employee_registration" class="pt-4 registration">{{ employee.registration }}</td>
-                    <td class="pt-4">{{ employee.name }}</td>
-                    <td class="pt-4">{{ employee.occupation }}</td>
-                    <td class="pt-4">{{ employee.leader_name }}</td>
-                    <td class="pt-4" >{{ employee.sub_sector.name }}</td>
-                    <td class="pt-4" >{{ employee.sector.name }}</td>
-                    
-                    <!-- <td><select  name="selected_sector" id="selected_sector" class="form-control selected_sector pr-5"
+                </div>
+            </form>
+        </div>
+    </nav>
+    {% if import_history %}
+        <h2 class="text-danger textHistoryH mb-3">Última Atualização: {{ import_history.created_at }}
+            por {{ import_history.made_by.first_name }}</h2>
+    {% endif %}
+    <div class="paginacao_gayvid">
+        <span>
+            {% if employees.has_previous %}
+                {% if employees.start_index %}
+                    <a href="?page={{ employees.start_index }}">first</a>
+                {% endif %}
+                <a href="?page={{ employees.previous_page_number }}"><</a>
+
+            {% endif %}
+            <span class="current">
+                {{ employees.number }} de {{ employees.paginator.num_pages }}
+            </span>
+            {% if employees.has_next %}
+                <a href="?page={{ employees.next_page_number }}">></a>
+                {% if employees.end_index %}
+                <a href="?page={{ employees.end_index }}">last</a>
+                {% endif %}
+            {% endif %}
+
+        </span>
+    </div>
+    <table id="tabelaEfetivo" class="table border border-dark">
+        <thead class="theadAll">
+        <tr>
+            <th class="mr-n5" scope="col">Líder</th>
+            <th class="mr-n5" scope="col">Matricula</th>
+            <th class="mr-n5" scope="col">Nome</th>
+            <th class="mr-n5" scope="col">Função</th>
+            <th class="mr-n5" scope="col">Líder</th>
+            <th class="mr-n5" style="padding-right: 5px" scope="col">Disciplina</th>
+            <th class="" scope="col">Setor</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% csrf_token %}
+        {% for employee in employees %}
+            <tr class="tr-employee">
+                {% if employee.leader == True %}
+                    <td class="pt-3"><input class="checkE  leader" type="checkbox" value="{{ employee.registration }}"
+                                            name="checks[leader]" id="check_leader" checked></td>
+                {% else %}
+                    <td class="pt-3"><input class="checkE leader" type="checkbox" value="{{ employee.registration }}"
+                                            name="checks[leader]" id="check_leader"></td>
+                {% endif %}
+                <td id="employee_registration" class="pt-4 registration">{{ employee.registration }}</td>
+                <td class="pt-4">{{ employee.name }}</td>
+                <td class="pt-4">{{ employee.occupation }}</td>
+                <td class="pt-4">{{ employee.leader_name }}</td>
+                <td class="pt-4">{{ employee.sub_sector.name }}</td>
+                <td class="pt-4">{{ employee.sector.name }}</td>
+
+                <!-- <td><select  name="selected_sector" id="selected_sector" class="form-control selected_sector pr-5"
                                 value="1">
                         <option value="0">Setor</option>
                         {% for sector in sectors %}
@@ -80,20 +102,20 @@
                             {% endif %}
                         {% endfor %}
                     </select></td> -->
-                    <td></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
     <script>
-     var $input = document.getElementById('input-file'),
-        $fileName = document.getElementById('file-name');
+        var $input = document.getElementById('input-file'),
+            $fileName = document.getElementById('file-name');
 
-    $input.addEventListener('change', function () {
-        $fileName.textContent = this.value;
-        console.log($input);
-    });
-</script>
+        $input.addEventListener('change', function () {
+            $fileName.textContent = this.value;
+            console.log($input);
+        });
+    </script>
 
 {% endblock %}
 
