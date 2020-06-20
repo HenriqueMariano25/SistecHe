@@ -6,6 +6,7 @@
 
 {% block content %}
     <h1 class="text-center textTitleAll"><strong>IMPORTAR HORA EXTRA | AG</strong></h1>
+
     <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgH">
         <div class="col-4 pt-3">
             <form method="POST" enctype="multipart/form-data" action="{% url 'update_extra_hour' %}">
@@ -50,43 +51,59 @@
             </form>
         </div>
     </nav>
-    <div class="container-fluid">
+    <div class="container-fluid ">
         <div class="row pt-3">
-            <div class="">
+            <div class="col-4 mt-4 ">
                 {% if import_history %}
                     <h2 class="text-danger textHistoryH">Última Atualização: {{ import_history.created_at }}
                         por {{ import_history.made_by.first_name }}</h2>
                 {% endif %}
             </div>
-            <div class="ml-5">
+            <div class="col-3 text-left ">
                 <form method="POST" action="{% url 'reset_extra_hours' %}">
                     {% csrf_token %}
                     <input type="submit" class="btn btn-danger" value="Zerar Hora Extra">
                 </form>
             </div>
+            <div class="col-5  text-right text-primary">
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-end pagination-sm">
+                        {% ifnotequal employees.number 1 %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link" href="?page=1">Ininial</a>
+                            </li>
+                        {% endifnotequal %}
+                        {% if employees.has_previous %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link"
+                                   href="?page={{ employees.previous_page_number }}"><</a>
+                            </li>
+                        {% endif %}
+                        <li class="current page-item">
+                            <a style="font-size: 18px" class="page-link">{{ employees.number }}
+                                de {{ employees.paginator.num_pages }}</a>
+                        </li>
+                        {% if employees.has_next %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link"
+                                   href="?page={{ employees.next_page_number }}">></a>
+                            </li>
+                        {% endif %}
+                        {% ifnotequal employees.number employees.paginator.num_pages %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link"
+                                   href="?page={{ employees.paginator.num_pages }}">Final</a>
+                            </li>
+                        {% endifnotequal %}
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
-    <div class="paginacao_gayvid">
-        <span>
-        {% ifnotequal employees.number 1 %}
-            <a href="?page=1">first</a>
-        {% endifnotequal %}
-            {% if employees.has_previous %}
 
-                <a href="?page={{ employees.previous_page_number }}"><</a>
 
-            {% endif %}
-            <span class="current">
-                {{ employees.number }} de {{ employees.paginator.num_pages }}
-            </span>
-            {% if employees.has_next %}
-                <a href="?page={{ employees.next_page_number }}">></a>
-            {% endif %}
-            {% ifnotequal employees.number employees.paginator.num_pages %}
-                <a href="?page={{ employees.paginator.num_pages }}">last</a>
-            {% endifnotequal %}
-        </span>
-    </div>
+
+
     <table id="tableExtraHours" class="table border border-dark">
         <thead class="theadAll">
         <tr>
@@ -108,6 +125,39 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class=" text-right text-primary">
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-end pagination-sm">
+                        {% ifnotequal employees.number 1 %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link" href="?page=1">Ininial</a>
+                            </li>
+                        {% endifnotequal %}
+                        {% if employees.has_previous %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link"
+                                   href="?page={{ employees.previous_page_number }}"><</a>
+                            </li>
+                        {% endif %}
+                        <li class="current page-item">
+                            <a style="font-size: 18px" class="page-link">{{ employees.number }}
+                                de {{ employees.paginator.num_pages }}</a>
+                        </li>
+                        {% if employees.has_next %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link"
+                                   href="?page={{ employees.next_page_number }}">></a>
+                            </li>
+                        {% endif %}
+                        {% ifnotequal employees.number employees.paginator.num_pages %}
+                            <li class="page-item">
+                                <a style="font-size: 18px" class="page-link"
+                                   href="?page={{ employees.paginator.num_pages }}">Final</a>
+                            </li>
+                        {% endifnotequal %}
+                    </ul>
+                </nav>
+            </div>
     <script>
         var $input = document.getElementById('input-file'),
             $fileName = document.getElementById('file-name');
