@@ -4,44 +4,85 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block content %}
+
+    <h1 class="text-center textTitleAll"><strong>APROVAÇÃO DE HORA EXTRA | AG</strong></h1>
+
     <form action="" method="" id="form_director_list">
-        {% csrf_token %}
-        <div class="col-5 row">
-            <div id="divVoid" class="col-7">
+        <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
+            <div class="container-fluid">
+                {% csrf_token %}
+                <div class="col-4 row">
+                    <div id="divVoid" class="col-7">
+                    </div>
+                    <div class="col-5">
+                        <input type="date" class="form-control" name="date" required>
+                    </div>
+                </div>
+                <div class="col-2 ">
+                    <select class="form-control" name="sector">
+                        <option value="0">Todos os setores</option>
+                        {% for sector in sectors %}
+                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-2 ">
+                    <select class="form-control" name="shift">
+                        <option value="0">Todos os turnos</option>
+                        {% for shift in shifts %}
+                            <option value="{{ shift.id }}">{{ shift.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4 row">
+                    <div class="col-5">
+                        <input type="submit" class="btn btn-info btn-block" value="visualizar">
+                    </div>
+                    <div id="divVoid" class="col-4">
+                    </div>
+                </div>
             </div>
-            <div class="col-5">
-                <input type="date" class="form-control" name="date">
-            </div>
-        </div>
-        <div class="col-2">
-            <select class="form-control" name="shift">
-                <option value="0">Todos os turnos</option>
-                {% for shift in shifts %}
-                    <option value="{{ shift.id }}">{{ shift.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-2">
-            <select class="form-control" name="sector">
-                <option value="0">Todos os setores</option>
-                {% for sector in sectors %}
-                    <option value="{{ sector.id }}">{{ sector.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="col-5 row">
-            <div class="col-5">
-                <input type="submit" class="btn btn-info btn-block" value="visualizar">
-            </div>
-            <div id="divVoid" class="col-7">
-            </div>
-        </div>
+        </nav>
     </form>
 
-        <div class="director_list">
+{#    <form action="" method="" id="form_director_list">#}
+{#        {% csrf_token %}#}
+{#        <div class="col-5 row">#}
+{#            <div id="divVoid" class="col-7">#}
+{#            </div>#}
+{#            <div class="col-5">#}
+{#                <input type="date" class="form-control" name="date">#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-2">#}
+{#            <select class="form-control" name="shift">#}
+{#                <option value="0">Todos os turnos</option>#}
+{#                {% for shift in shifts %}#}
+{#                    <option value="{{ shift.id }}">{{ shift.name }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#        <div class="col-2">#}
+{#            <select class="form-control" name="sector">#}
+{#                <option value="0">Todos os setores</option>#}
+{#                {% for sector in sectors %}#}
+{#                    <option value="{{ sector.id }}">{{ sector.name }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#        <div class="col-5 row">#}
+{#            <div class="col-5">#}
+{#                <input type="submit" class="btn btn-info btn-block" value="visualizar">#}
+{#            </div>#}
+{#            <div id="divVoid" class="col-7">#}
+{#            </div>#}
+{#        </div>#}
+{#    </form>#}
 
-        </div>
-    <h1>Oi</h1>
+    <div class="director_list">
+
+    </div>
     </form>
 {% endblock %}
