@@ -21,12 +21,12 @@
         </div>
     </div>
 </div>
-<p class="text-right" style="font-size:20px;">Funcionários Agendados: {{ count_employees }}</p>
+<h3 class="text-right" style="margin-right: 10px">Agendados: {{ count_employees }}</h3>
 
 
 {% if shifts_res %}
     {% for shift in shifts_res %}
-        <h1 class="display-4 text-center turnoTitle">{{ shift.name }}</h1>
+        <h1 class="display-4 text-center turnoTitle mt-5">{{ shift.name }}</h1>
         {% for sector in sectors %}
 
             {% for leader in leaders %}

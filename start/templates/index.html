@@ -2,5 +2,64 @@
 {% load static %}
 
 {% block content %}
-    <h1>Welcome to the SistecHe</h1>
+
+    <html>
+    <head>
+        <h1>Welcome to the SistecHe</h1>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load("current", {packages: ["corechart"]});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Task', 'Hours per Day'],
+                    ['Adminstração', 11],
+                    ['Suprimentos', 2],
+                    ['Produção', 10],
+                    ['SubContratos', 50],
+                    ['Sleep', 7]
+                ]);
+
+                var options = {
+                    title: 'Quantitativo por Setor',
+                    is3D: true,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+                chart.draw(data, options);
+            }
+        </script>
+    </head>
+
+    <head>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load("current", {packages: ["corechart"]});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Task', 'Hours per Day'],
+                    ['Diretos', 100],
+                    ['Indiretos', 1500],
+                ]);
+
+                var options = {
+                    title: 'Quantitativo por Mão de Obra',
+                    pieHole: 0.4,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chart.draw(data, options);
+            }
+        </script>
+    </head>
+    <body>
+    <div id="donutchart" style="width: 900px; height: 500px;"></div>
+    </body>
+    <body>
+    <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+    </body>
+    </html>
 {% endblock %}
