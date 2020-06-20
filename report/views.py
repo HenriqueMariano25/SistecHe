@@ -4,6 +4,7 @@ from base.models import Shift, Employee, Emplo_Schedu, Sector
 from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
+import xlwt
 
 from sistecHe import settings
 
@@ -121,6 +122,15 @@ def shift_pdf(request):
 
     # pdf = render_to_pdf('pdf/report_shift_pdf.html', response)
     # return HttpResponse(pdf, content_type='application/pdf')
+
+
+def generate_excel_shift(request):
+    # date = request.GET['date']
+    # response = HttpResponse(content_type='application/ms-excel')
+    # response['Content-Disposition'] = 'attachment; filename'
+    # print(date)
+    pass
+
 
 
 def report_leader(request):
