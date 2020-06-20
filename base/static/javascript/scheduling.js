@@ -64,16 +64,12 @@ $('#submit_search_employee').click(function () {
     $("#tbody_he_estourada").children().remove();
     search = $("[name=seach_employee]").val()
     var limite = $("#limite_hora").val();
-    console.log(search)
     $.ajax({
         url: "buscar",
         data: {'search': search},
         dataType: 'json',
         success: function (data) {
             $("#select_leader_scheduling").val("0");
-            console.log(data);
-            console.log("oi");
-            console.log(data['employees'].length)
             if (data['employees'].length > 0) {
                 add_employees_leader_table(data['leaders'], data['employees'], '#table_funcionario_lider tbody')
             }
@@ -138,13 +134,56 @@ function add_employees_leader_table(leaders, employees, table) {
         }
     }
 }
+$('#form_scheduling_employees').submit(function (event) {
+    event.preventDefault()
+    // const registrations = $('[name=registrations]:checked').val()
+    let registrations = $("input:checkbox[name=registrations]:checked").map(function(){return $(this).val()}).get()
+    let date = $('[name=scheduling_date]').val()
+    let leader = $('[name=leader]').val()
+    let shift = $('[name=shift]').val()
+    let reason = $('[name=reason]').val()
+    let csrf = $('[name=csrfmiddlewaretoken]').val()
+    $.ajax({
+        url:'funcionario/agendar',
+        method:'post',
+        data:{
+            'scheduling_date':date,
+            'reason':reason,
+            'registrations':registrations,
+            'shift':shift,
+            'leader':leader,
+            'csrfmiddlewaretoken':csrf,
+        },
+        dataType: 'json',
+        success: function (data) {
+            if(typeof data.scheduled_employees !== "undefined" ){
+                let div_alerts = $('#alerts_scheduling')
+                div_alerts.children().remove();
+                let scheduled_employees = data.scheduled_employees
+                console.log(scheduled_employees)
+                div_alerts.append('<h1>Os funcionarios abaixo já foram agendados</h1>')
+                $.each(scheduled_employees, function (key, value) {
+                    console.log(value)
+                    div_alerts.append('<p>'+value.employee.registration+' '+value.employee.name+'</p>')
+                })
+            }else{
+                let div_alerts = $('#alerts_scheduling')
+                div_alerts.children().remove();
+                div_alerts.append('<h1>Agendamento realiza com sucesso</h1>')
+                $("#tbody_funcionario_lider").children().remove();
+                $("#tbody_he_estourada").children().remove();
+                $('[name=leader]').val(0)
+            }
+        }
+    })
+})
 
 $("#select_all").click(function () {
     $('input:checkbox').not(this).prop('checked', this.checked);
 });
 
-$("#edit_scheduling").submit(function (e) {
-    e.preventDefault()
+$("#edit_scheduling").submit(function (event) {
+    event.preventDefault()
     let date = $('#date').val()
     let csrf = $('[name=csrfmiddlewaretoken]').val()
     $.ajax({

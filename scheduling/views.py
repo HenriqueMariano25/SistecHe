@@ -33,26 +33,73 @@ def selected_leader(request):
 
 
 def finalize_employee_scheduling(request):
+    print(request.POST)
     scheduling_date = request.POST['scheduling_date']
+    print(scheduling_date)
     reason = request.POST['reason']
-    registrations = request.POST.getlist('registrations')
+    registrations = request.POST.getlist('registrations[]')
     shift = request.POST['shift']
 
-    scheduling = Scheduling(date=scheduling_date, reason=reason, shift_id=int(shift), user=request.user,
-                            sector=request.user.userprofileinfo.sector)
+    scheduled_employees = []
 
-    if scheduling.save:
-        scheduling.save()
+    unscheduled_employees = []
 
     for registration in registrations:
-        print(registration)
-        employee = Employee.objects.get(registration=registration)
-        print(employee)
-        emplo_sched = Emplo_Schedu(scheduling=scheduling, employee=employee)
-        if emplo_sched.save:
-            emplo_sched.save()
-    messages.success(request, "Agendamento realizado com sucesso")
-    return redirect('scheduling_employees')
+        emplo_schedu = Emplo_Schedu.objects.filter(scheduling__date=scheduling_date,
+                                                   employee__registration=registration).first()
+        if not emplo_schedu is None:
+            scheduled_employees.append(emplo_schedu.to_json())
+            print("tem")
+            print(emplo_schedu)
+            continue
+        else:
+            print("nao tem")
+            print(emplo_schedu)
+            unscheduled_employees.append(registration)
+
+    print(scheduled_employees)
+    print(unscheduled_employees)
+
+    if scheduled_employees:
+        response = {
+            'status' : 'success',
+            'scheduled_employees' : scheduled_employees,
+        }
+    else:
+        if unscheduled_employees:
+            scheduling = Scheduling(date=scheduling_date, reason=reason, shift_id=int(shift), user=request.user,
+                                    sector=request.user.userprofileinfo.sector)
+            if scheduling.save:
+                scheduling.save()
+
+            for registration in unscheduled_employees:
+                employee = Employee.objects.get(registration=registration)
+                emplo_sched = Emplo_Schedu(scheduling=scheduling, employee=employee)
+                if emplo_sched.save:
+                    emplo_sched.save()
+
+        response = {
+            'status':'success',
+            # 'scheduled_employees': scheduled_employees
+        }
+    return JsonResponse(response)
+
+    # messages.error(request, "Teste")
+    #
+    # scheduling = Scheduling(date=scheduling_date, reason=reason, shift_id=int(shift), user=request.user,
+    #                         sector=request.user.userprofileinfo.sector)
+    #
+    # if scheduling.save:
+    #     scheduling.save()
+    #
+    # for registration in registrations:
+    #
+    #     employee = Employee.objects.get(registration=registration)
+    #     emplo_sched = Emplo_Schedu(scheduling=scheduling, employee=employee)
+    #     if emplo_sched.save:
+    #         emplo_sched.save()
+    # messages.success(request, "Agendamento realizado com sucesso")
+    # return redirect('scheduling_employees')
 
 
 def search_employee_scheduling(request):
@@ -66,8 +113,8 @@ def search_employee_scheduling(request):
         employees_burst_res = []
         for employee in employees:
             employees_json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
-                            occupation=employee.occupation, extra_hour=employee.extra_hour,
-                            leader_name=employee.leader_name)
+                                      occupation=employee.occupation, extra_hour=employee.extra_hour,
+                                      leader_name=employee.leader_name)
 
             leader = Employee.objects.get(name=employee.leader_name)
             leader_json_obj = dict(name=leader.name)
@@ -86,7 +133,7 @@ def search_employee_scheduling(request):
         data = {'leaders': leaders_res,
                 'employees': employees_res,
                 'employees_burst': employees_burst_res,
-                'leaders_burst': leaders_burst_res,}
+                'leaders_burst': leaders_burst_res, }
 
     return HttpResponse(json.dumps(data), content_type='application/json')
 
@@ -101,13 +148,14 @@ def edit_scheduling_employees_list(request):
         scheduling__date=date, employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True)
     emplo_schedus_json = [emplo_schedu.to_json() for emplo_schedu in emplo_schedus]
     response = {
-        'emplo_schedus':emplo_schedus_json,
+        'emplo_schedus': emplo_schedus_json,
     }
     return JsonResponse(response)
+
 
 def delete_emplo_scheduling(request):
     registration = request.POST['registration']
     date = request.POST['date']
-    emplo_schedu = Emplo_Schedu.objects.get(scheduling__date=date,employee__registration=registration)
+    emplo_schedu = Emplo_Schedu.objects.get(scheduling__date=date, employee__registration=registration)
     emplo_schedu.delete()
-    return JsonResponse({'status':'success'})
+    return JsonResponse({'status': 'success'})
