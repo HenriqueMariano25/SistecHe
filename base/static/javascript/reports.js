@@ -13,6 +13,7 @@ $("#form_report_shift").submit(function (event) {
             const shifts = data.shifts_res
             const sectors = data.sectors
             const date = data.date
+            const count = data.count_employees
             page.children().remove()
             page.append('<div class="container ">' +
                 '<div class="row justify-content-center">' +
@@ -30,6 +31,7 @@ $("#form_report_shift").submit(function (event) {
                 '</div>' +
                 '<div class="col-3">' +
                 '<h1 class="dateReport text-right ">' + date + '</h1> ' +
+                '<h3>Funcionairo agendados:'+count+'</h3>'+
                 '</div>' +
                 '</div>')
             for (var x = 0; x < data['shifts_res'].length; x++) {
@@ -90,6 +92,7 @@ $("#form_report_leader").submit(function (event) {
             const emplo_schedus = data.emplo_schedus_data
             const shifts = data.shifts_res
             const date = data.date
+            const count = data.count_employees
             page.children().remove()
             page.append('<div class="container ">' +
                 '<div class="row justify-content-center">' +
@@ -107,6 +110,7 @@ $("#form_report_leader").submit(function (event) {
                 '</div>' +
                 '<div class="col-3">' +
                 '<h1 class="dateReport text-right ">' + date + '</h1>' +
+                '<h3>Funcionairo agendados:'+count+'</h3>'+
                 '</div>' +
                 '</div>')
             for (var x = 0; x < shifts.length; x++) {
