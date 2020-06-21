@@ -67,7 +67,7 @@ $("#form_report_shift").submit(function (event) {
                                     '  <td>' + value.employee.name + '</td>\n' +
                                     '  <td>' + value.employee.occupation + '</td>\n' +
                                     '  <td>' + value.scheduling.reason + '</td>\n' +
-                                    '  <td>' + value.employee.extra_hour + '</td>\n' +
+                                    '  <td>' + (value.employee.extra_hour+7.30) + '</td>\n' +
                                     '</tr>'
                             })
                             page.append(table + tr)
@@ -140,7 +140,7 @@ $("#form_report_leader").submit(function (event) {
                                     '  <td>' + value.employee.name + '</td>\n' +
                                     '  <td>' + value.employee.occupation + '</td>\n' +
                                     '  <td>' + value.scheduling.reason + '</td>\n' +
-                                    '  <td>' + value.employee.extra_hour + '</td>\n' +
+                                    '  <td>' + (value.employee.extra_hour+7.30) + '</td>\n' +
                                     '</tr>'
                             })
                             page.append(table + tr)

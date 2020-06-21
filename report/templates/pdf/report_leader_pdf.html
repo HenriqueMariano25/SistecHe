@@ -49,7 +49,7 @@
                                     <td style="padding: 8px">{{ emplo_schedu.employee.name }}</td>
                                     <td style="padding: 8px">{{ emplo_schedu.employee.occupation }}</td>
                                     <td style="padding: 8px">{{ emplo_schedu.scheduling.reason }}</td>
-                                    <td style="padding: 8px">{{ emplo_schedu.employee.extra_hour }}</td>
+                                    <td style="padding: 8px">{{ emplo_schedu.employee.extra_hour|add:7.30 }}</td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
