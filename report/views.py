@@ -130,7 +130,7 @@ def generate_excel_shift(request):
     print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="relatorio_turno' + date + '.xlsx"'
+    response['Content-Disposition'] = 'attachment; filename="relatorio_turno.xls"'
 
     wb = xlwt.Workbook(encoding='utf-8')
     for shift in shifts:
@@ -271,7 +271,7 @@ def generate_excel_leader(request):
     print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="relatorio_lider' + date + '.xlsx"'
+    response['Content-Disposition'] = 'attachment; filename="relatorio_lider.xls"'
 
     wb = xlwt.Workbook(encoding='utf-8')
     for shift in shifts:
