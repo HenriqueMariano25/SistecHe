@@ -137,14 +137,10 @@ function add_employees_leader_table(leaders, employees, table) {
 
 $('#form_scheduling_employees').submit(function (event) {
     event.preventDefault()
-<<<<<<< HEAD
     // const registrations = $('[name=registrations]:checked').val()
     let registrations = $("input:checkbox[name=registrations]:checked").map(function () {
         return $(this).val()
     }).get()
-=======
-    let registrations = $("input:checkbox[name=registrations]:checked").map(function(){return $(this).val()}).get()
->>>>>>> 116cfe7dae85e3cc48909d5eea92d6f89f63b672
     let date = $('[name=scheduling_date]').val()
     let leader = $('[name=leader]').val()
     let shift = $('[name=shift]').val()
