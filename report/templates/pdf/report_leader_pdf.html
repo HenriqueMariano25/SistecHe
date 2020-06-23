@@ -41,7 +41,7 @@
                         </tr>
                         </thead>
 
-                        <tbody >
+                        <tbody>
                         {% for emplo_schedu in emplo_schedus_data %}
                             {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi %}
                                 <tr>
@@ -61,6 +61,19 @@
 
         {% endfor %}
     {% endfor %}
+
+    <div class="container-fluid mt-5" style="position: absolute; bottom:0">
+        <div class="row">
+            <div class="assinaturaDiv col-6">
+                <p class="text-center ">___________________________________</p>
+                <p class="text-center "><b>Assinatura Gerente</b></p>
+            </div>
+            <div class="assinaturaDiv col-6">
+                <p class="text-center ">___________________________________</p>
+                <p class="text-center "><b>Assinatura Diretor do Contrato</b></p>
+            </div>
+        </div>
+    </div>
 {% endif %}
 {% if error %}
     {{ error }}
