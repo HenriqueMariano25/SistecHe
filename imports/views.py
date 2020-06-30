@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,6 +14,7 @@ from base.models import SubSector, Employee, Sector, ImportHistory, ReleasedHour
 
 def employees(request):
     if request.user.is_authenticated:
+
         employees_list = Employee.objects.all().order_by('name')
 
         paginator = Paginator(employees_list, 20)
@@ -50,90 +53,97 @@ def update_employees(request):
         'GERENCIA ADCON': Sector.objects.get(name="Administração Contratual"),
     }
 
-    if request.method == 'POST':
-        excel = request.FILES['excel']
-        workbook = xlrd.open_workbook(file_contents=excel.read())
-        sheet = workbook.sheet_by_index(0)
-        for row_num in xrange(sheet.nrows):
-            row = sheet.row_values(row_num)
-            if row[0] == "" or row[0] == "Id reduzido":
+    excel = request.FILES['excel']
+    workbook = xlrd.open_workbook(file_contents=excel.read())
+    sheet = workbook.sheet_by_index(0)
+    for row_num in xrange(sheet.nrows):
+        row = sheet.row_values(row_num)
+        if row[0] == "" or row[0] == "Id reduzido":
+            continue
+
+        demission_date = row[4]
+
+        if type(demission_date) == str:
+            demission_date = demission_date.strip()
+
+        if type(demission_date) == float:
+            demission_date = ""
+
+        if not demission_date == "":
+            continue
+
+        occupation = row[5]
+
+        if occupation == "JOVEM APRENDIZ":
+            continue
+
+        if row[12] != "":
+            sector = row[12].split('-')[1].strip()
+            sector = SECTORS[sector]
+        else:
+            continue
+
+        registration = str(row[2])[-8:]
+        demission_date = row[4]
+        name = row[1]
+        leader_name = row[8]
+        admission_date = date.fromordinal(693594 + int(row[3]))
+        manager = row[9]
+
+        if registration != " ":
+            employee = Employee.objects.filter(registration=registration).first()
+            if not employee is None and demission_date != "":
+                employee.delete()
                 continue
 
-            demission_date = row[4]
-
-            if type(demission_date) == str:
-                demission_date = demission_date.strip()
-
-            if type(demission_date) == float:
-                demission_date = ""
-
-            if not demission_date == "":
-                continue
-
-            occupation = row[5]
-
-            if occupation == "JOVEM APRENDIZ":
-                continue
-
-            if row[12] != "":
-                sector = row[12].split('-')[1].strip()
-                sector = SECTORS[sector]
+            subsector = str(row[10]).split('-')[0]
+            sub = SubSector.objects.filter(name=subsector)
+            if sub.exists():
+                subSector = sub.first()
             else:
-                continue
-
-            registration = str(row[2])[-8:]
-            demission_date = row[4]
-            name = row[1]
-            leader_name = row[8]
-            admission_date = date.fromordinal(693594 + int(row[3]))
-            manager = row[9]
-
-            if registration != " ":
-                employee = Employee.objects.filter(registration=registration).first()
-                if not employee is None and demission_date != "":
-                    employee.delete()
-                    continue
-
-                subsector = str(row[10]).split('-')[0]
-                if SubSector.objects.filter(name=subsector).exists():
-                    subSector = SubSector.objects.filter(name=subsector).first()
-                else:
-                    subSector = SubSector(name=subsector)
-                    subSector.save()
-                if not employee is None:
-                    if not employee.sector == sector or employee.name == name or employee.occupation == occupation or \
-                            employee.admission_date == admission_date or employee.manager == manager or \
-                            employee.leader_name == leader_name or employee.sub_sector == subSector:
-                        employee.name = name
-                        employee.occupation = occupation
-                        employee.leader_name = leader_name
-                        employee.admission_date = admission_date
-                        employee.manager = manager
-                        employee.sub_sector = subSector
-                        employee.sector = sector
-                        if employee.save:
-                            employee.save()
-                else:
-                    employee = Employee(name=name, occupation=occupation, registration=registration,
-                                        admission_date=admission_date, manager=manager,
-                                        leader_name=leader_name, sub_sector=subSector, sector=sector)
+                subSector = SubSector(name=subsector)
+                subSector.save()
+            if not employee is None:
+                if not employee.sector == sector or employee.name == name or employee.occupation == occupation or \
+                        employee.admission_date == admission_date or employee.manager == manager or \
+                        employee.leader_name == leader_name or employee.sub_sector == subSector:
+                    employee.name = name
+                    employee.occupation = occupation
+                    employee.leader_name = leader_name
+                    employee.admission_date = admission_date
+                    employee.manager = manager
+                    employee.sub_sector = subSector
+                    employee.sector = sector
                     if employee.save:
                         employee.save()
-        for row_num in xrange(sheet.nrows):
-            row = sheet.row_values(row_num)
-            if row[0] == "" or row[0] == "Id reduzido":
-                continue
-            leader_name = row[8]
-            leader = Employee.objects.filter(name=leader_name).first()
-            if leader:
-                leader.leader = True
-                leader.save()
+            else:
+                employee = Employee(name=name, occupation=occupation, registration=registration,
+                                    admission_date=admission_date, manager=manager,
+                                    leader_name=leader_name, sub_sector=subSector, sector=sector)
+                if employee.save:
+                    employee.save()
 
-        import_history = ImportHistory(type="employees", made_by=request.user,
-                                       created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
-        import_history.save()
+    import_history = ImportHistory(type="employees", made_by=request.user,
+                                   created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
+    import_history.save()
 
-        return redirect('employees')
+    return redirect('employees')
+
+
+def validate_leaders(request):
+    excel = request.FILES['excel']
+    workbook = xlrd.open_workbook(file_contents=excel.read())
+    sheet = workbook.sheet_by_index(0)
+    for row_num in xrange(sheet.nrows):
+        row = sheet.row_values(row_num)
+        if row[0] == "" or row[0] == "Id reduzido":
+            continue
+        leader_name = row[8]
+        leader = Employee.objects.filter(name=leader_name).first()
+        if leader:
+            leader.leader = True
+            leader.save()
+    pass
 
 
 def update_employees_leader(request):

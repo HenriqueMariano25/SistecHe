@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime, date
 from pytz import timezone
 
+
 @login_required(login_url='/usuario/login')
 def scheduling_employees(request):
     today = date.today()
@@ -13,8 +14,9 @@ def scheduling_employees(request):
     timezone_string = timezone('America/Sao_Paulo')
     date_and_time_sao_paulo = date_and_time_current.astimezone(timezone_string)
     time_sao_paulo_string = date_and_time_sao_paulo.strftime('%H:%M')
-    user_released_hour = ReleasedHour.objects.filter(user_id=request.user.id,create_at__year=today.year, create_at__month=today.month,
-                                                create_at__day=today.day).last()
+    user_released_hour = ReleasedHour.objects.filter(user_id=request.user.id, create_at__year=today.year,
+                                                     create_at__month=today.month,
+                                                     create_at__day=today.day).last()
 
     if user_released_hour:
         if user_released_hour.released_hour.strftime('%H:%M') > time_sao_paulo_string:
@@ -76,8 +78,8 @@ def finalize_employee_scheduling(request):
 
     if scheduled_employees:
         response = {
-            'status' : 'success',
-            'scheduled_employees' : scheduled_employees,
+            'status': 'success',
+            'scheduled_employees': scheduled_employees,
         }
     else:
         if unscheduled_employees:
@@ -93,7 +95,7 @@ def finalize_employee_scheduling(request):
                     emplo_sched.save()
 
         response = {
-            'status':'success',
+            'status': 'success',
             # 'scheduled_employees': scheduled_employees
         }
     return JsonResponse(response)
@@ -118,6 +120,7 @@ def finalize_employee_scheduling(request):
 
 def search_employee_scheduling(request):
     search = request.GET['search']
+    print(request.GET['search'])
     if 'search' in request.GET:
         employees = Employee.objects.filter(name__icontains=search, sector=request.user.userprofileinfo.sector)
         print(employees)
@@ -130,19 +133,20 @@ def search_employee_scheduling(request):
                                       occupation=employee.occupation, extra_hour=employee.extra_hour,
                                       leader_name=employee.leader_name)
 
-            leader = Employee.objects.get(name=employee.leader_name)
-            leader_json_obj = dict(name=leader.name)
+            if Employee.objects.filter(name=employee.leader_name):
+                leader = Employee.objects.filter(name=employee.leader_name)
+                leader_json_obj = dict(name=leader.name)
 
-            print(employee.extra_hour)
+                print(employee.extra_hour)
 
-            if employee.extra_hour + 7.30 > 24.0:
-                employees_burst_res.append(employees_json_obj)
-                if not leader_json_obj in leaders_burst_res:
-                    leaders_burst_res.append(leader_json_obj)
-            else:
-                employees_res.append(employees_json_obj)
-                if not leader_json_obj in leaders_res:
-                    leaders_res.append(leader_json_obj)
+                if employee.extra_hour + 7.30 > 24.0:
+                    employees_burst_res.append(employees_json_obj)
+                    if not leader_json_obj in leaders_burst_res:
+                        leaders_burst_res.append(leader_json_obj)
+                else:
+                    employees_res.append(employees_json_obj)
+                    if not leader_json_obj in leaders_res:
+                        leaders_res.append(leader_json_obj)
 
         data = {'leaders': leaders_res,
                 'employees': employees_res,

@@ -31,7 +31,7 @@ $("#select_leader_scheduling").change(function () {
                 funcaoTd.textContent = data['employees'][i]['occupation'];
                 horaAcumuladaTd.textContent = (parseFloat(data['employees'][i]['extra_hour']) + 7.30);
 
-                if (data['employees'][i]['extra_hour'] >= limite - 7.30) {
+                if (data['employees'][i]['extra_hour'] >= (limite - 7.30)) {
                     var tabela_funcionario = document.querySelector('#table_he_estourada tbody');
                     // tabela_funcionario.setAttribute("onclick", "teste()");
                 } else {
@@ -59,7 +59,8 @@ $("#select_leader_scheduling").change(function () {
 
         });
 });
-$('#submit_search_employee').click(function () {
+$('#form_search_employee').submit(function (event) {
+    event.preventDefault()
     $("#tbody_funcionario_lider").children().remove();
     $("#tbody_he_estourada").children().remove();
     search = $("[name=seach_employee]").val()

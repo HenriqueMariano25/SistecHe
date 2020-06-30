@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'scheduling',
     'report',
     'approval',
-    'chartjs',
+    'background_task'
 ]
 
 MIDDLEWARE = [
