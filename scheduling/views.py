@@ -37,7 +37,7 @@ def scheduling_employees(request):
 
 def selected_leader(request):
     leader = Employee.objects.get(id=request.GET['lider_id'])
-    employees = Employee.objects.filter(leader_name=leader.name)
+    employees = Employee.objects.filter(leader_name=leader.name).order_by('name')
     employees_res = []
     for employee in employees:
         json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
