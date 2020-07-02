@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
-from base.models import Employee, Shift, Scheduling, Emplo_Schedu, ReleasedHour
+from base.models import Employee, Shift, Scheduling, Emplo_Schedu, ReleasedHour, LimitHour
 import json
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, date
@@ -38,6 +38,9 @@ def scheduling_employees(request):
 def selected_leader(request):
     leader = Employee.objects.get(id=request.GET['lider_id'])
     employees = Employee.objects.filter(leader_name=leader.name).order_by('name')
+    limit_hour = LimitHour.objects.last()
+    limit_hourJson = dict(hours=limit_hour.hours)
+    print(limit_hourJson)
     employees_res = []
     for employee in employees:
         json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
@@ -46,6 +49,7 @@ def selected_leader(request):
 
     data = {
         "employees": employees_res,
+        "limit_hour": limit_hourJson,
         "leader": dict(name=leader.name, occupation=leader.occupation)
     }
     return HttpResponse(json.dumps(data), content_type='application/json')

@@ -3,9 +3,12 @@ $("#select_leader_scheduling").change(function () {
     $("#tbody_he_estourada").children().remove();
 
     $('[name=seach_employee]').val("")
-    var limite = $("#limite_hora").val();
+
     $.ajax("agendamento/lider_selecionado?lider_id=" + this.value)
+
         .done(function (data) {
+            var limite = data['limit_hour']['hours'];
+            console.log(limite)
             for (var i = 0; i < data['employees'].length; i++) {
                 var funcionarioTr = document.createElement("tr");
                 var agendarTd = document.createElement("td");

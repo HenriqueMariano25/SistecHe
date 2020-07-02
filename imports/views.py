@@ -270,6 +270,7 @@ def update_extra_hour_limit(request):
 def update_extra_hour_month(request):
     if request.method == "POST":
         hours = request.POST['hours']
+        print(hours)
         limit = LimitHour(hours=hours, made_by=request.user, create_at=timezone.localtime(timezone.now()))
         if limit.save:
             limit.save()
