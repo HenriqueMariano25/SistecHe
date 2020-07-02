@@ -123,17 +123,6 @@ def update_employees(request):
                 if employee.save:
                     employee.save()
 
-    import_history = ImportHistory(type="employees", made_by=request.user,
-                                   created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
-    import_history.save()
-
-    return redirect('employees')
-
-
-def validate_leaders(request):
-    excel = request.FILES['excel']
-    workbook = xlrd.open_workbook(file_contents=excel.read())
-    sheet = workbook.sheet_by_index(0)
     for row_num in xrange(sheet.nrows):
         row = sheet.row_values(row_num)
         if row[0] == "" or row[0] == "Id reduzido":
@@ -143,7 +132,28 @@ def validate_leaders(request):
         if leader:
             leader.leader = True
             leader.save()
-    pass
+
+    import_history = ImportHistory(type="employees", made_by=request.user,
+                                   created_at=timezone.localtime(timezone.now()).strftime('%d/%m/%Y - %H:%M'))
+    import_history.save()
+
+    return redirect('employees')
+
+
+# def validate_leaders(request):
+#     excel = request.FILES['excel']
+#     workbook = xlrd.open_workbook(file_contents=excel.read())
+#     sheet = workbook.sheet_by_index(0)
+#     for row_num in xrange(sheet.nrows):
+#         row = sheet.row_values(row_num)
+#         if row[0] == "" or row[0] == "Id reduzido":
+#             continue
+#         leader_name = row[8]
+#         leader = Employee.objects.filter(name=leader_name).first()
+#         if leader:
+#             leader.leader = True
+#             leader.save()
+#     pass
 
 
 def update_employees_leader(request):
