@@ -133,6 +133,7 @@ def search_employee_scheduling(request):
         leaders_burst_res = []
         employees_res = []
         employees_burst_res = []
+        limit_hour = LimitHour.objects.last()
         for employee in employees:
             print(employee.leader_name)
             employees_json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
@@ -145,7 +146,9 @@ def search_employee_scheduling(request):
 
                 print(employee.extra_hour)
 
-                if employee.extra_hour + 7.30 > 24.0:
+
+                print(limit_hour.hours)
+                if employee.extra_hour + 7.30 > limit_hour.hours:
                     employees_burst_res.append(employees_json_obj)
                     if not leader_json_obj in leaders_burst_res:
                         leaders_burst_res.append(leader_json_obj)
