@@ -126,7 +126,8 @@ def search_employee_scheduling(request):
     search = request.GET['search']
     print(request.GET['search'])
     if 'search' in request.GET:
-        employees = Employee.objects.filter(name__icontains=search, sector=request.user.userprofileinfo.sector)
+        employees = Employee.objects.filter(name__icontains=search,
+                                            sector=request.user.userprofileinfo.sector).order_by('name')
         print(employees)
         leaders_res = []
         leaders_burst_res = []
