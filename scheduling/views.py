@@ -133,13 +133,14 @@ def search_employee_scheduling(request):
         employees_res = []
         employees_burst_res = []
         for employee in employees:
+            print(employee.leader_name)
             employees_json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
                                       occupation=employee.occupation, extra_hour=employee.extra_hour,
                                       leader_name=employee.leader_name)
 
             if Employee.objects.filter(name=employee.leader_name):
                 leader = Employee.objects.filter(name=employee.leader_name)
-                leader_json_obj = dict(name=leader.name)
+                leader_json_obj = dict(name=leader.first().name)
 
                 print(employee.extra_hour)
 
