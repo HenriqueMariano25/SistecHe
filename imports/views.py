@@ -245,7 +245,7 @@ def reset_all_employees_extra_time():
 
 def extra_hour_limit(request):
     today = date.today()
-    users = User.objects.prefetch_related('releasedhours').filter(is_superuser=False)
+    users = User.objects.prefetch_related('releasedhours').filter(is_superuser=False).order_by('first_name')
     # releasedhours__create_at__year=today.year,
     # releasedhours__create_at__month=today.month,
     # releasedhours__create_at__day=today.day)

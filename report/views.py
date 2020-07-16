@@ -158,12 +158,10 @@ def generate_excel_shift(request):
             emp.employee.extra_hour = (emp.employee.extra_hour + 7.30)
 
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
-                                         'employee__leader_name', 'scheduling__reason', 'employee__sector__name',
-                                         'employee__expected_time')
+                                         'employee__leader_name', 'scheduling__reason', 'employee__sector__name')
 
 
         for row in rows:
-            print(row)
             row_num += 1
             for col_num in range(len(row)):
                 ws.write(row_num, col_num, row[col_num], font_style)
@@ -278,7 +276,6 @@ def leader_pdf(request):
 def generate_excel_leader(request):
     shifts = Shift.objects.all()
     date = request.GET['date']
-    print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="relatorio_lider' + date + '.xls"'

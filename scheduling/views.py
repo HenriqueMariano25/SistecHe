@@ -40,7 +40,6 @@ def selected_leader(request):
     employees = Employee.objects.filter(leader_name=leader.name).order_by('name')
     limit_hour = LimitHour.objects.last()
     limit_hourJson = dict(hours=limit_hour.hours)
-    print(limit_hourJson)
     employees_res = []
     for employee in employees:
         json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
@@ -56,9 +55,7 @@ def selected_leader(request):
 
 
 def finalize_employee_scheduling(request):
-    print(request.POST)
     scheduling_date = request.POST['scheduling_date']
-    print(scheduling_date)
     reason = request.POST['reason']
     registrations = request.POST.getlist('registrations[]')
     shift = request.POST['shift']
@@ -69,16 +66,9 @@ def finalize_employee_scheduling(request):
                                                    employee__registration=registration).first()
         if not emplo_schedu is None:
             scheduled_employees.append(emplo_schedu.to_json())
-            print("tem")
-            print(emplo_schedu)
             continue
         else:
-            print("nao tem")
-            print(emplo_schedu)
             unscheduled_employees.append(registration)
-
-    print(scheduled_employees)
-    print(unscheduled_employees)
 
     if scheduled_employees:
         response = {
