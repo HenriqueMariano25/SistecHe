@@ -127,7 +127,6 @@ def shift_pdf(request):
 def generate_excel_shift(request):
     shifts = Shift.objects.all()
     date = request.GET['date']
-    print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="relatorio_turno' + date + '.xls"'
@@ -142,18 +141,29 @@ def generate_excel_shift(request):
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
 
-        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo', 'Setor']
+        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo', 'Setor', 'Horas Prevista']
 
         for col_num in range(len(columns)):
             ws.write(row_num, col_num, columns[col_num], font_style)
 
         # Sheet body, remaining rows
+
         font_style = xlwt.XFStyle()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, authorized=True, scheduling__shift=shift).order_by("employee__sector","employee__leader_name","employee__name")
+            scheduling__date=date, authorized=True, scheduling__shift=shift).order_by("employee__sector",
+                                                                                      "employee__leader_name",
+                                                                                      "employee__name")
+
+        for emp in emplo_schedus:
+            emp.employee.extra_hour = (emp.employee.extra_hour + 7.30)
+
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
-                                         'employee__leader_name', 'scheduling__reason', 'employee__sector__name')
+                                         'employee__leader_name', 'scheduling__reason', 'employee__sector__name',
+                                         'employee__expected_time')
+
+
         for row in rows:
+            print(row)
             row_num += 1
             for col_num in range(len(row)):
                 ws.write(row_num, col_num, row[col_num], font_style)
@@ -292,7 +302,8 @@ def generate_excel_leader(request):
         font_style = xlwt.XFStyle()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift=shift,
-            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True).order_by("employee__leader_name","employee__name")
+            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True).order_by(
+            "employee__leader_name", "employee__name")
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
                                          'employee__leader_name', 'scheduling__reason')
         for row in rows:

@@ -124,18 +124,15 @@ def finalize_employee_scheduling(request):
 
 def search_employee_scheduling(request):
     search = request.GET['search']
-    print(request.GET['search'])
     if 'search' in request.GET:
         employees = Employee.objects.filter(name__icontains=search,
                                             sector=request.user.userprofileinfo.sector).order_by('name')
-        print(employees)
         leaders_res = []
         leaders_burst_res = []
         employees_res = []
         employees_burst_res = []
         limit_hour = LimitHour.objects.last()
         for employee in employees:
-            print(employee.leader_name)
             employees_json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
                                       occupation=employee.occupation, extra_hour=employee.extra_hour,
                                       leader_name=employee.leader_name)
@@ -144,10 +141,6 @@ def search_employee_scheduling(request):
                 leader = Employee.objects.filter(name=employee.leader_name)
                 leader_json_obj = dict(name=leader.first().name)
 
-                print(employee.extra_hour)
-
-
-                print(limit_hour.hours)
                 if employee.extra_hour + 7.30 > limit_hour.hours:
                     employees_burst_res.append(employees_json_obj)
                     if not leader_json_obj in leaders_burst_res:
