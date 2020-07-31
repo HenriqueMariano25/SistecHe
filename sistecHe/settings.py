@@ -28,7 +28,7 @@ SECRET_KEY = '=#=pw^qr_$jo%jz^&zadb@bhq5d#lm=w4_vfyv(wv^!j1jyl6j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['10.10.88.23','192.168.2.251']
 
 
 # Application definition
@@ -88,11 +88,12 @@ WSGI_APPLICATION = 'sistecHe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sistecheag',
-        'USER': 'postgres',
-        'PASSWORD': 'henrique321',
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'sistechedb',
+        'USER': 'sistecheadmin',
+        'PASSWORD': 'AGdb@senha2020',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 

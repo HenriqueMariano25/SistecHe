@@ -1,0 +1,38 @@
+.checkE {
+    padding-top: 30px;
+    height: 25px;
+    width: 25px;
+}
+
+input[type='file'] {
+    display: none
+}
+
+.input-wrapper label {
+    background-color: #00102f;
+    border: 2px solid #00102f;
+    border-radius: 5px;
+    color: #fff;
+    margin: 10px;
+    padding: 6px 20px;
+
+}
+
+.input-wrapper label:hover {
+    background-color: white;
+    border: 2px solid #00102f;
+    border-radius: 5px;
+    color:  #00102f;
+
+}
+.btnE{
+    width: 100px;
+}
+.navBgE{
+    background: #ededed;
+    border-radius: 5px;
+}
+.textHistoryE{
+    font-size: 25px;
+    color: #0b2e13;
+}
