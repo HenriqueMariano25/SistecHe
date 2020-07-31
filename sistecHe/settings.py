@@ -18,7 +18,6 @@ from django.conf.global_settings import DATABASES
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -29,7 +28,6 @@ SECRET_KEY = '=#=pw^qr_$jo%jz^&zadb@bhq5d#lm=w4_vfyv(wv^!j1jyl6j'
 DEBUG = True
 
 ALLOWED_HOSTS = ['10.10.88.23','192.168.2.251']
-
 
 # Application definition
 
@@ -82,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sistecHe.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -102,7 +99,6 @@ import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -121,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -135,17 +130,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR,'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
 STATICFILES_DIR = [
     os.path.join(BASE_DIR, 'static/'),
 ]
 
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     messages.SUCCESS: 'success',

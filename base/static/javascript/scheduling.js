@@ -3,9 +3,12 @@ $("#select_leader_scheduling").change(function () {
     $("#tbody_he_estourada").children().remove();
 
     $('[name=seach_employee]').val("")
-    var limite = $("#limite_hora").val();
+
     $.ajax("agendamento/lider_selecionado?lider_id=" + this.value)
+
         .done(function (data) {
+            var limite = data['limit_hour']['hours'];
+            console.log(limite)
             for (var i = 0; i < data['employees'].length; i++) {
                 var funcionarioTr = document.createElement("tr");
                 var agendarTd = document.createElement("td");
@@ -31,7 +34,7 @@ $("#select_leader_scheduling").change(function () {
                 funcaoTd.textContent = data['employees'][i]['occupation'];
                 horaAcumuladaTd.textContent = (parseFloat(data['employees'][i]['extra_hour']) + 7.30);
 
-                if (data['employees'][i]['extra_hour'] >= limite - 7.30) {
+                if (data['employees'][i]['extra_hour'] >= (limite - 7.30)) {
                     var tabela_funcionario = document.querySelector('#table_he_estourada tbody');
                     // tabela_funcionario.setAttribute("onclick", "teste()");
                 } else {
@@ -59,7 +62,8 @@ $("#select_leader_scheduling").change(function () {
 
         });
 });
-$('#submit_search_employee').click(function () {
+$('#form_search_employee').submit(function (event) {
+    event.preventDefault()
     $("#tbody_funcionario_lider").children().remove();
     $("#tbody_he_estourada").children().remove();
     search = $("[name=seach_employee]").val()
@@ -137,14 +141,10 @@ function add_employees_leader_table(leaders, employees, table) {
 
 $('#form_scheduling_employees').submit(function (event) {
     event.preventDefault()
-<<<<<<< HEAD
     // const registrations = $('[name=registrations]:checked').val()
     let registrations = $("input:checkbox[name=registrations]:checked").map(function () {
         return $(this).val()
     }).get()
-=======
-    let registrations = $("input:checkbox[name=registrations]:checked").map(function(){return $(this).val()}).get()
->>>>>>> 116cfe7dae85e3cc48909d5eea92d6f89f63b672
     let date = $('[name=scheduling_date]').val()
     let leader = $('[name=leader]').val()
     let shift = $('[name=shift]').val()

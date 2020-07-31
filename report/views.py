@@ -32,7 +32,7 @@ def shift_preview(request):
 
     leaders = []
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name).to_json()
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
         if not leader in leaders:
             leaders.append(leader)
 
@@ -75,7 +75,7 @@ def shift_pdf(request):
             shifts.append(shift)
 
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name)
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
         if not leader in leaders:
             leaders.append(leader)
 
@@ -127,10 +127,9 @@ def shift_pdf(request):
 def generate_excel_shift(request):
     shifts = Shift.objects.all()
     date = request.GET['date']
-    print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="relatorio_turno' + date + '.xlsx"'
+    response['Content-Disposition'] = 'attachment; filename="relatorio_turno' + date + '.xls"'
 
     wb = xlwt.Workbook(encoding='utf-8')
     for shift in shifts:
@@ -142,17 +141,26 @@ def generate_excel_shift(request):
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
 
-        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo', 'Setor']
+        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo', 'Setor', 'Horas Prevista']
 
         for col_num in range(len(columns)):
             ws.write(row_num, col_num, columns[col_num], font_style)
 
         # Sheet body, remaining rows
+
         font_style = xlwt.XFStyle()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, authorized=True, scheduling__shift=shift).order_by("employee__sector","employee__leader_name","employee__name")
+            scheduling__date=date, authorized=True, scheduling__shift=shift).order_by("employee__sector",
+                                                                                      "employee__leader_name",
+                                                                                      "employee__name")
+
+        for emp in emplo_schedus:
+            emp.employee.extra_hour = (emp.employee.extra_hour + 7.30)
+
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
                                          'employee__leader_name', 'scheduling__reason', 'employee__sector__name')
+
+
         for row in rows:
             row_num += 1
             for col_num in range(len(row)):
@@ -186,7 +194,7 @@ def leader_preview(request):
 
     leaders = []
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name).to_json()
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
         if not leader in leaders:
             leaders.append(leader)
 
@@ -225,7 +233,7 @@ def leader_pdf(request):
             shifts.append(shift)
 
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name)
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
         if not leader in leaders:
             leaders.append(leader)
 
@@ -268,10 +276,9 @@ def leader_pdf(request):
 def generate_excel_leader(request):
     shifts = Shift.objects.all()
     date = request.GET['date']
-    print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="relatorio_lider' + date + '.xlsx"'
+    response['Content-Disposition'] = 'attachment; filename="relatorio_lider' + date + '.xls"'
 
     wb = xlwt.Workbook(encoding='utf-8')
     for shift in shifts:
@@ -292,7 +299,8 @@ def generate_excel_leader(request):
         font_style = xlwt.XFStyle()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift=shift,
-            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True).order_by("employee__leader_name","employee__name")
+            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True).order_by(
+            "employee__leader_name", "employee__name")
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
                                          'employee__leader_name', 'scheduling__reason')
         for row in rows:

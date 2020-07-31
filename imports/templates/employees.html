@@ -6,7 +6,6 @@
 
 {% block content %}
     <h1 class="text-center textTitleAll"><strong>IMPORTAR EFETIVO | AG</strong></h1>
-
     <nav class="navbar navbar-expand-lg navbar-light mt-5 mb-5 navBgE">
         <div class="col-6 pt-3">
             <form method="POST" enctype="multipart/form-data" action="{% url 'update_employees' %}">
@@ -39,26 +38,34 @@
         <h2 class="text-danger textHistoryH mb-3">Última Atualização: {{ import_history.created_at }}
             por {{ import_history.made_by.first_name }}</h2>
     {% endif %}
-    <div class="paginacao_gayvid">
-        <span>
-            {% if employees.has_previous %}
-                {% if employees.start_index %}
-                    <a href="?page={{ employees.start_index }}">first</a>
-                {% endif %}
-                <a href="?page={{ employees.previous_page_number }}"><</a>
 
-            {% endif %}
-            <span class="current">
-                {{ employees.number }} de {{ employees.paginator.num_pages }}
-            </span>
-            {% if employees.has_next %}
-                <a href="?page={{ employees.next_page_number }}">></a>
-                {% if employees.end_index %}
-                <a href="?page={{ employees.end_index }}">last</a>
+    <div class=" text-right text-primary" >
+        <nav aria-label="...">
+            <ul class="pagination justify-content-end pagination-sm">
+                {% if employees.has_previous %}
+                    <li class="page-item" >
+                        {% if employees.start_index %}
+                            <a  class="page-link" style="font-size: 18px" href="?page={{ employees.start_index }}">Início</a >
+                        {% endif %}
+                    </li>
+                    <li class="page-item"><a class="page-link" style="font-size: 18px" href="?page={{ employees.previous_page_number }}"><</a>
+                    </li>
                 {% endif %}
-            {% endif %}
-
-        </span>
+                <li class="page-item">
+                    <a class="page-link" style="font-size: 18px">{{ employees.number }} de {{ employees.paginator.num_pages }}</a>
+                </li>
+                {% if employees.has_next %}
+                    <li>
+                        <a class="page-link" style="font-size: 18px" href="?page={{ employees.next_page_number }}">></a>
+                    </li>
+                    <li>
+                        {% if employees.end_index %}
+                            <a class="page-link" style="font-size: 18px" href="?page={{ employees.end_index }}">Final</a>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
     <table id="tabelaEfetivo" class="table border border-dark">
         <thead class="theadAll">
@@ -107,6 +114,35 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class=" text-right text-primary" >
+        <nav aria-label="...">
+            <ul class="pagination justify-content-end pagination-sm">
+                {% if employees.has_previous %}
+                    <li class="page-item" >
+                        {% if employees.start_index %}
+                            <a  class="page-link" style="font-size: 18px" href="?page={{ employees.start_index }}">Início</a >
+                        {% endif %}
+                    </li>
+                    <li class="page-item"><a class="page-link" style="font-size: 18px" href="?page={{ employees.previous_page_number }}"><</a>
+                    </li>
+                {% endif %}
+                <li class="page-item">
+                    <a class="page-link" style="font-size: 18px">{{ employees.number }} de {{ employees.paginator.num_pages }}</a>
+                </li>
+                {% if employees.has_next %}
+                    <li>
+                        <a class="page-link" style="font-size: 18px" href="?page={{ employees.next_page_number }}">></a>
+                    </li>
+                    <li>
+                        {% if employees.end_index %}
+                            <a class="page-link" style="font-size: 18px" href="?page={{ employees.end_index }}">Final</a>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
     <script>
         var $input = document.getElementById('input-file'),
             $fileName = document.getElementById('file-name');

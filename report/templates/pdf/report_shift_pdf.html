@@ -21,20 +21,25 @@
         </div>
     </div>
 </div>
-<p class="text-right" style="font-size:20px;">Funcionários Agendados: {{ count_employees }}</p>
+<h3 class="text-right" style="margin-right: 10px">Agendados: {{ count_employees }}</h3>
 
 
 {% if shifts_res %}
     {% for shift in shifts_res %}
-        <h1 class="display-4 text-center turnoTitle">{{ shift.name }}</h1>
+        <h1 class="display-4 text-center turnoTitle mt-5">{{ shift.name }}</h1>
         {% for sector in sectors %}
 
             {% for leader in leaders %}
+                {% ifequal shi.id shift.id %}
+                    <h2 class="fontSetorGE text-left mt-4">{{ sector.name }}</h2>
+                {% endifequal %}
                 {% ifequal leader.sector sector %}
 
                     {% for shi in leader|emplo_in_leader:emplo_schedus_data %}
+
                         {% ifequal shi.id shift.id %}
                             <h2 class="fontSetorGE text-left mt-4">{{ sector.name }}</h2>
+
                             <h4 class="text-center mt-2 mb-3" style="color:rgb(70,70,70)">{{ leader.name }}</h4>
                             <table style="width:100%;padding: 105px;">
                                 <thead style="background-color: #00102f;color:white;">
@@ -46,7 +51,7 @@
                                     <th style="padding: 8px">HE Previsto</th>
                                 </tr>
                                 </thead>
-                                <tbody >
+                                <tbody>
                                 {% for emplo_schedu in emplo_schedus_data %}
                                     {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi %}
                                         <tr class="mt-4">
@@ -54,7 +59,7 @@
                                             <td style="padding: 8px">{{ emplo_schedu.employee.name }}</td>
                                             <td style="padding: 8px">{{ emplo_schedu.employee.occupation }}</td>
                                             <td style="padding: 8px">{{ emplo_schedu.scheduling.reason }}</td>
-                                            <td style="padding: 8px">{{ emplo_schedu.employee.extra_hour }}</td>
+                                            <td style="padding: 8px">{{ emplo_schedu.employee.extra_hour|add:7.30 }}</td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -68,6 +73,15 @@
             {% endfor %}
         {% endfor %}
     {% endfor %}
+    <br/>
+    <div class="" style="position: absolute; bottom:0">
+        <div class="row">
+            <div class="container assinaturaDiv col-6">
+                <p class="text-center ">___________________________________</p>
+                <p class="text-center "><b>Assinatura Diretor do Contrato</b></p>
+            </div>
+        </div>
+    </div>
 {% endif %}
 {% if error %}
     {{ error }}

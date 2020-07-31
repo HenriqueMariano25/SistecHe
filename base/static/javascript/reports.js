@@ -32,9 +32,9 @@ $("#form_report_shift").submit(function (event) {
                 '</div>' +
                 '<div class="col-3">' +
                 '<h1 class="dateReport text-right ">' + date + '</h1> ' +
-                '<h3>Funcionairo agendados:'+count+'</h3>'+
                 '</div>' +
                 '</div>')
+            page.append('<h3 class="text-right" style="margin-right: 10px">Agendados:'+count+'</h3>')
             for (var x = 0; x < data['shifts_res'].length; x++) {
                 if (data.emplo_schedus_data.find(emplo_schedus => emplo_schedus.scheduling.shift.id === data.shifts_res[x].id)) {
                     page.append('<h1 class="display-4 text-center mt-5 turnTitle ">' + data['shifts_res'][x]['name'] + '</h1>')
@@ -67,7 +67,7 @@ $("#form_report_shift").submit(function (event) {
                                     '  <td>' + value.employee.name + '</td>\n' +
                                     '  <td>' + value.employee.occupation + '</td>\n' +
                                     '  <td>' + value.scheduling.reason + '</td>\n' +
-                                    '  <td>' + value.employee.extra_hour + '</td>\n' +
+                                    '  <td>' + (value.employee.extra_hour+7.30) + '</td>\n' +
                                     '</tr>'
                             })
                             page.append(table + tr)
@@ -112,9 +112,9 @@ $("#form_report_leader").submit(function (event) {
                 '</div>' +
                 '<div class="col-3">' +
                 '<h1 class="dateReport text-right ">' + date + '</h1>' +
-                '<h3>Funcionairo agendados:'+count+'</h3>'+
                 '</div>' +
                 '</div>')
+             page.append('<h3 class="text-right" style="margin-right: 10px">Agendados:'+count+'</h3>')
             for (var x = 0; x < shifts.length; x++) {
                 if (emplo_schedus.find(emplo_schedus => emplo_schedus.scheduling.shift.id === shifts[x].id)) {
                     page.append('<h1 class="display-4 text-center mt-5 turnTitle">' + shifts[x].name + '</h1>')
@@ -140,7 +140,7 @@ $("#form_report_leader").submit(function (event) {
                                     '  <td>' + value.employee.name + '</td>\n' +
                                     '  <td>' + value.employee.occupation + '</td>\n' +
                                     '  <td>' + value.scheduling.reason + '</td>\n' +
-                                    '  <td>' + value.employee.extra_hour + '</td>\n' +
+                                    '  <td>' + (value.employee.extra_hour+7.30) + '</td>\n' +
                                     '</tr>'
                             })
                             page.append(table + tr)
