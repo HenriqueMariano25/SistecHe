@@ -3,6 +3,19 @@
 <head>
     <title>Relatório | Por Turno</title>
     {% load static %}
+    <style type="text/css">
+        @page {
+            size: "A4";
+            margin-left:0.8cm;
+            margin-right:0.8cm;
+            margin-top: 1.3cm;
+            @bottom-right {
+                content: counter(page) " de " counter(pages);
+                margin-top: 1cm;
+                margin-bottom: 1cm;
+            }
+        }
+    </style>
 </head>
 {% load emplo_in_leader %}
 <body style='font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif'>
@@ -21,56 +34,61 @@
         </div>
     </div>
 </div>
-<h3 class="text-right" style="margin-right: 10px">Agendados: {{ count_employees }}</h3>
-
-
+<h3 class="text-right">Agendados: {{ count_employees }}</h3>
 {% if shifts_res %}
     {% for shift in shifts_res %}
-        <h1 class="display-4 text-center turnoTitle mt-5">{{ shift.name }}</h1>
+        <h1 class="display-4 text-left turnoTitle mt-5">{{ shift.name }}</h1>
         {% for sector in sectors %}
+                <h2 class="fontSetorGE display-5 text-center" style="text-align:center;">{{ sector.name }}</h2>
 
-            {% for leader in leaders %}
-                {% ifequal shi.id shift.id %}
-                    <h2 class="fontSetorGE text-left mt-4">{{ sector.name }}</h2>
-                {% endifequal %}
-                {% ifequal leader.sector sector %}
+            <table style="width:100%;padding: 105px;margin-bottom: 10px">
+                <thead style="background-color: #00102f;color:white;border: 1px solid black;border-collapse: collapse;">
+                <tr>
+                    <th style="padding: 8px">Matrícula</th>
+                    <th style="padding: 8px">Funcionário</th>
+                    <th style="padding: 8px">Função</th>
+                    <th style="padding: 8px">Motivo</th>
+                    <th style="padding: 8px">HE Previsto</th>
+                </tr>
+                </thead>
+                {% for leader in leaders %}
+                    {% ifequal shi.id shift.id %}
+                        <h2 class="fontSetorGE text-left mt-4">{{ sector.name }}</h2>
+                    {% endifequal %}
+                    {% ifequal leader.sector sector %}
 
-                    {% for shi in leader|emplo_in_leader:emplo_schedus_data %}
+                        {% for shi in leader|emplo_in_leader:emplo_schedus_data %}
 
-                        {% ifequal shi.id shift.id %}
-                            <h2 class="fontSetorGE text-left mt-4">{{ sector.name }}</h2>
+                            {% ifequal shi.id shift.id %}
 
-                            <h4 class="text-center mt-2 mb-3" style="color:rgb(70,70,70)">{{ leader.name }}</h4>
-                            <table style="width:100%;padding: 105px;">
-                                <thead style="background-color: #00102f;color:white;">
+
                                 <tr>
-                                    <th style="padding: 8px">Matrícula</th>
-                                    <th style="padding: 8px">Funcionário</th>
-                                    <th style="padding: 8px">Função</th>
-                                    <th style="padding: 8px">Motivo</th>
-                                    <th style="padding: 8px">HE Previsto</th>
+                                    <td class="text-center mt-2 mb-3"
+                                        style="border: 1px solid black;border-collapse: collapse;color:rgb(70,70,70); background-color: rgba(0,16,47,0.3);font-size: 18px"
+                                        colspan=5><b>{{ leader.name }}</b></td>
                                 </tr>
-                                </thead>
+
                                 <tbody>
                                 {% for emplo_schedu in emplo_schedus_data %}
                                     {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi %}
-                                        <tr class="mt-4">
-                                            <td style="padding: 8px">{{ emplo_schedu.employee.registration }}</td>
-                                            <td style="padding: 8px">{{ emplo_schedu.employee.name }}</td>
-                                            <td style="padding: 8px">{{ emplo_schedu.employee.occupation }}</td>
-                                            <td style="padding: 8px">{{ emplo_schedu.scheduling.reason }}</td>
-                                            <td style="padding: 8px">{{ emplo_schedu.employee.extra_hour|add:7.30 }}</td>
+                                        <tr class="mt-4" style="border: 1px solid black;border-collapse: collapse;">
+                                            <td style="padding-left: 8px">{{ emplo_schedu.employee.registration }}</td>
+                                            <td>{{ emplo_schedu.employee.name }}</td>
+                                            <td>{{ emplo_schedu.employee.occupation }}</td>
+                                            <td>{{ emplo_schedu.scheduling.reason }}</td>
+                                            <td>{{ emplo_schedu.employee.extra_hour|add:7.30 }}</td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
                                 </tbody>
-                            </table>
-                            {#                                {{ shi }}#}
-                        {% endifequal %}
-                    {% endfor %}
-                {% endifequal %}
 
-            {% endfor %}
+                                {#                                {{ shi }}#}
+                            {% endifequal %}
+                        {% endfor %}
+                    {% endifequal %}
+
+                {% endfor %}
+            </table>
         {% endfor %}
     {% endfor %}
     <br/>
@@ -83,6 +101,8 @@
         </div>
     </div>
 {% endif %}
+
+
 {% if error %}
     {{ error }}
 {% endif %}

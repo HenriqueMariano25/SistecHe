@@ -110,7 +110,7 @@ def shift_pdf(request):
     ], )
 
     response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+    response['Content-Disposition'] = 'inline; filename=relatorio_por_turno.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
     with tempfile.NamedTemporaryFile(delete=True) as output:
         output.write(result)
@@ -262,7 +262,7 @@ def leader_pdf(request):
     ], )
 
     response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+    response['Content-Disposition'] = 'inline; filename=relatorio_setor.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
     with tempfile.NamedTemporaryFile(delete=True) as output:
         output.write(result)
