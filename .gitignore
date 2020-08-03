@@ -133,3 +133,5 @@ dmypy.json
 cython_debug/
 
 .idea/
+
+sistecHe/settings.py
