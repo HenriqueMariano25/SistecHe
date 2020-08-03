@@ -1,0 +1,24 @@
+.leaderTitle{
+    font-size: 30px;
+}
+
+.turnTitle{
+    font-size: 35px;
+}
+
+.dateReport{
+    font-size: 30px;
+    margin-top: 45px;
+    margin-right: 20px;
+}
+
+.soonReport{
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 250px;
+    height: 100px;
+}
+
+.textTitleReport{
+    margin-top: 30px;
+}

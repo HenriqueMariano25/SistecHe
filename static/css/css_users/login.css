@@ -1,0 +1,24 @@
+.containerMargin{
+    margin-top: 100px;
+}
+.contLogin{
+    width: 100%;
+    max-width: 500px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.containerMax{
+    max-width: 420px;
+}
+.centered{
+    margin: 0 auto;
+    float: none;
+}
+.soonLogin{
+    width: 410px;
+    height: 165px;
+}
+.textLogin{
+    font-family: 'Righteous', cursive;
+    color: #00102f;
+}

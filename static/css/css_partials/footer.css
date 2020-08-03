@@ -1,0 +1,16 @@
+.contFooter{
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #00102f;
+}
+.RowFooter{
+    width: 100%;
+    height: 2px;
+    background-color: #00102f;
+}
+.textFooter{
+    color: #00102f;
+    font-size: 15px;
+    font-family: 'Roboto Mono', monospace;
+}
