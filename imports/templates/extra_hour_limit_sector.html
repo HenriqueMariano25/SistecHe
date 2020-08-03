@@ -1,0 +1,46 @@
+<head>
+    <title>Configurações de Usuários</title>
+</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1 class="text-center textTitleAll"><strong>CONFIGURAÇÃO DE USUÁRIOS | AG</strong></h1>
+    <div class="container-fluid">
+        <div class="mt-5 pb-2">
+            <form method="POST" action="{% url 'extra_hour_limit' %}">
+                {% csrf_token %}
+                <div class="row justify-content-end">
+                    <div>
+                        <input class="form-control mr-sm-2" type="text" name="search">
+                    </div>
+                    <div class="ml-1">
+                        <input class="btn btn-outline-success my-2 my-sm-0" value="Procurar" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table class="table border border-dark">
+        <thead class="theadAll">
+        <tr>
+            <th>Nome do Setor</th>
+            <th>Limite de horas</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sector in sectors %}
+            <tr>
+                <td class="pt-4">{{ sector.name }}</td>
+                <form action="{% url 'update_extra_hour_limit_sector' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="sector_id" value="{{ sector.id }}">
+                    <td><input type="number" name="hours" value="{{ sector.time_limit }}">
+                    <td><input type="submit" value="Atualizar">
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

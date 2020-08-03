@@ -5,7 +5,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, date
 from pytz import timezone
-
+from django.db.models import Q
 
 @login_required(login_url='/usuario/login')
 def scheduling_employees(request):
@@ -22,6 +22,7 @@ def scheduling_employees(request):
         if user_released_hour.released_hour.strftime('%H:%M') > time_sao_paulo_string:
             leaders = Employee.objects.filter(leader=True, sector=request.user.userprofileinfo.sector).order_by('name')
             shifts = Shift.objects.all()
+
             data = {"leaders": leaders, "shifts": shifts}
             return render(request, 'scheduling_employees.html', data)
         else:
@@ -115,35 +116,40 @@ def finalize_employee_scheduling(request):
 def search_employee_scheduling(request):
     search = request.GET['search']
     if 'search' in request.GET:
-        employees = Employee.objects.filter(name__icontains=search,
-                                            sector=request.user.userprofileinfo.sector).order_by('name')
-        leaders_res = []
-        leaders_burst_res = []
-        employees_res = []
-        employees_burst_res = []
-        limit_hour = LimitHour.objects.last()
-        for employee in employees:
-            employees_json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
-                                      occupation=employee.occupation, extra_hour=employee.extra_hour,
-                                      leader_name=employee.leader_name)
+        employees = Employee.objects.filter(Q(name__icontains=search,sector=request.user.userprofileinfo.sector) | Q(registration__icontains=search,sector=request.user.userprofileinfo.sector)).order_by('name')
+        if(len(employees) > 0):
+            leaders_res = []
+            leaders_burst_res = []
+            employees_res = []
+            employees_burst_res = []
+            limit_hour = request.user.userprofileinfo.sector.time_limit
+            for employee in employees:
+                employees_json_obj = dict(name=employee.name, id=employee.id, registration=employee.registration,
+                                          occupation=employee.occupation, extra_hour=employee.extra_hour,
+                                          leader_name=employee.leader_name)
 
-            if Employee.objects.filter(name=employee.leader_name):
-                leader = Employee.objects.filter(name=employee.leader_name)
-                leader_json_obj = dict(name=leader.first().name)
+                if Employee.objects.filter(name=employee.leader_name):
+                    leader = Employee.objects.filter(name=employee.leader_name)
+                    leader_json_obj = dict(name=leader.first().name)
 
-                if employee.extra_hour + 7.30 > limit_hour.hours:
-                    employees_burst_res.append(employees_json_obj)
-                    if not leader_json_obj in leaders_burst_res:
-                        leaders_burst_res.append(leader_json_obj)
-                else:
-                    employees_res.append(employees_json_obj)
-                    if not leader_json_obj in leaders_res:
-                        leaders_res.append(leader_json_obj)
+                    if employee.extra_hour + 7.30 > limit_hour:
+                        employees_burst_res.append(employees_json_obj)
+                        if not leader_json_obj in leaders_burst_res:
+                            leaders_burst_res.append(leader_json_obj)
+                    else:
+                        employees_res.append(employees_json_obj)
+                        if not leader_json_obj in leaders_res:
+                            leaders_res.append(leader_json_obj)
 
-        data = {'leaders': leaders_res,
-                'employees': employees_res,
-                'employees_burst': employees_burst_res,
-                'leaders_burst': leaders_burst_res, }
+
+            data = {'leaders': leaders_res,
+                    'employees': employees_res,
+                    'employees_burst': employees_burst_res,
+                    'leaders_burst': leaders_burst_res,
+                    'response': 'Success'}
+
+        else:
+            data = {'response': 'Error', 'message': 'Nenhum funcionário encontrado'}
 
     return HttpResponse(json.dumps(data), content_type='application/json')
 

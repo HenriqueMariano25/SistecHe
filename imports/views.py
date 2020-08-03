@@ -285,3 +285,21 @@ def update_extra_hour_month(request):
         if limit.save:
             limit.save()
         return redirect('extra_hour')
+
+
+def extra_hour_limit_sector(request):
+    sectors = Sector.objects.all().order_by("name")
+    data = {
+        'sectors':sectors
+    }
+    return render(request, 'extra_hour_limit_sector.html', data)
+
+
+def update_extra_hour_limit_sector(request):
+    if request.method == "POST":
+        hours = request.POST['hours']
+        sector_id = request.POST['sector_id']
+        sector = Sector.objects.get(id=sector_id)
+        sector.time_limit=hours
+        sector.save()
+    return redirect('extra_hour_limit_sector')

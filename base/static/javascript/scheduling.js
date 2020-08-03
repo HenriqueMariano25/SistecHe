@@ -8,6 +8,7 @@ $("#select_leader_scheduling").change(function () {
 
         .done(function (data) {
             var limite = data['limit_hour']['hours'];
+            var hora_limite_setor = $('#time_limit_sector').val();
             console.log(limite)
             for (var i = 0; i < data['employees'].length; i++) {
                 var funcionarioTr = document.createElement("tr");
@@ -34,7 +35,7 @@ $("#select_leader_scheduling").change(function () {
                 funcaoTd.textContent = data['employees'][i]['occupation'];
                 horaAcumuladaTd.textContent = (parseFloat(data['employees'][i]['extra_hour']) + 7.30);
 
-                if (data['employees'][i]['extra_hour'] >= (limite - 7.30)) {
+                if (data['employees'][i]['extra_hour'] >= (hora_limite_setor - 7.30)) {
                     var tabela_funcionario = document.querySelector('#table_he_estourada tbody');
                     // tabela_funcionario.setAttribute("onclick", "teste()");
                 } else {
@@ -73,14 +74,32 @@ $('#form_search_employee').submit(function (event) {
         data: {'search': search},
         dataType: 'json',
         success: function (data) {
+            console.log(data);
             $("#select_leader_scheduling").val("0");
-            if (data['employees'].length > 0) {
-                add_employees_leader_table(data['leaders'], data['employees'], '#table_funcionario_lider tbody')
-            }
-            if (data['employees_burst'].length > 0) {
-                add_employees_leader_table(data['leaders_burst'], data['employees_burst'], '#table_he_estourada tbody')
-            }
+            let lineMessageEstourada;
+            if (data['response'] === "Success") {
+                if (data['employees'].length > 0) {
+                    add_employees_leader_table(data['leaders'], data['employees'], '#table_funcionario_lider tbody')
+                }
+                if (data['employees_burst'].length > 0) {
+                    add_employees_leader_table(data['leaders_burst'], data['employees_burst'], '#table_he_estourada tbody')
+                }
+            } else {
+                const lineMessage = document.createElement("tr");
+                const message = document.createElement("td");
 
+                message.setAttribute("colspan", 5)
+                message.setAttribute("style", "text-align: center;background-color: rgba(173,216,230,0.5);")
+                message.textContent = data['message']
+
+                lineMessage.appendChild(message);
+
+                const employee_table = document.querySelector('#table_funcionario_lider tbody');
+
+                employee_table.appendChild(lineMessage)
+
+
+            }
         }
     })
 })
@@ -92,7 +111,7 @@ function add_employees_leader_table(leaders, employees, table) {
         nameLeaderTd = document.createElement("td")
         nameLeaderTd.setAttribute("width", "100%")
         nameLeaderTd.setAttribute("colspan", 5)
-        nameLeaderTd.setAttribute("style", "text-align: center;")
+        nameLeaderTd.setAttribute("style", "text-align: center;background-color: rgba(0,16,47,0.2);")
         nameLeaderTd.textContent = leaders[x]['name']
         const leader_table = document.querySelector(table);
         leaderTr.appendChild(nameLeaderTd);
