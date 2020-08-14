@@ -75,7 +75,7 @@ def shift_pdf(request):
     shifts = []
     sectors = []
     for shift in shifts_res:
-        if emplo_schedus.filter(scheduling__shift=shift).select_related():
+        if emplo_schedus.filter(scheduling__shift=shift):
             shifts.append(shift)
 
     for emplo_schedu in emplo_schedus:
@@ -87,7 +87,7 @@ def shift_pdf(request):
             continue
 
     for leader in leaders:
-        sector = Sector.objects.get(id=leader.sector_id).select_related()
+        sector = Sector.objects.get(id=leader.sector_id)
         if not sector in sectors:
             sectors.append(sector)
 
