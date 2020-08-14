@@ -32,11 +32,14 @@ def shift_preview(request):
 
     leaders = []
     for emplo_schedu in emplo_schedus:
-        try:
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
+        if leader != None:
             leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
-        except AttributeError:
-            print("Erro de atributo")
+        else:
+            print("Continuou")
             continue
+
+
         if not leader in leaders:
             leaders.append(leader)
 
