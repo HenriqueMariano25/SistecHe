@@ -20,15 +20,21 @@ def shift_preview(request):
     shift_params = int(request.GET['shift'])
 
     if shift_params != 0:
-        shifts_res = Shift.objects.filter(id=int(shift_params))
-        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
-        shifts_res = [shift.to_json() for shift in shifts_res]
+        try:
+            shifts_res = Shift.objects.filter(id=int(shift_params))
+            emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+                scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
+            shifts_res = [shift.to_json() for shift in shifts_res]
+        except AttributeError:
+            print("Erro")
     else:
-        shifts_res_date = Shift.objects.all()
-        shifts_res = [shift.to_json() for shift in shifts_res_date]
-        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, authorized=True)
+        try:
+            shifts_res_date = Shift.objects.all()
+            shifts_res = [shift.to_json() for shift in shifts_res_date]
+            emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+                scheduling__date=date, authorized=True)
+        except AttributeError:
+            print("Erro")
 
     leaders = []
     try:
