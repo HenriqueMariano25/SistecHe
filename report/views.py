@@ -79,7 +79,7 @@ def shift_pdf(request):
             shifts.append(shift)
 
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).select_related(depth=1).first()
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).select_related().first()
         if leader != None:
             if not leader in leaders:
                 leaders.append(leader)
