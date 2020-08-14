@@ -64,11 +64,11 @@ def shift_pdf(request):
 
     if shift_params != 0:
         shifts_res = Shift.objects.filter(id=int(shift_params))
-        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
+        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling', depth=1).filter(
             scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
     else:
         shifts_res = Shift.objects.all()
-        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
+        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling', depth=1).filter(
             scheduling__date=date, authorized=True)
 
     leaders = []
@@ -79,7 +79,7 @@ def shift_pdf(request):
             shifts.append(shift)
 
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).select_related().first()
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).select_related(depth=1).first()
         if leader != None:
             if not leader in leaders:
                 leaders.append(leader)
@@ -166,7 +166,6 @@ def generate_excel_shift(request):
 
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
                                          'employee__leader_name', 'scheduling__reason', 'employee__sector__name')
-
 
         for row in rows:
             row_num += 1
