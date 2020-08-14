@@ -31,8 +31,11 @@ def shift_preview(request):
             scheduling__date=date, authorized=True)
 
     leaders = []
+    print(emplo_schedus)
     for emplo_schedu in emplo_schedus:
+        print(emplo_schedu)
         leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
+        print(leader)
         if leader != None:
             leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
         else:
