@@ -32,16 +32,11 @@ def shift_preview(request):
 
     leaders = []
     for emplo_schedu in emplo_schedus:
-        print(emplo_schedu)
         leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
-        print(leader)
         if leader != None:
             leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
         else:
-            print("Continuou")
             continue
-
-
         if not leader in leaders:
             leaders.append(leader)
 
@@ -85,8 +80,11 @@ def shift_pdf(request):
 
     for emplo_schedu in emplo_schedus:
         leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
-        if not leader in leaders:
-            leaders.append(leader)
+        if leader != None:
+            if not leader in leaders:
+                leaders.append(leader)
+        else:
+            continue
 
     for leader in leaders:
         sector = Sector.objects.get(id=leader.sector_id)
