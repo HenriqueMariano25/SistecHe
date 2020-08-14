@@ -31,20 +31,22 @@ def shift_preview(request):
             scheduling__date=date, authorized=True)
 
     leaders = []
-    print(emplo_schedus)
-    for emplo_schedu in emplo_schedus:
-        print(emplo_schedu)
-        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
-        print(leader)
-        if leader != None:
-            leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
-        else:
-            print("Continuou")
-            continue
+    try:
+        for emplo_schedu in emplo_schedus:
+            print(emplo_schedu)
+            leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
+            print(leader)
+            if leader != None:
+                leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
+            else:
+                print("Continuou")
+                continue
 
 
-        if not leader in leaders:
-            leaders.append(leader)
+            if not leader in leaders:
+                leaders.append(leader)
+    except AttributeError:
+        print("Erro")
 
     sectors = [sector.to_json() for sector in Sector.objects.all()]
 
