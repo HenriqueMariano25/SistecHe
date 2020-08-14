@@ -20,39 +20,30 @@ def shift_preview(request):
     shift_params = int(request.GET['shift'])
 
     if shift_params != 0:
-        try:
-            shifts_res = Shift.objects.filter(id=int(shift_params))
-            emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-                scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
-            shifts_res = [shift.to_json() for shift in shifts_res]
-        except AttributeError:
-            print("Erro")
+        shifts_res = Shift.objects.filter(id=int(shift_params))
+        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+            scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
+        shifts_res = [shift.to_json() for shift in shifts_res]
     else:
-        try:
-            shifts_res_date = Shift.objects.all()
-            shifts_res = [shift.to_json() for shift in shifts_res_date]
-            emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-                scheduling__date=date, authorized=True)
-        except AttributeError:
-            print("Erro")
+        shifts_res_date = Shift.objects.all()
+        shifts_res = [shift.to_json() for shift in shifts_res_date]
+        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+            scheduling__date=date, authorized=True)
 
     leaders = []
-    try:
-        for emplo_schedu in emplo_schedus:
-            print(emplo_schedu)
-            leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
-            print(leader)
-            if leader != None:
-                leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
-            else:
-                print("Continuou")
-                continue
+    for emplo_schedu in emplo_schedus:
+        print(emplo_schedu)
+        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
+        print(leader)
+        if leader != None:
+            leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
+        else:
+            print("Continuou")
+            continue
 
 
-            if not leader in leaders:
-                leaders.append(leader)
-    except AttributeError:
-        print("Erro")
+        if not leader in leaders:
+            leaders.append(leader)
 
     sectors = [sector.to_json() for sector in Sector.objects.all()]
 

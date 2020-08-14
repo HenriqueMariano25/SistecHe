@@ -105,6 +105,11 @@ class Shift(models.Model):
             'id': self.id,
         }
 
+    def __str__(self):
+        return self.name
+
+
+
 
 class Scheduling(models.Model):
     date = models.DateField(null=False, blank=False)
@@ -122,6 +127,9 @@ class Scheduling(models.Model):
             # 'user': self.user.to_json(),
             'sector': self.sector.to_json()
         }
+
+    def __str__(self):
+        return str(self.date)
 
 
 class Emplo_Schedu(models.Model):
