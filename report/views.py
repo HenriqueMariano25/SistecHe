@@ -64,11 +64,11 @@ def shift_pdf(request):
 
     if shift_params != 0:
         shifts_res = Shift.objects.filter(id=int(shift_params))
-        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling', depth=1).filter(
+        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
     else:
         shifts_res = Shift.objects.all()
-        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling', depth=1).filter(
+        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
             scheduling__date=date, authorized=True)
 
     leaders = []
