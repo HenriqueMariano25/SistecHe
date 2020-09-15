@@ -21,7 +21,7 @@ def shift_preview(request):
 
     if shift_params != 0:
         shifts_res = Shift.objects.filter(id=int(shift_params))
-        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
         shifts_res = [shift.to_json() for shift in shifts_res]
     else:
@@ -62,34 +62,28 @@ def shift_pdf(request):
     date = request.GET['data']
     shift_params = int(request.GET['turno'])
 
+    shifts = []
+
     if shift_params != 0:
-        shifts_res = Shift.objects.filter(id=int(shift_params))
-        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
+        shifts_res = Shift.objects.filter(id=int(shift_params)).only('name')
+        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
     else:
-        shifts_res = Shift.objects.all()
-        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
-            scheduling__date=date, authorized=True)
+        shifts_res = Shift.objects.all().only('name')
+        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
+            scheduling__date=date, authorized=True).only('employee', 'scheduling')
 
-    leaders = []
-    shifts = []
-    sectors = []
     for shift in shifts_res:
         if emplo_schedus.filter(scheduling__shift=shift):
             shifts.append(shift)
 
-    for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).select_related().first()
-        if leader != None:
-            if not leader in leaders:
-                leaders.append(leader)
-        else:
-            continue
+    # print(emplo_schedus.values('employee__leader_name').distinct())
+    leaderes = emplo_schedus.values_list('employee__leader_name',flat=True).distinct()
+    sectores = emplo_schedus.values_list('employee__sector_id',flat=True).distinct()
 
-    for leader in leaders:
-        sector = Sector.objects.get(id=leader.sector_id)
-        if not sector in sectors:
-            sectors.append(sector)
+    leaders = [Employee.objects.filter(name=leader).first() for leader in leaderes]
+
+    sectors = [Sector.objects.get(id=sec) for sec in sectores]
 
     date_split = date.split('-')
     formatted_date = date_split[2] + "/" + date_split[1] + "/" + date_split[0]
@@ -109,23 +103,23 @@ def shift_pdf(request):
             'error': 'Sem marcações'
         }
 
-    html_string = render_to_string('pdf/report_shift_pdf.html', response)
-    html = HTML(string=html_string)
-    result = html.write_pdf(stylesheets=[
-        settings.BASE_DIR + '/base/static/css/css_report/report.css',
-        settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
-    ], )
+    # html_string = render_to_string('pdf/report_shift_pdf.html', response)
+    # html = HTML(string=html_string)
+    # result = html.write_pdf(stylesheets=[
+    #     settings.BASE_DIR + '/base/static/css/css_report/report.css',
+    #     settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
+    # ], )
+    #
+    # response = HttpResponse(content_type='application/pdf;')
+    # response['Content-Disposition'] = 'inline; filename=relatorio_por_turno.pdf'
+    # response['Content-Transfer-Encoding'] = 'binary'
+    # with tempfile.NamedTemporaryFile(delete=True) as output:
+    #     output.write(result)
+    #     output.flush()
+    #     output = open(output.name, 'rb')
+    #     response.write(output.read())
 
-    response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=relatorio_por_turno.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name, 'rb')
-        response.write(output.read())
-
-    return response
+    return render(request, 'pdf/report_shift_pdf.html',response)
 
     # pdf = render_to_pdf('pdf/report_shift_pdf.html', response)
     # return HttpResponse(pdf, content_type='application/pdf')

@@ -24,7 +24,7 @@ class Schedulings(admin.ModelAdmin):
 
 class Emplo_Schedus(admin.ModelAdmin):
     list_display = (
-        'employee', 'scheduling', 'plus_he', 'authorized')
+        'employee', 'scheduling', 'plus_he', 'authorized',)
     list_display_links = ('employee', 'scheduling')
     search_fields = ('employee', 'scheduling')
     list_per_page = 100

@@ -10,4 +10,5 @@ urlpatterns = [
     path('por_lider/preview', views.leader_preview, name='leader_preview'),
     path('por_lider/pdf', views.leader_pdf, name='leader_pdf'),
     path('por_lider/excel', views.generate_excel_leader, name='generate_excel_leader'),
+    path('por_turno/teste', views.shift_pdf, name='teste'),
 ]
