@@ -39,6 +39,7 @@
 {% if shifts_res %}
     {% for shift in shifts_res %}
         <h1 class="display-4 text-center turnoTitle">{{ shift.name }}</h1>
+        <h5>Ao assinar no campo especificado abaixo, afirmo concordar com a programação de trabalho proposta, fazendo-me presente na empresa na data estipulada.</h5>
         <table style="width:100%;padding: 105px;margin-bottom: 10px">
 
                 <thead style="background-color: #00102f;color:white;border: 1px solid black;border-collapse: collapse;">
@@ -48,7 +49,7 @@
                     <th style="padding: 8px">Função</th>
                     <th style="padding: 8px">Motivo</th>
                     <th style="padding: 8px">HE Previsto</th>
-                    <th>Ciencia de agendamento</th>
+                    <th>Ciência do colaborador</th>
                 </tr>
                 </thead>
                 {% for leader in leaders %}
