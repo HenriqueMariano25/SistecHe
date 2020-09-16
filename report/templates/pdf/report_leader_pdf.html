@@ -39,7 +39,9 @@
 {% if shifts_res %}
     {% for shift in shifts_res %}
         <h1 class="display-4 text-center turnoTitle">{{ shift.name }}</h1>
+        <h5>Ao assinar no campo especificado abaixo, afirmo concordar com a programação de trabalho proposta, fazendo-me presente na empresa na data estipulada.</h5>
         <table style="width:100%;padding: 105px;margin-bottom: 10px">
+
                 <thead style="background-color: #00102f;color:white;border: 1px solid black;border-collapse: collapse;">
                 <tr>
                     <th style="padding: 8px">Matrícula</th>
@@ -47,6 +49,7 @@
                     <th style="padding: 8px">Função</th>
                     <th style="padding: 8px">Motivo</th>
                     <th style="padding: 8px">HE Previsto</th>
+                    <th>Ciência do colaborador</th>
                 </tr>
                 </thead>
                 {% for leader in leaders %}
@@ -58,18 +61,19 @@
                                 <tr>
                                     <td class="text-center mt-2 mb-3"
                                         style="border: 1px solid black;border-collapse: collapse;color:rgb(70,70,70); background-color: rgba(0,16,47,0.3);font-size: 18px"
-                                        colspan=5><b>{{ leader.name }}</b></td>
+                                        colspan=6><b>{{ leader.name }}</b></td>
                                 </tr>
 
                                 <tbody>
                                 {% for emplo_schedu in emplo_schedus_data %}
                                     {% if emplo_schedu.employee.leader_name == leader.name and emplo_schedu.scheduling.shift == shi %}
-                                        <tr class="mt-4" style="border: 1px solid black;border-collapse: collapse;">
+                                        <tr class="mt-4" style="border: 1px solid black;border-collapse: collapse;height: 50px">
                                             <td style="padding-left: 8px">{{ emplo_schedu.employee.registration }}</td>
                                             <td>{{ emplo_schedu.employee.name }}</td>
                                             <td>{{ emplo_schedu.employee.occupation }}</td>
-                                            <td>{{ emplo_schedu.scheduling.reason }}</td>
-                                            <td>{{ emplo_schedu.employee.extra_hour|add:7.30 }}</td>
+                                            <td>{{ emplo_schedu.scheduling.reason | slice:"0:30" }}</td>
+                                            <td>{{ emplo_schedu.employee.extra_hour|add:8 }}</td>
+                                            <td style="padding-right: 10px">____________________________</td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
