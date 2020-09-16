@@ -21,7 +21,7 @@ def shift_preview(request):
 
     if shift_params != 0:
         shifts_res = Shift.objects.filter(id=int(shift_params))
-        emplo_schedus = Emplo_Schedu.objects.select_related('employee', 'scheduling').filter(
+        emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
         shifts_res = [shift.to_json() for shift in shifts_res]
     else:
@@ -32,11 +32,7 @@ def shift_preview(request):
 
     leaders = []
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
-        if leader != None:
-            leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
-        else:
-            continue
+        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name).to_json()
         if not leader in leaders:
             leaders.append(leader)
 
@@ -62,28 +58,31 @@ def shift_pdf(request):
     date = request.GET['data']
     shift_params = int(request.GET['turno'])
 
-    shifts = []
-
     if shift_params != 0:
-        shifts_res = Shift.objects.filter(id=int(shift_params)).only('name')
+        shifts_res = Shift.objects.filter(id=int(shift_params))
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift_id=shift_params, authorized=True)
     else:
-        shifts_res = Shift.objects.all().only('name')
+        shifts_res = Shift.objects.all()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, authorized=True).only('employee', 'scheduling')
+            scheduling__date=date, authorized=True)
 
+    leaders = []
+    shifts = []
+    sectors = []
     for shift in shifts_res:
         if emplo_schedus.filter(scheduling__shift=shift):
             shifts.append(shift)
 
-    # print(emplo_schedus.values('employee__leader_name').distinct())
-    leaderes = emplo_schedus.values_list('employee__leader_name',flat=True).distinct()
-    sectores = emplo_schedus.values_list('employee__sector_id',flat=True).distinct()
+    for emplo_schedu in emplo_schedus:
+        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name)
+        if not leader in leaders:
+            leaders.append(leader)
 
-    leaders = [Employee.objects.filter(name=leader).first() for leader in leaderes]
-
-    sectors = [Sector.objects.get(id=sec) for sec in sectores]
+    for leader in leaders:
+        sector = Sector.objects.get(id=leader.sector_id)
+        if not sector in sectors:
+            sectors.append(sector)
 
     date_split = date.split('-')
     formatted_date = date_split[2] + "/" + date_split[1] + "/" + date_split[0]
@@ -103,23 +102,23 @@ def shift_pdf(request):
             'error': 'Sem marcações'
         }
 
-    # html_string = render_to_string('pdf/report_shift_pdf.html', response)
-    # html = HTML(string=html_string)
-    # result = html.write_pdf(stylesheets=[
-    #     settings.BASE_DIR + '/base/static/css/css_report/report.css',
-    #     settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
-    # ], )
-    #
-    # response = HttpResponse(content_type='application/pdf;')
-    # response['Content-Disposition'] = 'inline; filename=relatorio_por_turno.pdf'
-    # response['Content-Transfer-Encoding'] = 'binary'
-    # with tempfile.NamedTemporaryFile(delete=True) as output:
-    #     output.write(result)
-    #     output.flush()
-    #     output = open(output.name, 'rb')
-    #     response.write(output.read())
+    html_string = render_to_string('pdf/report_shift_pdf.html', response)
+    html = HTML(string=html_string)
+    result = html.write_pdf(stylesheets=[
+        settings.BASE_DIR + '/base/static/css/css_report/report.css',
+        settings.BASE_DIR + '/static/bootstrap/css/bootstrap.min.css',
+    ], )
 
-    return render(request, 'pdf/report_shift_pdf.html',response)
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output = open(output.name, 'rb')
+        response.write(output.read())
+
+    return response
 
     # pdf = render_to_pdf('pdf/report_shift_pdf.html', response)
     # return HttpResponse(pdf, content_type='application/pdf')
@@ -128,6 +127,7 @@ def shift_pdf(request):
 def generate_excel_shift(request):
     shifts = Shift.objects.all()
     date = request.GET['date']
+    print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="relatorio_turno' + date + '.xls"'
@@ -142,25 +142,17 @@ def generate_excel_shift(request):
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
 
-        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo', 'Setor', 'Horas Prevista']
+        columns = ['Matricula', 'Nome', 'Função', 'Líder', 'Motivo', 'Setor']
 
         for col_num in range(len(columns)):
             ws.write(row_num, col_num, columns[col_num], font_style)
 
         # Sheet body, remaining rows
-
         font_style = xlwt.XFStyle()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
-            scheduling__date=date, authorized=True, scheduling__shift=shift).order_by("employee__sector",
-                                                                                      "employee__leader_name",
-                                                                                      "employee__name")
-
-        for emp in emplo_schedus:
-            emp.employee.extra_hour = (emp.employee.extra_hour + 7.30)
-
+            scheduling__date=date, authorized=True, scheduling__shift=shift).order_by("employee__sector","employee__leader_name","employee__name")
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
                                          'employee__leader_name', 'scheduling__reason', 'employee__sector__name')
-
         for row in rows:
             row_num += 1
             for col_num in range(len(row)):
@@ -194,7 +186,7 @@ def leader_preview(request):
 
     leaders = []
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first().to_json()
+        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name).to_json()
         if not leader in leaders:
             leaders.append(leader)
 
@@ -233,7 +225,7 @@ def leader_pdf(request):
             shifts.append(shift)
 
     for emplo_schedu in emplo_schedus:
-        leader = Employee.objects.filter(name=emplo_schedu.employee.leader_name).first()
+        leader = Employee.objects.get(name=emplo_schedu.employee.leader_name)
         if not leader in leaders:
             leaders.append(leader)
 
@@ -262,7 +254,7 @@ def leader_pdf(request):
     ], )
 
     response = HttpResponse(content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=relatorio_setor.pdf'
+    response['Content-Disposition'] = 'inline; filename=list_people.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
     with tempfile.NamedTemporaryFile(delete=True) as output:
         output.write(result)
@@ -276,6 +268,7 @@ def leader_pdf(request):
 def generate_excel_leader(request):
     shifts = Shift.objects.all()
     date = request.GET['date']
+    print(date)
 
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="relatorio_lider' + date + '.xls"'
@@ -299,8 +292,7 @@ def generate_excel_leader(request):
         font_style = xlwt.XFStyle()
         emplo_schedus = Emplo_Schedu.objects.prefetch_related('employee', 'scheduling').filter(
             scheduling__date=date, scheduling__shift=shift,
-            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True).order_by(
-            "employee__leader_name", "employee__name")
+            employee__sector_id=request.user.userprofileinfo.sector_id, authorized=True).order_by("employee__leader_name","employee__name")
         rows = emplo_schedus.values_list('employee__registration', 'employee__name', 'employee__occupation',
                                          'employee__leader_name', 'scheduling__reason')
         for row in rows:
