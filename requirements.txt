@@ -20,7 +20,7 @@ pycparser==2.20
 pyexcel==0.6.2
 pyexcel-io==0.5.20
 pyexcel-webio==0.1.4
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 Pyphen==0.9.5
 python-dateutil==2.8.1
 pytz==2020.1
